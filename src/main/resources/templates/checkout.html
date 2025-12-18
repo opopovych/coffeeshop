@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Checkout</title>
+</head>
+<body>
+
+<h2>Оформлення замовлення</h2>
+
+<div>
+    <p>Сума до оплати: <b th:text="${total}"></b> грн</p>
+</div>
+
+<form th:action="@{/order/checkout}" method="post">
+    <label>Ваше ім'я:</label>
+    <input type="text" name="name" required><br><br>
+
+    <label>Телефон:</label>
+    <input type="text" name="phone" required><br><br>
+
+    <label>Адреса доставки:</label>
+    <input type="text" name="address" required><br><br>
+
+    <button type="submit">Підтвердити замовлення</button>
+</form>
+
+</body>
+</html>

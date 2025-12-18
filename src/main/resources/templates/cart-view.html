@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Кошик</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f3f3f3;
+        }
+
+        header {
+            background: #3e2723;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            font-size: 22px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 20px auto;
+            padding: 15px;
+        }
+
+        .cart-card {
+            display: grid;
+            grid-template-columns: 120px auto 100px 100px 80px;
+            align-items: center;
+            gap: 15px;
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .cart-card img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .coffee-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #3e2723;
+        }
+
+        .brand {
+            font-size: 14px;
+            color: #555;
+            margin-top: 3px;
+        }
+
+        .price {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: right;
+            color: #6d4c41;
+        }
+
+        .qty {
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .remove-btn {
+            background: #b71c1c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .remove-btn:hover {
+            background: #d32f2f;
+        }
+
+        .total-block {
+            text-align: right;
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #3e2723;
+        }
+
+        .checkout-btn {
+            float: right;
+            margin-top: 15px;
+            padding: 12px 20px;
+            background: #3e2723;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 18px;
+        }
+
+        .checkout-btn:hover {
+            background: #5d4037;
+        }
+
+        .empty {
+            text-align: center;
+            font-size: 22px;
+            padding: 50px;
+            color: #444;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>Ваш кошик</header>
+
+<div class="container">
+
+    <!-- Якщо кошик пустий -->
+    <div th:if="${cart.items.size() == 0}" class="empty">
+        Ваш кошик порожній ☕<br>
+        <a href="/coffee" style="color:#3e2723; text-decoration:underline;">Повернутися до каталогу</a>
+    </div>
+
+    <!-- Вміст кошика -->
+    <div th:each="item : ${cart.items}" class="cart-card" th:if="${cart.items.size() > 0}">
+
+        <img th:src="@{'/images/' + ${item.photoPath}}" alt="Coffee">
+
+        <div>
+            <div class="coffee-name" th:text="${item.name}"></div>
+            <div class="brand" th:text="${item.brand}"></div>
+        </div>
+
+        <div class="price">
+            ₴ <span th:text="${item.price}"></span>
+        </div>
+
+        <form th:action="@{'/cart/update/' + ${item.coffeeId}}" method="post" class="qty-form">
+            x
+            <input type="number"
+                   name="quantity"
+                   th:value="${item.quantity}"
+                   onchange="this.form.submit()"
+                   style="width: 50px;">
+        </form>
+
+
+        <form th:action="@{'/cart/remove/' + ${item.coffeeId}}" method="post">
+            <button class="remove-btn">X</button>
+        </form>
+
+    </div>
+
+    <!-- Загальна сума -->
+    <div th:if="${cart.items.size() > 0}">
+        <div class="total-block">
+            Разом: ₴ <span th:text="${total}"></span>
+        </div>
+
+        <a href="/order/checkout" class="checkout-btn">Оформити замовлення</a>
+        <a href="/coffee" style="color:#3e2723; text-decoration:underline;">Продовжити покупки</a>
+    </div>
+
+</div>
+
+</body>
+</html>

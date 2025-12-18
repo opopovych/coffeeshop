@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Редагувати замовлення</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; }
+        label { display: block; margin-top: 10px; }
+        select { width: 200px; padding: 5px; margin-top: 5px; }
+        button { margin-top: 15px; padding: 8px 12px; }
+    </style>
+</head>
+<body>
+<h2>Редагувати замовлення #<span th:text="${order.id}"></span></h2>
+
+<form th:action="@{'/admin/edit-order/' + ${order.id}}" th:object="${order}" method="post">
+
+    <label>Статус замовлення:</label>
+    <select th:field="*{status}">
+        <option th:each="s : ${T(com.example.coffeeshop.model.Status).values()}"
+                th:value="${s}"
+                th:text="${s.displayName}">
+        </option>
+    </select>
+
+    <button type="submit">Зберегти</button>
+</form>
+
+<a th:href="@{/admin/admin-panel}" style="display:block; margin-top:20px;">Повернутися до панелі адміністратора</a>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Список Брендів</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .action-links a { margin-right: 10px; text-decoration: none; }
+        .add-button { margin-bottom: 20px; padding: 10px 15px; background-color: #007bff; color: white; border-radius: 4px; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+<h2>📋 Список Брендів Кави</h2>
+
+<a th:href="@{/admin/coffee/add-brand}" class="add-button">Додати Новий Бренд</a>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Назва</th>
+        <th>Історія/Опис</th>
+        <th>Дії</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="brand : ${brands}">
+        <td th:text="${brand.id}">1</td>
+        <td th:text="${brand.name}">Lavazza</td>
+        <td th:text="${brand.history}">...</td>
+        <td class="action-links">
+            <a th:href="@{/admin/coffee/edit-brand/{id}(id=${brand.id})}">Редагувати</a>
+            <a th:href="@{/admin/coffee/delete-brand/{id}(id=${brand.id})}" onclick="return confirm('Ви впевнені?')">Видалити</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

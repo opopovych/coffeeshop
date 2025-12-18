@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+    >
+    <title>Coffee Shop</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #e7e1e1;
+        }
+
+        .container {
+            max-width: 1200px;
+    
+            padding: 10px;
+        }
+
+        .filter-form select {
+            padding: 5px;
+            margin-right: 8px;
+            margin-bottom: 10px;
+        }
+
+        .filter-form button {
+            padding: 6px 12px;
+            background: #3e2723;
+            color: rgb(154, 135, 135);
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .filter-form button:hover {
+            background: #5d4037;
+        }
+
+        .coffee-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 30px;
+        }
+
+        .coffee-card {
+            background: rgb(245, 232, 232);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+            transition: 0.25s;
+            border: 1px solid #eee;
+        }
+
+        .coffee-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.12);
+        }
+
+        .coffee-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            height: 40px;
+        }
+
+        .attribute {
+            font-size: 14px;
+            color: #333;
+            margin: 3px 0;
+        }
+
+        .label {
+            font-weight: bold;
+            color: #5d4037;
+        }
+
+        .price {
+            margin-top: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #3e2723;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 8px 14px;
+            background: #3e2723;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .btn:hover {
+            background: #5d4037;
+        }
+
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            padding: 6px 10px;
+            margin: 0 3px;
+            text-decoration: none;
+            color: #3e2723;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .pagination a.active {
+            background: #3e2723;
+            color: white;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            background: #2e2a28;
+            color: white;
+        }
+        /* =======================================================
+   КОРИСТУВАЦЬКІ БЕЖЕВІ СТИЛІ (Beige Accent)
+   ======================================================= */
+
+/* =======================================================
+   КОРИСТУВАЦЬКІ БЕЖЕВІ СТИЛІ (Beige Accent)
+   ======================================================= */
+
+/* 1. Колір бейджа та фону */
+.bg-beige-accent {
+    --bs-bg-opacity: 1;
+    background-color: #D2B48C !important; 
+    color: #333333 !important; 
+}
+
+/* 2. Колір тексту (для ціни) */
+.text-beige-accent {
+    color: #D2B48C !important;
+}
+
+/* 3. Стиль кнопки "Детальніше" (btn-beige-accent) */
+.btn-beige-accent {
+    /* Наслідуємо основні стилі Bootstrap для функціональності кнопки */
+    display: inline-block;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    border-radius: 0.25rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+    /* Наші бежеві кольори */
+    --bs-btn-color: #ede4e4; /* Колір тексту на кнопці */
+    --bs-btn-bg: #846439;
+    --bs-btn-border-color: #0a0601;
+
+    /* Стиль при наведенні (Hover state) */
+    --bs-btn-hover-color: #ffffff; 
+    --bs-btn-hover-bg: #C19A6B; 
+    --bs-btn-hover-border-color: #C19A6B;
+    
+    /* Стиль при активному стані (Active state) */
+    --bs-btn-active-color: #ffffff;
+    --bs-btn-active-bg: #AF875E;
+    --bs-btn-active-border-color: #AF875E;
+}
+
+/* Застосовуємо наші кольори */
+.btn-beige-accent {
+    color: var(--bs-btn-color);
+    background-color: var(--bs-btn-bg);
+    border-color: var(--bs-btn-border-color);
+}
+.btn-beige-accent:hover {
+    color: var(--bs-btn-hover-color);
+    background-color: var(--bs-btn-hover-bg);
+    border-color: var(--bs-btn-hover-border-color);
+}
+.btn-beige-accent:active {
+    color: var(--bs-btn-active-color);
+    background-color: var(--bs-btn-active-bg);
+    border-color: var(--bs-btn-active-border-color);
+}
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
+        <div class="container">
+            
+            <a class="navbar-brand" th:href="@{/coffee}">
+                ☕ IJO Coffee
+            </a>
+            
+            <button class="navbar-toggler" type="button" 
+                    data-toggle="collapse" data-target="#navbarsExample07" 
+                    aria-controls="navbarsExample07" aria-expanded="false" 
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+      
+            <div class="collapse navbar-collapse" id="navbarsExample07">
+                
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Історія <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Про нас <span class="sr-only">(current)</span></a>
+                    </li>
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" 
+                           href="#" 
+                           id="dropdownFilter" 
+                           data-toggle="dropdown" 
+                           aria-haspopup="true" 
+                           aria-expanded="false">
+                            ⚙️ Фільтри та Сортування
+                        </a>
+                        
+                        <form class="dropdown-menu p-3" 
+                              aria-labelledby="dropdownFilter" 
+                              th:action="@{/coffee/filter}" 
+                              method="get" 
+                              style="min-width: 250px;">
+                            
+                            <div class="mb-3">
+                                <select name="brandId" class="form-select form-select-sm">
+                                    <option value="">Всі бренди</option>
+                                    <option th:each="brand : ${brands}"
+                                            th:value="${brand.id}"
+                                            th:text="${brand.name}"
+                                            th:selected="${brand.id == brandId}">
+                                    </option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <select name="intensity" class="form-select form-select-sm">
+                                    <option value="">Інтенсивність</option>
+                                    <option th:each="i : ${intensities}"
+                                            th:value="${i}"
+                                            th:text="${i.displayName}"
+                                            th:selected="${i == intensity}">
+                                    </option>
+                                </select>
+                            </div>
+    
+                            <div class="mb-3">
+                                <select name="roast" class="form-select form-select-sm">
+                                    <option value="">Обжарка</option>
+                                    <option th:each="r : ${roastLevels}"
+                                            th:value="${r}"
+                                            th:text="${r.displayName}"
+                                            th:selected="${r == roast}">
+                                    </option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <select name="bitterness" class="form-select form-select-sm">
+                                    <option value="">Гіркота</option>
+                                    <option th:each="b : ${bitternessLevels}"
+                                            th:value="${b}"
+                                            th:text="${b.displayName}"
+                                            th:selected="${b == bitterness}">
+                                    </option>
+                                </select>
+                            </div>
+    
+                            <div class="mb-3">
+                                <select name="composition" class="form-select form-select-sm">
+                                    <option value="">Склад</option>
+                                    <option th:each="c : ${compositions}"
+                                            th:value="${c}"
+                                            th:text="${c.displayName}"
+                                            th:selected="${c == composition}">
+                                    </option>
+                                </select>
+                            </div>
+    
+                            <div class="mb-3">
+                                <select name="sort" class="form-select form-select-sm">
+                                    <option value="">Сортування</option>
+                                    <option value="priceAsc"  th:selected="${sort == 'priceAsc'}">Ціна ↑</option>
+                                    <option value="priceDesc" th:selected="${sort == 'priceDesc'}">Ціна ↓</option>
+                                    <option value="nameAsc"   th:selected="${sort == 'nameAsc'}">Назва A–Z</option>
+                                </select>
+                            </div>
+    
+                            <button type="submit" class="btn btn-sm btn-primary w-100 mt-2">
+                                Застосувати Фільтри
+                            </button>
+                        </form>
+                    </li>
+                    </ul>
+                
+                <form class="form-inline my-2 my-md-0 d-flex" th:action="@{/coffee/search}" method="get">
+                  <input class="form-control mr-sm-2" type="text" name="query" placeholder="Пошук..." aria-label="Search">
+                </form>
+                
+              </div>
+            </div>
+          </nav>
+
+<div class="container">
+    
+    <!-- ============ КАРТКИ ТОВАРІВ ============ -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+
+        <div class="col" th:each="coffee : ${coffeeList}">
+            
+            <div class="card h-100 shadow-sm">
+                
+                <div class="p-3">
+                    <img th:src="@{'/images/' + ${coffee.photoPath}}" 
+                         class="card-img-top img-fluid rounded" 
+                         alt="Coffee Photo" 
+                         style="max-height: 200px; object-fit: contain;">
+                </div>
+    
+                <div class="card-body d-flex flex-column">
+                    
+                    <h5 class="card-title mb-1 text-center" th:text="${coffee.name}">Назва продукту</h5>
+                    <h6 class="card-subtitle mb-3 text-muted text-center" th:text="${coffee.brand.name}">Бренд</h6>
+                    
+                    <ul class="list-group list-group-flush mb-3">
+                        
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span class="text-muted">Інтенсивність:</span>
+                            <span class="badge bg-beige-accent rounded-pill" th:text="${coffee.intensity.displayName}"></span>
+                        </li>
+    
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span class="text-muted">Обжарка:</span>
+                            <span class="badge bg-beige-accent rounded-pill" th:text="${coffee.roastLevel.displayName}"></span>
+                        </li>
+    
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span class="text-muted">Гіркота:</span>
+                            <span class="badge bg-beige-accent rounded-pill" th:text="${coffee.bitterness.displayName}"></span>
+                        </li>
+    
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span class="text-muted">Склад:</span>
+                            <span class="badge bg-beige-accent rounded-pill" th:text="${coffee.composition.displayName}"></span>
+                        </li>
+                    </ul>
+    
+                    <div class="mt-auto pt-2 text-center">
+                        <h4 class="text-beige-accent fw-bold">
+                            <span th:text="'₴ ' + ${#numbers.formatDecimal(coffee.price, 0, 'POINT', 2, 'COMMA')}">₴ 450.00</span>
+                        </h4>
+                    </div>
+                </div>
+                
+                <div class="card-footer bg-white border-0 pt-0 pb-3 px-3">
+                    <a class="btn btn-beige-accent w-100" th:href="@{'/coffee/' + ${coffee.id}}">
+                        Детальніше
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ ПАГІНАЦІЯ ============ -->
+    <div class="pagination" th:if="${totalPages > 1}">
+        <a th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+           th:href="@{/coffee/filter(
+               page=${i},
+               brandId=${brandId},
+               intensity=${intensity},
+               roast=${roast},
+               bitterness=${bitterness},
+               composition=${composition},
+               sort=${sort}
+           )}"
+           th:text="${i + 1}"
+           th:classappend="${i == currentPage} ? 'active' : ''">
+        </a>
+    </div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+
+<!-- Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+<!-- Bootstrap 4 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+
+<footer>
+    © 2025 Coffee Shop — Власний магазин кави
+</footer>
+
+</body>
+</html>
