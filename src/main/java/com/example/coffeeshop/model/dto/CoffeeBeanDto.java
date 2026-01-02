@@ -15,6 +15,7 @@ public class CoffeeBeanDto {
         private Double price;
         private String photoPath;
         private String brand;
+        private String weight;
 
 }
 

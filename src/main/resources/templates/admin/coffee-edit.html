@@ -67,11 +67,22 @@
         <hr>
 
         <div class="form-group">
+            <label>Вага:</label>
+            <select th:field="*{weight}" required>
+                <option value="">-- Виберіть Рівень --</option>
+                <option th:each="weight : ${weights}"
+                        th:value="${weight}"
+                        th:text="${weight.displayName}"
+                        th:selected="${weight == coffeeBean.weight}"></option>
+            </select>
+        </div>
+
+        <div class="form-group">
             <label>Рівень обсмаження:</label>
             <select th:field="*{roastLevel}" required>
                 <option value="">-- Виберіть Рівень --</option>
                 <option th:each="roast : ${roastLevels}"
-                        th:value="${roast.displayName}"
+                        th:value="${roast}"
                         th:text="${roast.displayName}"
                         th:selected="${roast == coffeeBean.roastLevel}"></option>
             </select>
@@ -80,7 +91,7 @@
             <label>Гіркота:</label>
             <select th:field="*{bitterness}" required>
                 <option value="">-- Виберіть Рівень --</option>
-                <option th:each="b : ${bitternessLevels}" th:value="${b.displayName}" th:text="${b.displayName}" th:selected="${b == coffeeBean.bitterness}"></option>
+                <option th:each="b : ${bitternessLevels}" th:value="${b}" th:text="${b.displayName}" th:selected="${b == coffeeBean.bitterness}"></option>
             </select>
         </div>
 
@@ -88,7 +99,7 @@
             <label>Кислотність:</label>
             <select th:field="*{acidity}" required>
                 <option value="">-- Виберіть Рівень --</option>
-                <option th:each="a : ${acidityLevels}" th:value="${a.displayName}" th:text="${a.displayName}" th:selected="${a == coffeeBean.acidity}"></option>
+                <option th:each="a : ${acidityLevels}" th:value="${a}" th:text="${a.displayName}" th:selected="${a == coffeeBean.acidity}"></option>
             </select>
         </div>
 
@@ -96,7 +107,7 @@
             <label>Склад (Арабіка/Робуста):</label>
             <select th:field="*{composition}" required>
                 <option value="">-- Виберіть Склад --</option>
-                <option th:each="c : ${compositions}" th:value="${c.displayName}" th:text="${c.displayName}" th:selected="${c == coffeeBean.composition}"></option>
+                <option th:each="c : ${compositions}" th:value="${c}" th:text="${c.displayName}" th:selected="${c == coffeeBean.composition}"></option>
             </select>
         </div>
 
@@ -104,7 +115,7 @@
             <label>Інтенсивність:</label>
             <select th:field="*{intensity}" required>
                 <option value="">-- Виберіть Інтенсивність --</option>
-                <option th:each="i : ${intensityLevels}" th:value="${i.displayName}" th:text="${i.displayName}" th:selected="${i == coffeeBean.intensity}"></option>
+                <option th:each="i : ${intensityLevels}" th:value="${i}" th:text="${i.displayName}" th:selected="${i == coffeeBean.intensity}"></option>
             </select>
         </div>
 
@@ -113,11 +124,13 @@
         <div class="form-group">
             <label>Поточне Фото:</label>
             <div class="current-photo" th:if="${coffeeBean.photoPath != null}">
-                <img th:src="@{/uploads/{path}(path=${coffeeBean.photoPath})}" alt="Поточне фото кави">
-                <p><small>Поточний шлях: <span th:text="${coffeeBean.photoPath}"></span></small></p>
+                <img th:src="@{/images/{path}(path=${coffeeBean.photoPath})}"
+                     alt="Поточне фото кави"
+                     style="max-width: 150px; border: 1px solid #ddd; padding: 5px;">
+                <p><small>Ім'я файлу в базі: <span th:text="${coffeeBean.photoPath}"></span></small></p>
             </div>
             <div th:unless="${coffeeBean.photoPath != null}">
-                <p>Фото не завантажено.</p>
+                <p class="text-muted">Фото не завантажено.</p>
             </div>
         </div>
 
@@ -128,7 +141,7 @@
         </div>
 
         <button type="submit">Зберегти Зміни</button>
-        <a th:href="@{/admin/coffee}">Скасувати та повернутися до списку</a>
+        <a th:href="@{/admin/coffeeList}">Скасувати та повернутися до списку</a>
 
     </form>
 </div>

@@ -1,21 +1,12 @@
 package com.example.coffeeshop.controller;
 
-import com.example.coffeeshop.model.Acidity;
-import com.example.coffeeshop.model.Bitterness;
-import com.example.coffeeshop.model.CoffeeBean;
-import com.example.coffeeshop.model.Composition;
-import com.example.coffeeshop.model.Intensity;
-import com.example.coffeeshop.model.RoastLevel;
+import com.example.coffeeshop.model.*;
 import com.example.coffeeshop.service.BrandService;
 import com.example.coffeeshop.service.CoffeeBeanService;
 import com.example.coffeeshop.service.OriginCountryService;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -52,6 +43,7 @@ public class CoffeeAdminController {
         model.addAttribute("brands", brandService.findAll());
 
         // ДОДАТИ: Списки значень Enum для радіокнопок/вибірок
+        model.addAttribute("weights", ProductWeight.values());
         model.addAttribute("roastLevels", RoastLevel.values());
         model.addAttribute("bitternessLevels", Bitterness.values());
         model.addAttribute("acidityLevels", Acidity.values());
@@ -87,6 +79,7 @@ public class CoffeeAdminController {
         model.addAttribute("countries", originCountryService.findAll());
         model.addAttribute("brands", brandService.findAll());
 
+        model.addAttribute("weights", ProductWeight.values());
         model.addAttribute("roastLevels", RoastLevel.values());
         model.addAttribute("bitternessLevels", Bitterness.values());
         model.addAttribute("acidityLevels", Acidity.values());
@@ -110,6 +103,7 @@ public class CoffeeAdminController {
         existing.setDescription(coffeeBean.getDescription());
         existing.setPrice(coffeeBean.getPrice());
         existing.setBrand(coffeeBean.getBrand());
+        existing.setWeight(coffeeBean.getWeight());
         existing.setOriginCountry(coffeeBean.getOriginCountry());
         existing.setRoastLevel(coffeeBean.getRoastLevel());
         existing.setBitterness(coffeeBean.getBitterness());

@@ -12,4 +12,9 @@ public class CartItem {
     private Double price;
     private Integer quantity;
     private String photoPath;
+    private String roastLevel;
+    private String bitterness;
+    private String composition;
+    private String intensity;
+    private String weight;
 }

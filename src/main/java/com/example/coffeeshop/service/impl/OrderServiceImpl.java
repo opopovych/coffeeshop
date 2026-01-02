@@ -29,6 +29,7 @@ public class OrderServiceImpl implements OrderService {
         cartService.getCart().getItems().forEach(item -> {
             OrderItem oi = new OrderItem();
             oi.setCoffeeId(item.getCoffeeId());
+            oi.setCoffeeBrand(item.getBrand());
             oi.setName(item.getName());
             oi.setPrice(item.getPrice());
             oi.setQuantity(item.getQuantity());

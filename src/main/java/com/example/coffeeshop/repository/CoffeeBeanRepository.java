@@ -27,6 +27,8 @@ public interface CoffeeBeanRepository extends JpaRepository<CoffeeBean, Long> {
             @Param("composition") Composition composition,
             Pageable pageable
     );
+    long count();
+
 
 
 

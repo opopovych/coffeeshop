@@ -1,14 +1,18 @@
 package com.example.coffeeshop.controller;
 
+import com.example.coffeeshop.model.CoffeeBean;
 import com.example.coffeeshop.model.Order;
 import com.example.coffeeshop.service.BrandService;
 import com.example.coffeeshop.service.CoffeeBeanService;
 import com.example.coffeeshop.service.OrderService;
 import com.example.coffeeshop.service.OriginCountryService;
+import com.example.coffeeshop.service.impl.DashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
@@ -25,20 +29,14 @@ public class AdminController {
 
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private DashboardService dashboardService;
 
     @GetMapping()
     public String adminPanel(Model model) {
-        /*// товари
-        model.addAttribute("coffeeList", coffeeBeanService.findAll());
-
-        // бренди
-        model.addAttribute("brands", brandService.findAll());
-
-        // країни
-        model.addAttribute("countries", originCountryService.findAll());
-
-        // замовлення
-        model.addAttribute("orders", orderService.findAll());*/
+        model.addAttribute("ordersCount", dashboardService.getNewOrdersCount());
+        model.addAttribute("productsCount", dashboardService.getProductsCount());
+        model.addAttribute("brandsCount", dashboardService.getBrandsCount());
 
         return "admin/admin-panel"; // ім'я Thymeleaf файлу
     }
@@ -77,12 +75,12 @@ public class AdminController {
         Order existingOrder = orderService.findById(id);
         existingOrder.setStatus(order.getStatus()); // лише оновлюємо статус
         orderService.update(existingOrder);
-        return "redirect:/admin/admin-panel";
+        return "redirect:/admin/orders";
     }
     @GetMapping("/delete-order/{id}")
     public String deleteOrder(@PathVariable Long id){
         orderService.deleteOrder(id);
-        return "redirect:/admin/admin-panel";
+        return "redirect:/admin/orders";
     }
 
 }

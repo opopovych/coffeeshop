@@ -64,6 +64,16 @@
         <hr>
 
         <div class="form-group">
+            <label>Вага:</label>
+            <div class="enum-group">
+                <select th:field="*{weight}" required>
+                    <option value="">-- Виберіть Вагу --</option>
+                    <option th:each="weight : ${weights}" th:value="${weight.name}" th:text="${weight.displayName}"></option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
             <label>Рівень обсмаження:</label>
             <div class="enum-group">
                 <select th:field="*{roastLevel}" required>

@@ -1,423 +1,605 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IJO Coffee | Каталог</title>
+
     <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
-    >
-    <title>Coffee Shop</title>
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 
     <style>
+        :root {
+            --espresso: #2e2a28;
+            --cream: #fdfcf0;
+            --gold: #d1b894;
+            --dark-gold: #b08d5b;
+            --white: #ffffff;
+            --accent-red: #e63946;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Montserrat', sans-serif;
+            background: var(--cream);
+            color: var(--espresso);
             margin: 0;
-            padding: 0;
-            background: #e7e1e1;
+            padding-bottom: 120px;
         }
 
-        .container {
-            max-width: 1200px;
-    
-            padding: 10px;
+        /* --- НАВБАР --- */
+        .navbar {
+            background: var(--espresso) !important;
+            padding: 0.8rem 2rem;
+            border-bottom: 2px solid var(--gold);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
-        .filter-form select {
-            padding: 5px;
-            margin-right: 8px;
-            margin-bottom: 10px;
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: var(--gold) !important;
+            letter-spacing: 1px;
         }
 
-        .filter-form button {
-            padding: 6px 12px;
-            background: #3e2723;
-            color: rgb(154, 135, 135);
+        .nav-link {
+            color: var(--white) !important;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            margin: 0 10px;
+            transition: 0.3s;
+        }
+
+        .nav-link:hover {
+            color: var(--gold) !important;
+        }
+
+        .search-input {
             border: none;
-            cursor: pointer;
-            border-radius: 4px;
+            border-bottom: 1px solid var(--dark-gold);
+            background: transparent !important;
+            color: var(--white) !important;
+            font-size: 0.85rem;
+            width: 140px;
         }
 
-        .filter-form button:hover {
-            background: #5d4037;
+        .cart-wrapper {
+            position: relative;
+            margin-left: 25px;
+            text-decoration: none !important;
         }
 
-        .coffee-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 30px;
+        .cart-icon {
+            color: var(--gold);
+            font-size: 1.3rem;
         }
 
-        .coffee-card {
-            background: rgb(245, 232, 232);
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
-            transition: 0.25s;
-            border: 1px solid #eee;
+
+
+        /* --- ФІЛЬТРИ --- */
+        .dropdown-menu {
+            border-radius: 0;
+            border: 1px solid var(--gold);
+            min-width: 340px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
         }
 
-        .coffee-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.12);
+        .filter-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--dark-gold);
+            text-transform: uppercase;
+            margin-bottom: 2px;
+            display: block;
         }
 
-        .coffee-card img {
+        .form-select-custom {
+            border-radius: 0;
+            border: 1px solid #ddd;
+            font-size: 0.8rem;
             width: 100%;
-            height: 220px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 10px;
+            padding: 6px;
+            margin-bottom: 12px;
         }
 
-        .name {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 8px;
-            height: 40px;
+        /* --- КАРТКИ --- */
+        .card {
+            background: var(--white);
+            border: none;
+            border-radius: 0;
+            transition: 0.4s ease;
         }
 
-        .attribute {
-            font-size: 14px;
-            color: #333;
-            margin: 3px 0;
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
         }
 
-        .label {
-            font-weight: bold;
-            color: #5d4037;
-        }
-
-        .price {
-            margin-top: 12px;
-            font-size: 18px;
-            font-weight: bold;
-            color: #3e2723;
-        }
-
-        .btn {
-            display: inline-block;
-            margin-top: 12px;
-            padding: 8px 14px;
-            background: #3e2723;
-            color: white;
-            text-decoration: none;
+        .card-img-container {
+            background: #fcfcfc;
+            padding: 20px;
             text-align: center;
-            border-radius: 5px;
-            font-size: 14px;
         }
 
-        .btn:hover {
-            background: #5d4037;
+        .card-img-top {
+            max-height: 180px;
+            width: auto;
+            object-fit: contain;
         }
 
-        .pagination {
-            text-align: center;
-            margin-top: 20px;
+        /* --- ХАРАКТЕРИСТИКИ --- */
+        .composition-tag {
+            color: var(--dark-gold);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: block;
+            margin-bottom: 15px;
+            min-height: 34px;
+            /* Для вирівнювання */
         }
 
+        .bean-rating {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            margin-bottom: 5px;
+        }
+
+        .bean-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            color: var(--espresso);
+            min-width: 100px;
+            text-align: right;
+            margin-right: 8px;
+            font-weight: 600;
+            opacity: 0.8;
+        }
+
+        .bean-icon {
+            font-size: 0.7rem;
+            color: var(--gold);
+        }
+
+        .bean-icon.inactive {
+            color: #e0e0e0;
+            opacity: 0.5;
+        }
+
+        .btn-coffee {
+            background: var(--espresso);
+            color: var(--gold);
+            border-radius: 0;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            padding: 12px;
+            transition: 0.3s;
+            border: 1px solid var(--espresso);
+            font-weight: 600;
+        }
+
+        .btn-coffee:hover {
+            background: var(--gold);
+            color: var(--espresso);
+            border-color: var(--gold);
+        }
+
+        /* ПАГІНАЦІЯ */
         .pagination a {
-            padding: 6px 10px;
-            margin: 0 3px;
+            color: var(--espresso);
+            border: 1px solid var(--gold);
+            padding: 8px 16px;
+            margin: 0 4px;
+            transition: 0.3s;
             text-decoration: none;
-            color: #3e2723;
-            border: 1px solid #ccc;
-            border-radius: 4px;
         }
 
         .pagination a.active {
-            background: #3e2723;
-            color: white;
+            background: var(--espresso);
+            color: var(--gold);
         }
 
         footer {
-            text-align: center;
-            padding: 20px;
-            margin-top: 40px;
-            background: #2e2a28;
-            color: white;
+            background: var(--espresso);
+            color: var(--gold);
+            border-top: 2px solid var(--gold);
+            padding: 1.5rem 0;
+            margin-top: 50px;
         }
-        /* =======================================================
-   КОРИСТУВАЦЬКІ БЕЖЕВІ СТИЛІ (Beige Accent)
-   ======================================================= */
 
-/* =======================================================
-   КОРИСТУВАЦЬКІ БЕЖЕВІ СТИЛІ (Beige Accent)
-   ======================================================= */
-
-/* 1. Колір бейджа та фону */
-.bg-beige-accent {
-    --bs-bg-opacity: 1;
-    background-color: #D2B48C !important; 
-    color: #333333 !important; 
+        /* Стиль для всієї назви */
+        .card-title-main {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.15rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            /* Відступ між назвою та вагою */
+            flex-wrap: wrap;
+            /* Щоб на мобільних назва не ламалася */
+        }
+        /* Прибираємо стандартне підкреслення посилань */
+.coffee-card-link {
+    text-decoration: none !important;
+    color: inherit !important;
+    display: block;
 }
 
-/* 2. Колір тексту (для ціни) */
-.text-beige-accent {
-    color: #D2B48C !important;
+/* Новий ефект для картки */
+.coffee-card-link:hover .card {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(46, 42, 40, 0.15);
+    border-color: var(--gold);
 }
 
-/* 3. Стиль кнопки "Детальніше" (btn-beige-accent) */
-.btn-beige-accent {
-    /* Наслідуємо основні стилі Bootstrap для функціональності кнопки */
-    display: inline-block;
-    font-weight: 400;
-    line-height: 1.5;
-    text-align: center;
-    text-decoration: none;
-    vertical-align: middle;
-    cursor: pointer;
-    user-select: none;
-    border: 1px solid transparent;
-    padding: 0.375rem 0.75rem;
-    font-size: 1rem;
-    border-radius: 0.25rem;
-    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-
-    /* Наші бежеві кольори */
-    --bs-btn-color: #ede4e4; /* Колір тексту на кнопці */
-    --bs-btn-bg: #846439;
-    --bs-btn-border-color: #0a0601;
-
-    /* Стиль при наведенні (Hover state) */
-    --bs-btn-hover-color: #ffffff; 
-    --bs-btn-hover-bg: #C19A6B; 
-    --bs-btn-hover-border-color: #C19A6B;
-    
-    /* Стиль при активному стані (Active state) */
-    --bs-btn-active-color: #ffffff;
-    --bs-btn-active-bg: #AF875E;
-    --bs-btn-active-border-color: #AF875E;
+.coffee-card-link:hover .brand-label {
+    color: var(--dark-gold);
 }
 
-/* Застосовуємо наші кольори */
-.btn-beige-accent {
-    color: var(--bs-btn-color);
-    background-color: var(--bs-btn-bg);
-    border-color: var(--bs-btn-border-color);
-}
-.btn-beige-accent:hover {
-    color: var(--bs-btn-hover-color);
-    background-color: var(--bs-btn-hover-bg);
-    border-color: var(--bs-btn-hover-border-color);
-}
-.btn-beige-accent:active {
-    color: var(--bs-btn-active-color);
-    background-color: var(--bs-btn-active-bg);
-    border-color: var(--bs-btn-active-border-color);
-}
+        /* Стиль для ваги */
+        .weight-badge {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: var(--dark-gold);
+            border: 1px solid var(--gold);
+            padding: 1px 6px;
+            letter-spacing: 0.5px;
+            display: inline-block;
+        }
+
+        /* Кнопка виклику ШІ */
+        /* Дизайн AI Сомельє */
+        .ai-assistant-btn {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            background: var(--espresso);
+            color: var(--gold);
+            border: 2px solid var(--gold);
+            border-radius: 50px;
+            padding: 12px 25px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .ai-assistant-btn:hover {
+            background: var(--gold);
+            color: var(--espresso);
+            transform: scale(1.05);
+        }
+
+        .ai-modal-content {
+            background: var(--cream);
+            border: 2px solid var(--gold);
+            border-radius: 0;
+            min-height: 400px;
+        }
+
+        .ai-step {
+            display: none;
+        }
+
+        .ai-step.active {
+            display: block;
+        }
+
+        .option-card {
+            border: 1px solid var(--gold);
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 5px;
+        }
+
+        .option-card:hover {
+            background: var(--espresso);
+            color: var(--gold);
+            transform: translateY(-2px);
+        }
+
+        .option-card i {
+            font-size: 1.5rem;
+            color: var(--dark-gold);
+        }
+
+        .btn-coffee-outline {
+            border: 1px solid var(--espresso);
+            color: var(--espresso);
+            transition: 0.3s;
+        }
+
+        .btn-coffee-outline:hover {
+            background: var(--espresso);
+            color: var(--gold);
+        }
+
+        footer {
+            background: var(--espresso);
+            color: var(--gold);
+            border-top: 2px solid var(--gold);
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            padding: 15px 0;
+            z-index: 1000;
+        }
     </style>
 </head>
 
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
-        <div class="container">
-            
-            <a class="navbar-brand" th:href="@{/coffee}">
-                ☕ IJO Coffee
-            </a>
-            
-            <button class="navbar-toggler" type="button" 
-                    data-toggle="collapse" data-target="#navbarsExample07" 
-                    aria-controls="navbarsExample07" aria-expanded="false" 
-                    aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-      
-            <div class="collapse navbar-collapse" id="navbarsExample07">
-                
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#">Історія <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#">Про нас <span class="sr-only">(current)</span></a>
-                    </li>
-                    
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" 
-                           href="#" 
-                           id="dropdownFilter" 
-                           data-toggle="dropdown" 
-                           aria-haspopup="true" 
-                           aria-expanded="false">
-                            ⚙️ Фільтри та Сортування
-                        </a>
-                        
-                        <form class="dropdown-menu p-3" 
-                              aria-labelledby="dropdownFilter" 
-                              th:action="@{/coffee/filter}" 
-                              method="get" 
-                              style="min-width: 250px;">
-                            
-                            <div class="mb-3">
-                                <select name="brandId" class="form-select form-select-sm">
-                                    <option value="">Всі бренди</option>
-                                    <option th:each="brand : ${brands}"
-                                            th:value="${brand.id}"
-                                            th:text="${brand.name}"
-                                            th:selected="${brand.id == brandId}">
-                                    </option>
-                                </select>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <select name="intensity" class="form-select form-select-sm">
-                                    <option value="">Інтенсивність</option>
-                                    <option th:each="i : ${intensities}"
-                                            th:value="${i}"
-                                            th:text="${i.displayName}"
-                                            th:selected="${i == intensity}">
-                                    </option>
-                                </select>
-                            </div>
-    
-                            <div class="mb-3">
-                                <select name="roast" class="form-select form-select-sm">
-                                    <option value="">Обжарка</option>
-                                    <option th:each="r : ${roastLevels}"
-                                            th:value="${r}"
-                                            th:text="${r.displayName}"
-                                            th:selected="${r == roast}">
-                                    </option>
-                                </select>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <select name="bitterness" class="form-select form-select-sm">
-                                    <option value="">Гіркота</option>
-                                    <option th:each="b : ${bitternessLevels}"
-                                            th:value="${b}"
-                                            th:text="${b.displayName}"
-                                            th:selected="${b == bitterness}">
-                                    </option>
-                                </select>
-                            </div>
-    
-                            <div class="mb-3">
-                                <select name="composition" class="form-select form-select-sm">
-                                    <option value="">Склад</option>
-                                    <option th:each="c : ${compositions}"
-                                            th:value="${c}"
-                                            th:text="${c.displayName}"
-                                            th:selected="${c == composition}">
-                                    </option>
-                                </select>
-                            </div>
-    
-                            <div class="mb-3">
-                                <select name="sort" class="form-select form-select-sm">
-                                    <option value="">Сортування</option>
-                                    <option value="priceAsc"  th:selected="${sort == 'priceAsc'}">Ціна ↑</option>
-                                    <option value="priceDesc" th:selected="${sort == 'priceDesc'}">Ціна ↓</option>
-                                    <option value="nameAsc"   th:selected="${sort == 'nameAsc'}">Назва A–Z</option>
-                                </select>
-                            </div>
-    
-                            <button type="submit" class="btn btn-sm btn-primary w-100 mt-2">
-                                Застосувати Фільтри
-                            </button>
-                        </form>
-                    </li>
-                    </ul>
-                
-                <form class="form-inline my-2 my-md-0 d-flex" th:action="@{/coffee/search}" method="get">
-                  <input class="form-control mr-sm-2" type="text" name="query" placeholder="Пошук..." aria-label="Search">
-                </form>
-                
-              </div>
-            </div>
-          </nav>
+    <div th:replace="~{fragments/clientnavbar :: navbar}"></div>
 
-<div class="container">
-    
-    <!-- ============ КАРТКИ ТОВАРІВ ============ -->
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-4 col-md-6 mb-5" th:each="coffee : ${coffeeList}">
+                <a th:href="@{'/coffee/' + ${coffee.id}}" class="coffee-card-link">
+                <div class="card h-100 text-center">
+                    <div class="card-img-container">
+                        <img th:src="@{'/images/' + ${coffee.photoPath}}" class="card-img-top" alt="Coffee">
+                    </div>
 
-        <div class="col" th:each="coffee : ${coffeeList}">
-            
-            <div class="card h-100 shadow-sm">
-                
-                <div class="p-3">
-                    <img th:src="@{'/images/' + ${coffee.photoPath}}" 
-                         class="card-img-top img-fluid rounded" 
-                         alt="Coffee Photo" 
-                         style="max-height: 200px; object-fit: contain;">
-                </div>
-    
-                <div class="card-body d-flex flex-column">
-                    
-                    <h5 class="card-title mb-1 text-center" th:text="${coffee.name}">Назва продукту</h5>
-                    <h6 class="card-subtitle mb-3 text-muted text-center" th:text="${coffee.brand.name}">Бренд</h6>
-                    
-                    <ul class="list-group list-group-flush mb-3">
-                        
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span class="text-muted">Інтенсивність:</span>
-                            <span class="badge bg-beige-accent rounded-pill" th:text="${coffee.intensity.displayName}"></span>
-                        </li>
-    
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span class="text-muted">Обжарка:</span>
-                            <span class="badge bg-beige-accent rounded-pill" th:text="${coffee.roastLevel.displayName}"></span>
-                        </li>
-    
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span class="text-muted">Гіркота:</span>
-                            <span class="badge bg-beige-accent rounded-pill" th:text="${coffee.bitterness.displayName}"></span>
-                        </li>
-    
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span class="text-muted">Склад:</span>
-                            <span class="badge bg-beige-accent rounded-pill" th:text="${coffee.composition.displayName}"></span>
-                        </li>
-                    </ul>
-    
-                    <div class="mt-auto pt-2 text-center">
-                        <h4 class="text-beige-accent fw-bold">
-                            <span th:text="'₴ ' + ${#numbers.formatDecimal(coffee.price, 0, 'POINT', 2, 'COMMA')}">₴ 450.00</span>
-                        </h4>
+                    <div class="card-body d-flex flex-column">
+                        <h6 class="text-muted small text-uppercase mb-1" th:text="${coffee.brand?.name}">BRAND</h6>
+                        <h5 class="card-title-main mb-3">
+                            <span th:text="${coffee.name}">Coffee Name</span>
+                            <span class="weight-badge" th:text="${coffee.weight?.displayName}">250г</span>
+                        </h5>
+                        <span class="composition-tag" th:text="${coffee.composition?.displayName}">100% Arabica</span>
+
+                        <div class="mb-4">
+
+                            <div class="bean-rating">
+                                <span class="bean-label">Кислотність</span>
+                                <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                                    <i class="fas fa-seedling bean-icon"
+                                       th:classappend="${i <= (coffee.acidity?.ordinal() + 1)} ? '' : 'inactive'"></i>
+                                </th:block>
+                            </div>
+
+                            <div class="bean-rating">
+                                <span class="bean-label">Інтенсивність</span>
+                                <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                                    <i class="fas fa-seedling bean-icon"
+                                       th:classappend="${i <= (coffee.intensity?.ordinal() + 1)} ? '' : 'inactive'"></i>
+                                </th:block>
+                            </div>
+
+                            <div class="bean-rating">
+                                <span class="bean-label">Обжарка</span>
+                                <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                                    <i class="fas fa-seedling bean-icon"
+                                       th:classappend="${i <= (coffee.roastLevel?.ordinal() + 1)} ? '' : 'inactive'"></i>
+                                </th:block>
+                            </div>
+
+                            <div class="bean-rating">
+                                <span class="bean-label">Гіркота</span>
+                                <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                                    <i class="fas fa-seedling bean-icon"
+                                       th:classappend="${i <= (coffee.bitterness?.ordinal() + 1)} ? '' : 'inactive'"></i>
+                                </th:block>
+                            </div>
+                        </div>
+
+                        <div class="mt-auto">
+                            <h4 class="font-weight-bold mb-3">
+                                ₴ <span
+                                    th:text="${#numbers.formatDecimal(coffee.price, 0, 'POINT', 0, 'COMMA')}">450</span>
+                            </h4>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="card-footer bg-white border-0 pt-0 pb-3 px-3">
-                    <a class="btn btn-beige-accent w-100" th:href="@{'/coffee/' + ${coffee.id}}">
-                        Детальніше
-                    </a>
-                </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="row mt-5" th:if="${totalPages != null && totalPages > 1}">
+            <div class="col-12 d-flex justify-content-center pagination">
+                <a th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                   th:href="@{/coffee/filter(page=${i}, brandId=${brandId}, intensity=${intensity}, roast=${roast}, composition=${composition}, sort=${sort})}"
+                   th:text="${i + 1}" th:classappend="${i == currentPage} ? 'active' : ''"></a>
             </div>
         </div>
     </div>
 
-    <!-- ============ ПАГІНАЦІЯ ============ -->
-    <div class="pagination" th:if="${totalPages > 1}">
-        <a th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
-           th:href="@{/coffee/filter(
-               page=${i},
-               brandId=${brandId},
-               intensity=${intensity},
-               roast=${roast},
-               bitterness=${bitterness},
-               composition=${composition},
-               sort=${sort}
-           )}"
-           th:text="${i + 1}"
-           th:classappend="${i == currentPage} ? 'active' : ''">
-        </a>
+
+    <div class="ai-assistant-btn" onclick="$('#aiModal').modal('show')">
+        <i class="fas fa-robot mr-2"></i> AI Сомельє
     </div>
 
-</div>
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <div class="modal fade" id="aiModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content ai-modal-content">
+                <div class="modal-header border-0">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
 
-<!-- Popper.js -->
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+                <div class="modal-body p-4">
+                    <div id="progressContainer" class="progress mb-4" style="height: 6px; display: none;">
+                        <div id="aiProgress" class="progress-bar bg-warning" style="width: 0%"></div>
+                    </div>
 
-<!-- Bootstrap 4 JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+                    <div class="ai-step active" id="step0">
+                        <div class="text-center py-4">
+                            <i class="fas fa-robot mb-3" style="font-size: 3.5rem; color: var(--gold);"></i>
+                            <h3 style="font-family: 'Playfair Display';">Вітаю! Я IJO-сомельє</h3>
+                            <p class="text-muted px-3">Давайте підберемо зерно, яке зробить твій ранок особливим. Я
+                                поставлю декілька запитань, щоб знайти ваш ідеал.</p>
+                            <button type="button" class="btn btn-coffee px-5 mt-4" onclick="goToStep(1)">
+                                Почати підбір
+                            </button>
+                        </div>
+                    </div>
 
-<footer>
-    © 2025 Coffee Shop — Власний магазин кави
-</footer>
+                    <div class="ai-step" id="step1">
+                        <h5 class="text-center mb-4 font-weight-bold">1. Як ви готуєте свою каву?</h5>
+                        <div class="option-card" onclick="saveStep(1, 'machine')">
+                            <i class="fas fa-plug mr-3"></i> <b>Кавомашина / Гейзер</b>
+                        </div>
+                        <div class="option-card" onclick="saveStep(1, 'manual')">
+                            <i class="fas fa-fire-alt mr-3"></i> <b>Турка / Чашка / Фільтр</b>
+                        </div>
+                    </div>
 
+                    <div class="ai-step" id="step2">
+                        <h5 class="text-center mb-4 font-weight-bold">2. Додаєте молоко чи п'єте чорну?</h5>
+                        <div class="option-card" onclick="saveStep(2, 'black')">
+                            <i class="fas fa-coffee mr-3"></i> <b>Тільки чорна (чистий смак)</b>
+                        </div>
+                        <div class="option-card" onclick="saveStep(2, 'milk')">
+                            <i class="fas fa-cheese mr-3"></i> <b>З молоком (Latte/Cappuccino)</b>
+                        </div>
+                    </div>
+
+                    <div class="ai-step" id="step3">
+                        <h5 class="text-center mb-4 font-weight-bold">3. Який післясмак ви шукаєте?</h5>
+                        <div class="option-card" onclick="saveStep(3, 'classic')">
+                            <i class="fas fa-cookie mr-3"></i> <b>Горіхово-шоколадна класика</b>
+                        </div>
+                        <div class="option-card" onclick="saveStep(3, 'exotic')">
+                            <i class="fas fa-lemon mr-3"></i> <b>Ягідно-фруктова екзотика</b>
+                        </div>
+                    </div>
+
+                    <div class="ai-step" id="step4">
+                        <h5 class="text-center mb-4 font-weight-bold">4. Наскільки сильною має бути "іскра"?</h5>
+                        <div class="option-card" onclick="finishSelection('STRONG')">
+                            <i class="fas fa-bolt mr-3"></i> <b>Максимальна бадьорість</b>
+                        </div>
+                        <div class="option-card" onclick="finishSelection('SOFT')">
+                            <i class="fas fa-leaf mr-3"></i> <b>М'який ароматний ритуал</b>
+                        </div>
+                    </div>
+
+                    <div id="aiNavigation" class="d-flex justify-content-between mt-4 border-top pt-3"
+                        style="display: none;">
+                        <button type="button" class="btn btn-sm text-muted" onclick="restartAI()">
+                            <i class="fas fa-undo"></i> Спочатку
+                        </button>
+                        <button id="prevBtn" type="button" class="btn btn-sm btn-coffee-outline" onclick="prevStep()">
+                            <i class="fas fa-arrow-left"></i> Назад
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="container-fluid text-center">
+            <small>© 2026 IJO Coffee — Тільки преміальні сорти</small>
+        </div>
+    </footer>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+    <script th:inline="javascript">
+        let currentStep = 0;
+        let historySteps = [];
+        let aiPrefs = {
+            intensity: '', roast: '', composition: '',
+            bitterness: '', acidity: '', sort: 'priceDesc'
+        };
+
+        function goToStep(step) {
+            currentStep = step;
+            $('.ai-step').hide().removeClass('active');
+            $('#step' + step).fadeIn(300).addClass('active');
+
+            if (step === 0) {
+                $('#progressContainer').hide();
+                $('#aiNavigation').hide();
+            } else {
+                $('#progressContainer').show();
+                $('#aiNavigation').css('display', 'flex');
+                $('#aiProgress').css('width', (step * 25) + '%');
+
+                // Ховаємо "Назад" тільки на першому питанні
+                if (step === 1) $('#prevBtn').css('visibility', 'hidden');
+                else $('#prevBtn').css('visibility', 'visible');
+            }
+        }
+
+        function saveStep(step, value) {
+            // Зберігаємо копію поточних налаштувань перед зміною
+            historySteps[step] = JSON.parse(JSON.stringify(aiPrefs));
+
+            if (step === 1) {
+                aiPrefs.roast = (value === 'machine') ? 'DARK' : 'LIGHT';
+            } else if (step === 2) {
+                if (value === 'milk') {
+                    aiPrefs.composition = 'MIX_70_30';
+                    aiPrefs.bitterness = 'HIGH';
+                } else {
+                    aiPrefs.composition = 'ARABICA_100';
+                }
+            } else if (step === 3) {
+                if (value === 'classic') {
+                    aiPrefs.acidity = 'LOW';
+                    aiPrefs.bitterness = 'MEDIUM';
+                } else {
+                    aiPrefs.acidity = 'HIGH';
+                    aiPrefs.bitterness = 'LOW';
+                }
+            }
+            goToStep(step + 1);
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                aiPrefs = historySteps[currentStep - 1];
+                goToStep(currentStep - 1);
+            }
+        }
+
+        function restartAI() {
+            aiPrefs = { intensity: '', roast: '', composition: '', bitterness: '', acidity: '', sort: 'priceDesc' };
+            historySteps = [];
+            goToStep(0);
+        }
+
+        function finishSelection(intensityValue) {
+            aiPrefs.intensity = intensityValue;
+
+            // Візуалізація аналізу
+            $('.ai-modal-content').html(`
+            <div class="text-center p-5">
+                <div class="spinner-grow text-warning mb-4" role="status" style="width: 3rem; height: 3rem;"></div>
+                <h4 style="font-family: 'Playfair Display'">IJO AI аналізує ваші смаки...</h4>
+                <p class="text-muted">Шукаю найкраще зерно в нашій колекції</p>
+            </div>
+        `);
+
+            const baseUrl = [[@{/coffee/filter}]];
+        const params = new URLSearchParams();
+
+        // Додаємо тільки заповнені параметри
+        Object.keys(aiPrefs).forEach(key => {
+            if (aiPrefs[key]) params.append(key, aiPrefs[key]);
+        });
+
+        setTimeout(() => {
+            window.location.href = baseUrl + '?' + params.toString();
+        }, 2000);
+    }
+    </script>
 </body>
+
 </html>

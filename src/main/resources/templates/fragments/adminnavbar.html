@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" th:href="@{/admin}">
+        ☕ IJO Coffee | Адмін
+    </a>
+
+    <button class="navbar-toggler" type="button"
+            data-toggle="collapse"
+            data-target="#adminNavbar"
+            aria-controls="adminNavbar"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="adminNavbar">
+        <ul class="navbar-nav mr-auto">
+
+            <!-- Головна -->
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/coffee}">
+                    Каталог
+                </a>
+            </li>
+
+            <!-- Товари -->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle"
+                   href="#"
+                   id="coffeeDropdown"
+                   role="button"
+                   data-toggle="dropdown"
+                   aria-haspopup="true"
+                   aria-expanded="false">
+                    Товари
+                </a>
+                <div class="dropdown-menu" aria-labelledby="coffeeDropdown">
+                    <a class="dropdown-item" th:href="@{/admin/coffee/add}">
+                        ➕ Створення товару
+                    </a>
+                    <a class="dropdown-item" th:href="@{/admin/coffee}">
+                        📋 Перегляд товарів
+                    </a>
+                </div>
+            </li>
+
+            <!-- Бренди -->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle"
+                   href="#"
+                   id="brandDropdown"
+                   role="button"
+                   data-toggle="dropdown">
+                    Бренди
+                </a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" th:href="@{/admin/coffee/add-brand}">
+                        ➕ Створення бренду
+                    </a>
+                    <a class="dropdown-item" th:href="@{/admin/coffee/brands}">
+                        📋 Перегляд брендів
+                    </a>
+                </div>
+            </li>
+
+            <!-- Країни -->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle"
+                   href="#"
+                   id="countryDropdown"
+                   role="button"
+                   data-toggle="dropdown">
+                    Країни
+                </a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" th:href="@{/admin/coffee/add-country}">
+                        ➕ Створення країни
+                    </a>
+                    <a class="dropdown-item" th:href="@{/admin/countries}">
+                        📋 Перегляд країн
+                    </a>
+                </div>
+            </li>
+
+            <!-- Замовлення -->
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/admin/orders}">
+                    📦 Перегляд замовлень
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+</body>
+</html>

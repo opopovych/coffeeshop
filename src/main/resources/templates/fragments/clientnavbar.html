@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+
+    <nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" th:href="@{/}">
+                <i class="fas fa-seedling mr-2"></i> IJO COFFEE
+            </a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link" href="/history">Історія</a></li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdownFilter" data-toggle="dropdown">⚙️
+                            Фільтри</a>
+                        <form class="dropdown-menu p-4" th:action="@{/coffee/filter}" method="get">
+
+                            <label class="filter-label">Бренд</label>
+                            <select name="brandId" class="form-select-custom">
+                                <option value="">Всі бренди</option>
+                                <option th:each="brand : ${brands}" th:value="${brand.id}" th:text="${brand.name}"
+                                    th:selected="${brand.id == brandId}"></option>
+                            </select>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <label class="filter-label">Інтенсивність</label>
+                                    <select name="intensity" class="form-select-custom">
+                                        <option value="">Всі</option>
+                                        <option th:each="i : ${intensities}" th:value="${i}" th:text="${i.displayName}"
+                                            th:selected="${i == intensity}"></option>
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <label class="filter-label">Обжарка</label>
+                                    <select name="roast" class="form-select-custom">
+                                        <option value="">Всі</option>
+                                        <option th:each="r : ${roastLevels}" th:value="${r}" th:text="${r.displayName}"
+                                            th:selected="${r == roast}"></option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <label class="filter-label">Склад</label>
+                            <select name="composition" class="form-select-custom">
+                                <option value="">Всі варіанти</option>
+                                <option th:each="c : ${compositions}" th:value="${c}" th:text="${c.displayName}"
+                                    th:selected="${c == composition}"></option>
+                            </select>
+
+                            <label class="filter-label">Сортування</label>
+                            <select name="sort" class="form-select-custom">
+                                <option value="">Стандартно</option>
+                                <option value="priceAsc" th:selected="${sort == 'priceAsc'}">Дешевші спочатку</option>
+                                <option value="priceDesc" th:selected="${sort == 'priceDesc'}">Дорожчі спочатку</option>
+                                <option value="nameAsc" th:selected="${sort == 'nameAsc'}">Назва A-Z</option>
+                            </select>
+
+                            <button type="submit" class="btn btn-coffee btn-block mt-2">Застосувати</button>
+                            <a th:href="@{/coffee}" class="btn btn-link btn-sm btn-block text-muted mt-1">Скинути</a>
+                        </form>
+                    </li>
+
+                </ul>
+
+                <div class="d-flex align-items-center">
+                    <form class="form-inline d-none d-md-flex" th:action="@{/coffee/search}" method="get">
+                        <input class="form-control search-input" type="text" name="query" placeholder="Пошук...">
+                    </form>
+                    <a th:href="@{/cart/view}" class="cart-wrapper">
+                        <i class="fas fa-shopping-basket cart-icon"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+</body>
+</html>

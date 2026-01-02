@@ -17,7 +17,7 @@
 
 <h2>➕ Додати Новий Бренд Кави</h2>
 
-<form th:action="@{/admin/coffee/add-brand}" th:object="${brand}" method="post">
+<form th:action="@{/admin/coffee/add-brand}" th:object="${brand}" method="post" enctype="multipart/form-data">
 
     <div class="form-group">
         <label for="name">Назва Бренду:</label>
@@ -27,6 +27,10 @@
     <div class="form-group">
         <label for="history">Історія/Опис:</label>
         <textarea id="history" th:field="*{history}" rows="6"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="logo">Фото Продукту:</label>
+        <input type="file" id="logo" name="logo" accept="image/*" required>
     </div>
 
     <button type="submit">Зберегти Бренд</button>

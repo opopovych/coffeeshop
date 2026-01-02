@@ -1,7 +1,10 @@
 package com.example.coffeeshop.model;
 
+import lombok.Getter;
+
+@Getter
 public enum Status {
-    WHAITING("Очікує"),
+    WAITING("Очікує"),
     AT_WORK("В роботі"),
     DONE("Виконано");
 
@@ -11,7 +14,4 @@ public enum Status {
         this.displayName = displayName;
     }
 
-    public String getDisplayName() {
-        return displayName;
-    }
 }

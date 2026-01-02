@@ -2,158 +2,292 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${coffee.brand.name} + ' ' + ${coffee.name}">Coffee Details</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 
     <style>
+        :root {
+            --espresso: #2e2a28;
+            --cream: #fdfcf0;
+            --gold: #d1b894;
+            --dark-gold: #b08d5b;
+            --white: #ffffff;
+            --accent-red: #e63946;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Montserrat', sans-serif;
+            background: var(--cream);
+            color: var(--espresso);
             margin: 0;
-            padding: 0;
-            background: #fafafa;
-            color: #333;
+            padding-bottom: 120px;
         }
 
-        header {
-            background: #2e2a28;
-            color: white;
-            padding: 18px;
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-            letter-spacing: 1px;
+        /* --- НАВБАР --- */
+        .navbar {
+            background: var(--espresso) !important;
+            padding: 0.8rem 2rem;
+            border-bottom: 2px solid var(--gold);
         }
 
-        .container {
-            max-width: 1000px;
-            margin: 30px auto;
-            padding: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 40px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            color: var(--gold) !important;
+            font-size: 1.5rem;
         }
 
-        .coffee-image {
-            flex: 1 1 400px;
-            max-width: 400px;
+        /* --- КОНТЕЙНЕР --- */
+        .details-container {
+            background: var(--white);
+            margin-top: 50px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
 
-        .coffee-image img {
+        .product-image img {
             width: 100%;
-            border-radius: 10px;
-            object-fit: cover;
+            max-height: 500px;
+            object-fit: contain;
+            background: #fcfcfc;
+            padding: 20px;
         }
 
-        .coffee-info {
-            flex: 1 1 400px;
+        .product-info h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
         }
 
-        .coffee-info h1 {
-            font-size: 28px;
-            margin-bottom: 15px;
-            color: #3e2723;
+        .brand-name {
+            color: var(--dark-gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            font-size: 0.9rem;
         }
 
-        .attribute {
-            font-size: 16px;
-            margin: 8px 0;
+        /* Склад під назвою */
+        .composition-header {
+            font-size: 1.1rem;
+            color: var(--dark-gold);
+            margin-bottom: 25px;
+            font-weight: 400;
+            font-style: italic;
         }
 
-        .attribute .label {
-            font-weight: bold;
-            color: #5d4037;
+        /* --- ЗЕРНЯТКА (ПЕЛЮСТКИ) --- */
+        .bean-group {
+            margin: 20px 0;
+            padding: 20px 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
         }
 
-        .price {
-            font-size: 22px;
-            font-weight: bold;
-            color: #3e2723;
-            margin-top: 20px;
+        .bean-rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
         }
 
-        .btn {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 18px;
-            background: #3e2723;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            font-size: 16px;
+        .bean-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--espresso);
+            width: 130px;
         }
 
-        .btn:hover {
-            background: #5d4037;
+        .bean-icon { 
+            font-size: 0.85rem; 
+            color: var(--gold); 
+            margin-right: 5px;
+            transform: rotate(-15deg);
+        }
+        .bean-icon.inactive { color: #e0e0e0; opacity: 0.4; }
+
+        /* --- ІНША ІНФО --- */
+        .info-row {
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+        .info-label {
+            font-weight: 700;
+            color: var(--espresso);
+            margin-right: 8px;
         }
 
-        @media (max-width: 800px) {
-            .container {
-                flex-direction: column;
-                align-items: center;
-            }
-            .coffee-info, .coffee-image {
-                max-width: 100%;
-            }
+        .price-tag {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 25px 0;
+        }
+
+        .quantity-input {
+            width: 70px;
+            height: 48px;
+            border: 1px solid var(--gold);
+            text-align: center;
+            margin-right: 15px;
+            border-radius: 0;
+        }
+
+        .btn-add-cart {
+            background: var(--espresso);
+            color: var(--gold);
+            border: none;
+            padding: 12px 35px;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border-radius: 0;
+            transition: 0.3s;
+        }
+
+        .btn-add-cart:hover {
+            background: var(--gold);
+            color: var(--espresso);
+        }
+
+        .description-text {
+            margin-top: 30px;
+            color: #555;
+            line-height: 1.7;
+            border-left: 3px solid var(--gold);
+            padding-left: 20px;
+        }
+/* Робимо стрілочки видимими в Chrome, Safari, Edge та Opera */
+.quantity-input::-webkit-outer-spin-button,
+.quantity-input::-webkit-inner-spin-button {
+    opacity: 1 !important;
+    display: block !important;
+}
+
+/* Для Firefox */
+.quantity-input {
+    -moz-appearance: textfield !important;
+    appearance: auto !important; /* Дозволяє браузеру показати стандартні елементи */
+}
+
+/* Додатково стилізуємо саме поле, щоб воно виглядало вишукано */
+.quantity-input {
+    width: 80px;
+    height: 50px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 0; /* Прямі кути для преміальності */
+    margin-right: 10px;
+    background: transparent;
+}
+        footer {
+            background: var(--espresso);
+            color: var(--gold);
+            border-top: 2px solid var(--gold);
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            padding: 15px 0;
+            z-index: 1000;
         }
     </style>
 </head>
 
 <body>
 
-<header>
-    Coffee Shop — Деталі кави
-</header>
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/coffee}">
+                <i class="fas fa-seedling mr-2"></i> IJO COFFEE
+            </a>
+            <div class="ml-auto">
+                <a th:href="@{/coffee}" class="text-white small text-uppercase" style="letter-spacing: 1px;">← Назад</a>
+            </div>
+        </div>
+    </nav>
 
-<div class="container">
+    <div class="container details-container">
+        <div class="row">
+            <div class="col-md-6 mb-4 mb-md-0">
+                <div class="product-image">
+                    <img th:src="@{'/images/' + ${coffee.photoPath}}" alt="Coffee Photo"/>
+                </div>
+            </div>
 
-    <!-- Фото кави -->
-    <div class="coffee-image">
-        <img th:src="@{'/images/' + ${coffee.photoPath}}" alt="Coffee Photo"/>
+            <div class="col-md-6 product-info">
+                <span class="brand-name" th:text="${coffee.brand.name}">BRAND</span>
+                <h1 th:text="${coffee.name}">Coffee Name</h1>
+                
+                <div class="composition-header" th:text="${coffee.composition.getDisplayName()}">
+                    100% Arabica
+                </div>
+                
+                <div class="bean-group">
+                    <div class="bean-rating">
+                        <span class="bean-label">Інтенсивність</span>
+                        <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                            <i class="fas fa-seedling bean-icon" th:classappend="${i <= (coffee.intensity?.ordinal() + 1)} ? '' : 'inactive'"></i>
+                        </th:block>
+                    </div>
+
+                    <div class="bean-rating">
+                        <span class="bean-label">Обжарка</span>
+                        <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                            <i class="fas fa-seedling bean-icon" th:classappend="${i <= (coffee.roastLevel?.ordinal() + 1)} ? '' : 'inactive'"></i>
+                        </th:block>
+                    </div>
+
+                    <div class="bean-rating">
+                        <span class="bean-label">Гіркота</span>
+                        <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                            <i class="fas fa-seedling bean-icon" th:classappend="${i <= (coffee.bitterness?.ordinal() + 1)} ? '' : 'inactive'"></i>
+                        </th:block>
+                    </div>
+
+                    <div class="bean-rating">
+                        <span class="bean-label">Кислотність</span>
+                        <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                            <i class="fas fa-seedling bean-icon" th:classappend="${i <= (coffee.acidity?.ordinal() + 1)} ? '' : 'inactive'"></i>
+                        </th:block>
+                    </div>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">Країна:</span>
+                    <span th:text="${coffee.originCountry.name}">Країна</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Вага:</span>
+                    <span th:text="${coffee.weight.getDisplayName()}">250г</span>
+                </div>
+
+                <div class="price-tag">
+                    ₴ <span th:text="${#numbers.formatDecimal(coffee.price, 0, 'POINT', 0, 'COMMA')}">450</span>
+                </div>
+
+                <form th:action="@{'/cart/add/' + ${coffee.id}}" method="post" class="d-flex align-items-center mb-4">
+                    <input type="number" name="quantity" value="1" min="1" class="form-control quantity-input">
+                    <button type="submit" class="btn btn-add-cart">У кошик</button>
+                </form>
+
+                <div class="description-text">
+                    <p th:text="${coffee.description}">Опис...</p>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Інформація про каву -->
-    <div class="coffee-info">
-        <h1 th:text="${coffee.brand.name} + ' ' + ${coffee.name}">Coffee Name</h1>
-
-        <div class="attribute">
-            <span class="label">Інтенсивність:</span> <span th:text="${coffee.intensity.displayName}"></span>
+    <footer>
+        <div class="container text-center">
+            <small>© 2026 IJO Coffee — Смак справжньої якості</small>
         </div>
+    </footer>
 
-        <div class="attribute">
-            <span class="label">Обжарка:</span> <span th:text="${coffee.roastLevel.displayName}"></span>
-        </div>
-
-        <div class="attribute">
-            <span class="label">Гіркота:</span> <span th:text="${coffee.bitterness.displayName}"></span>
-        </div>
-
-        <div class="attribute">
-            <span class="label">Склад:</span> <span th:text="${coffee.composition.displayName}"></span>
-        </div>
-
-        <div class="attribute">
-            <span class="label">Ціна:</span> ₴<span th:text="${coffee.price}"></span>
-        </div>
-        <div class="attribute">
-            <span class="label">Опис:</span> <span th:text="${coffee.description}"></span>
-        </div>
-        <div class="attribute">
-            <span class="label">Кислота:</span> <span th:text="${coffee.acidity.displayName}"></span>
-        </div>
-        <div class="attribute">
-            <span class="label">Країна:</span> <span th:text="${coffee.originCountry.name}"></span>
-        </div>
-        <form th:action="@{'/cart/add/' + ${coffee.id}}" method="post">
-            <input type="number" name="quantity" value="1" min="1">
-            <button type="submit">Додати в кошик</button>
-        </form>
-
-        <a class="btn" href="/coffee" >Назад</a>
-    </div>
-
-</div>
-
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

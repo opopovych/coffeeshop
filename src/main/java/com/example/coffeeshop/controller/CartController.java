@@ -30,7 +30,12 @@ public class CartController {
                 .setBrand(coffee.getBrand().getName())
                 .setPrice(coffee.getPrice())
                 .setQuantity(quantity)
-                .setPhotoPath(coffee.getPhotoPath());
+                .setPhotoPath(coffee.getPhotoPath())
+                .setBitterness(coffee.getBitterness().displayName)
+                .setIntensity(coffee.getIntensity().displayName)
+                .setComposition(coffee.getComposition().displayName)
+                .setRoastLevel(coffee.getRoastLevel().displayName)
+                .setWeight(coffee.getWeight().getDisplayName());
         cartService.addToCart(item);
         return "redirect:/cart/view";
     }

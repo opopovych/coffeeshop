@@ -13,6 +13,7 @@ public class OrderItem {
     private Long id;
 
     private Long coffeeId;
+    private String coffeeBrand;
     private String name;
     private Integer quantity;
     private Double price;

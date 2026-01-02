@@ -1,63 +1,163 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
 
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
-    >
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <title>Admin Panel - Coffee Shop</title>
     <style>
-        body { font-family: Arial, sans-serif; margin:0; padding:0; background: #f4f4f4; }
-        header { background: #2e2a28; color:white; padding:15px; text-align:center; }
-        h2 { margin-top: 30px; }
-        .container { width: 95%; max-width: 1200px; margin: 20px auto; }
-        table { width:100%; border-collapse: collapse; margin-bottom: 30px; background: white; }
-        th, td { border:1px solid #ccc; padding:8px; text-align:left; }
-        th { background:#eee; }
-        a.button { padding:5px 10px; background:#3e2723; color:white; text-decoration:none; border-radius:3px; margin-right:5px;}
-        a.button:hover { background:#5d4037; }
-        input, select, textarea { padding:5px; margin:3px 0; width:100%; }
-        form { margin-top:10px; }
-        .section { background:white; padding:15px; margin-bottom:20px; border-radius:5px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f4;
+        }
+
+        header {
+            background: #2e2a28;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 30px;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            background: white;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background: #eee;
+        }
+
+        a.button {
+            padding: 5px 10px;
+            background: #3e2723;
+            color: white;
+            text-decoration: none;
+            border-radius: 3px;
+            margin-right: 5px;
+        }
+
+        a.button:hover {
+            background: #5d4037;
+        }
+
+        input,
+        select,
+        textarea {
+            padding: 5px;
+            margin: 3px 0;
+            width: 100%;
+        }
+
+        form {
+            margin-top: 10px;
+        }
+
+        .section {
+            background: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-hero {
+            background: linear-gradient(rgba(46, 42, 40, 0.8), rgba(46, 42, 40, 0.8)),
+                url('https://images.pexels.com/photos/302899/pexels-photo-302899.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2') center/cover;
+            padding: 60px 0;
+            color: white;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: #fff;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 30px;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .stat-card:hover {
+            border-color: #c5a059;
+            /* Твоє золото */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+        }
+
+        .stat-number {
+            display: block;
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0d0a09;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #999;
+        }
+
+        .gold-text {
+            color: #c5a059;
+        }
     </style>
 </head>
+
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" th:href="@{/admin}">
             ☕ IJO Coffee | Адмін
         </a>
-    
-        <button class="navbar-toggler" type="button"
-                data-toggle="collapse"
-                data-target="#adminNavbar"
-                aria-controls="adminNavbar"
-                aria-expanded="false"
-                aria-label="Toggle navigation">
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#adminNavbar"
+            aria-controls="adminNavbar" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-    
+
         <div class="collapse navbar-collapse" id="adminNavbar">
             <ul class="navbar-nav mr-auto">
-    
+
                 <!-- Головна -->
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/admin}">
-                        Головна
+                    <a class="nav-link" th:href="@{/coffee}">
+                        Каталог
                     </a>
                 </li>
-    
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/}">
+                        Головна сторінка
+                    </a>
+                </li>
+
                 <!-- Товари -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle"
-                       href="#"
-                       id="coffeeDropdown"
-                       role="button"
-                       data-toggle="dropdown"
-                       aria-haspopup="true"
-                       aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="coffeeDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Товари
                     </a>
                     <div class="dropdown-menu" aria-labelledby="coffeeDropdown">
@@ -69,33 +169,27 @@
                         </a>
                     </div>
                 </li>
-    
+
                 <!-- Бренди -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle"
-                       href="#"
-                       id="brandDropdown"
-                       role="button"
-                       data-toggle="dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="brandDropdown" role="button"
+                        data-toggle="dropdown">
                         Бренди
                     </a>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" th:href="@{/admin/coffee/add-brand}">
                             ➕ Створення бренду
                         </a>
-                        <a class="dropdown-item" th:href="@{/admin/brands}">
+                        <a class="dropdown-item" th:href="@{/admin/coffee/brands}">
                             📋 Перегляд брендів
                         </a>
                     </div>
                 </li>
-    
+
                 <!-- Країни -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle"
-                       href="#"
-                       id="countryDropdown"
-                       role="button"
-                       data-toggle="dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="countryDropdown" role="button"
+                        data-toggle="dropdown">
                         Країни
                     </a>
                     <div class="dropdown-menu">
@@ -107,7 +201,7 @@
                         </a>
                     </div>
                 </li>
-    
+
                 <!-- Замовлення -->
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/admin/orders}">
@@ -115,134 +209,59 @@
                     </a>
                 </li>
             </ul>
-    
-            <!-- Праворуч -->
-            <span class="navbar-text text-light">
-                Admin Panel
-            </span>
         </div>
     </nav>
-    
-
-<div class="container">
-
-    <!-- ==================== ТОВАРИ ==================== -->
-    <div class="section">
-        <h2>Товари</h2>
-        <a th:href="@{/admin/coffee/add}" class="button">Додати товар</a>
-        <table>
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Фото</th>
-                <th>Назва</th>
-                <th>Бренд</th>
-                <th>Ціна</th>
-                <th>Дії</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="coffee : ${coffeeList}">
-                <td th:text="${coffee.id}"></td>
-                <td><img th:src="@{'/images/' + ${coffee.photoPath}}" width="50"/></td>
-                <td th:text="${coffee.name}"></td>
-                <td th:text="${coffee.brand.name}"></td>
-                <td th:text="${coffee.price}"></td>
-                <td>
-                    <a th:href="@{'/admin/coffee/edit/' + ${coffee.id}}" class="button">Редагувати</a>
-                    <a th:href="@{'/admin/coffee/delete/' + ${coffee.id}}" class="button"
-                       onclick="return confirm('Видалити товар?');">Видалити</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+    <div class="admin-hero">
+        <div class="container text-center">
+            <h1 style="font-family: 'Playfair Display', serif;">Вітаємо, Адміністратор IJO</h1>
+            <p class="lead" style="font-weight: 200; letter-spacing: 2px;">Контроль якості та управління замовленнями
+            </p>
+        </div>
     </div>
 
-    <!-- ==================== БРЕНДИ ==================== -->
-    <div class="section">
-        <h2>Бренди</h2>
-        <a th:href="@{/admin/coffee/add-brand}" class="button">Додати бренд</a>
-        <table>
-            <thead>
-            <tr><th>ID</th><th>Назва</th><th>Дії</th></tr>
-            </thead>
-            <tbody>
-            <tr th:each="b : ${brands}">
-                <td th:text="${b.id}"></td>
-                <td th:text="${b.name}"></td>
-                <td>
-                    <a th:href="@{'/admin/coffee/edit-brand/' + ${b.id}}" class="button">Редагувати</a>
-                    <a th:href="@{'/admin/coffee/delete-brand/' + ${b.id}}" class="button"
-                       onclick="return confirm('Видалити бренд?');">Видалити</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 mb-4">
+                <a class="nav-link" th:href="@{/admin/orders}">
+                    <div class="stat-card">
+                        <i class="fas fa-shopping-bag gold-text mb-2" style="font-size: 1.5rem;"></i>
+                        <span class="stat-number" th:text="${ordersCount}">12</span>
+                        <span class="stat-label">Нових замовлень</span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-3 mb-4">
+                <a class="nav-link" th:href="@{/admin/coffeeList}">
+                    <div class="stat-card">
+                        <i class="fas fa-coffee gold-text mb-2" style="font-size: 1.5rem;"></i>
+                        <span class="stat-number" th:text="${productsCount}">48</span>
+                        <span class="stat-label">Товарів у каталозі</span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-3 mb-4">
+                <a class="nav-link" th:href="@{/admin/coffee/brands}">
+                    <div class="stat-card">
+                        <i class="fas fa-award gold-text mb-2" style="font-size: 1.5rem;"></i>
+                        <span class="stat-number" th:text="${brandsCount}">6</span>
+                        <span class="stat-label">Активних брендів</span>
+                    </div>
+                </a>
+            </div>
+        </div>
     </div>
 
-    <!-- ==================== КРАЇНИ ==================== -->
-    <div class="section">
-        <h2>Країни</h2>
-        <a th:href="@{/admin/coffee/add-country}" class="button">Додати країну</a>
-        <table>
-            <thead>
-            <tr><th>ID</th><th>Назва</th><th>Дії</th></tr>
-            </thead>
-            <tbody>
-            <tr th:each="c : ${countries}">
-                <td th:text="${c.id}"></td>
-                <td th:text="${c.name}"></td>
-                <td>
-                    <a th:href="@{'/admin/coffee/edit-country/' + ${c.id}}" class="button">Редагувати</a>
-                    <a th:href="@{'/admin/coffee/delete-country/' + ${c.id}}" class="button"
-                       onclick="return confirm('Видалити країну?');">Видалити</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
 
-    <!-- ==================== ЗАМОВЛЕННЯ ==================== -->
-    <div class="section">
-        <h2>Замовлення</h2>
-        <table>
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Клієнт</th>
-                <th>Телефон</th>
-                <th>Адреса</th>
-                <th>Статус</th>
-                <th>сума</th>
-                <th>Дії</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="o : ${orders}">
-                <td th:text="${o.id}"></td>
-                <td th:text="${o.customerName}"></td>
-                <td th:text="${o.phone}"></td>
-                <td th:text="${o.deliveryAddress}"></td>
-                <td th:text="${o.status != null ? o.status.displayName : 'Не визначено'}"></td>
-                <td th:text="${o.totalPrice}"></td>
-                <td>
-                    <a th:href="@{'/admin/edit-order/' + ${o.id}}" class="button">Редагувати</a>
-                    <a th:href="@{'/admin/delete-order/' + ${o.id}}" class="button"
-                       onclick="return confirm('Видалити країну?');">Видалити</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
 
-</div>
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <!-- Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 
-<!-- Popper.js -->
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-
-<!-- Bootstrap 4 JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+    <!-- Bootstrap 4 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
 
 </body>
+
 </html>

@@ -3,6 +3,8 @@ package com.example.coffeeshop.controller;
 import com.example.coffeeshop.mapper.CoffeeBeanMapper;
 import com.example.coffeeshop.model.*;
 import com.example.coffeeshop.model.dto.CoffeeBeanDto;
+import com.example.coffeeshop.repository.BrandRepository;
+import com.example.coffeeshop.repository.CoffeeBeanRepository;
 import com.example.coffeeshop.service.BrandService;
 import com.example.coffeeshop.service.CoffeeBeanService;
 import java.util.List;
@@ -18,7 +20,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/coffee")
 public class CoffeeCatalogController {
 
     @Autowired
@@ -27,27 +28,38 @@ public class CoffeeCatalogController {
     private BrandService brandService;
 
 
-    @GetMapping
+    @GetMapping("/coffee")
     public String list(Model model) {
         model.addAttribute("coffeeList", coffeeBeanService.findAll());
         addFilterAttributes(model);
 
         return "catalog";
     }
+    @GetMapping
+    public String index(Model model) {
+        // Беремо всі бренди з бази для каруселі
+        model.addAttribute("brands", brandService.findAll());
+        return "index"; // ваш файл index.html
+    }
+    @GetMapping("/history")
+    public String showHistory(Model model) {
+        //model.addAttribute("brands", brandService.findAll());
+        return "history"; //
+    }
 
-    @GetMapping("/{id}")
+    @GetMapping("/coffee/{id}")
     public String details(@PathVariable Long id, Model model) {
         model.addAttribute("coffee", coffeeBeanService.findById(id));
         return "coffee-details";
     }
-    @GetMapping("/search")
+    @GetMapping("/coffee/search")
     public String searchCoffee(@RequestParam("query") String query, Model model) {
         List<CoffeeBean> coffee = coffeeBeanService.search(query);
         model.addAttribute("coffeeList", coffee);
         model.addAttribute("query", query);
         return "catalog"; // твоя сторінка списку товарів
     }
-    @GetMapping("/filter")
+    @GetMapping("/coffee/filter")
     public String filter(
             @RequestParam(required = false) Long brandId,
             @RequestParam(required = false) Intensity intensity,
@@ -90,7 +102,6 @@ public class CoffeeCatalogController {
 
         return "catalog";
     }
-
 
     private void addFilterAttributes(Model model) {
         model.addAttribute("brands", brandService.findAll());

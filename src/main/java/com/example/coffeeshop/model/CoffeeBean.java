@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 @Entity
+@Data
 @Accessors(chain = true)
 public class CoffeeBean {
 
@@ -55,6 +56,8 @@ public class CoffeeBean {
     @JoinColumn(name = "brand_id") // Зовнішній ключ для бренду
     private Brand brand;
     // brand — бренд кави (вибірка з довідника)
+    @Enumerated(EnumType.STRING)
+    private ProductWeight weight;
 
 
     public Long getId() {

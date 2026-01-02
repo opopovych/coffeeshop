@@ -3,6 +3,7 @@ package com.example.coffeeshop.controller;
 import com.example.coffeeshop.model.Order;
 import com.example.coffeeshop.service.OrderService;
 import com.example.coffeeshop.service.impl.CartService;
+import com.example.coffeeshop.service.impl.TelegramService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,10 +17,12 @@ public class CheckoutController {
 
     private final CartService cartService;
     private final OrderService orderService;
+    private final TelegramService telegramService;
 
-    public CheckoutController(CartService cartService, OrderService orderService) {
+    public CheckoutController(CartService cartService, OrderService orderService, TelegramService telegramService) {
         this.cartService = cartService;
         this.orderService = orderService;
+        this.telegramService = telegramService;
     }
 
     @GetMapping
@@ -32,10 +35,16 @@ public class CheckoutController {
     @PostMapping
     public String placeOrder(@RequestParam String name,
                              @RequestParam String phone,
-                             @RequestParam String address,
+                             @RequestParam String cityName,
+                             @RequestParam String wareHouse,
                              Model model) {
-
+        String address = "Місто - " + cityName+ " Нова пошта, " + wareHouse;
+        // 1. Створюємо замовлення в БД
         Order order = orderService.createOrder(name, phone, address);
+
+        // 2. ВІДПРАВЛЯЄМО СПОВІЩЕННЯ В ТЕЛЕГРАМ
+        // Передаємо об'єкт замовлення, щоб дістати з нього склад та ціну
+        telegramService.sendOrderNotification(order);
 
         model.addAttribute("order", order);
         return "order-success";

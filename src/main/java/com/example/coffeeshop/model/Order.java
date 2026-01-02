@@ -19,6 +19,9 @@ public class Order {
     private String deliveryAddress;
     private Double totalPrice;
     private Status status;
+    //Поля для нової пошти
+    private String city;        // Назва міста
+    private String warehouse;   // Назва/номер відділення
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> items = new ArrayList<>();
