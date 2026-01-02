@@ -1,6 +1,7 @@
 package com.example.coffeeshop.service.impl;
 
 import com.example.coffeeshop.model.Order;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -11,7 +12,8 @@ import java.util.Map;
 @Service
 public class TelegramService {
 
-    private final String BOT_TOKEN = "8508179157:AAG28xoFaEhk_wrCTxkde7Y8QvbCMq97JB0";
+    @Value("${telegram.bot.token}")
+    private String BOT_TOKEN;
     private final String CHAT_ID = "585786382";
 
     public void sendOrderNotification(Order order) {

@@ -4,6 +4,14 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+# Ігноруємо локальні налаштування з паролями
+src/main/resources/application-local.properties
+
+# Ігноруємо налаштування вашої IDE
+.idea/
+*.iml
+target/
+
 ### STS ###
 .apt_generated
 .classpath
