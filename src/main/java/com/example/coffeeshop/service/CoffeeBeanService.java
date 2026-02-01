@@ -22,13 +22,21 @@ public interface CoffeeBeanService {
     List<CoffeeBean> findByBrandId(Long brandId);
     Page<CoffeeBean> filter(
             Long brandId,
-            Intensity intensity,
-            RoastLevel roast,
-            Bitterness bitterness,
-            Composition composition,
+            Long countryId,
+            List<Intensity> intensity,
+            List<RoastLevel> roast,
+            List<Bitterness> bitterness,
+            List<Composition> composition,
+            List<Acidity> acidity,
             Pageable pageable
     );
 
 
+    List<CoffeeBean> findAllById(List<Long> productIds);
 
+    void saveAll(List<CoffeeBean> products);
+
+    void deleteAllById(List<Long> productIds);
+
+    Page<CoffeeBean> findAllActive(Pageable pageable);
 }

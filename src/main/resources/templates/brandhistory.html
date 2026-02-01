@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Колекція Брендів | IJO Coffee</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Montserrat:wght@200;300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root {
+            --espresso: #1a1715;
+            --cream: #fdfcf0;
+            --gold: #d1b894;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--cream);
+            color: var(--espresso);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* --- UNIVERSAL PREMIUM NAVBAR --- */
+        .navbar {
+            background: rgba(26, 23, 21, 0.98);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--gold);
+        }
+
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: var(--gold) !important;
+            letter-spacing: 1px;
+        }
+
+        .nav-brand-link {
+            color: rgba(255, 255, 255, 0.7) !important;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: 0.3s;
+            text-decoration: none !important;
+        }
+
+        .nav-brand-link:hover {
+            color: var(--gold) !important;
+        }
+
+        /* Нова кнопка Каталогу */
+        .btn-nav-catalog {
+            border: 1px solid var(--gold);
+            color: var(--gold) !important;
+            padding: 8px 25px;
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            transition: 0.4s;
+            text-decoration: none !important;
+        }
+
+        .btn-nav-catalog:hover {
+            background: var(--gold);
+            color: var(--dark-espresso) !important;
+        }
+
+
+        /* --- HERO SECTION --- */
+        .history-hero {
+            height: 80vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+                url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=2070') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            text-align: center;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        /* --- INTRO BLOCK --- */
+        .brand-intro {
+            padding: 100px 0;
+            background: var(--white);
+            text-align: center;
+        }
+
+        /* --- BRAND STORIES (PROCESS STEPS STYLE) --- */
+        .brand-section {
+            padding: 100px 0;
+        }
+
+        .brand-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--espresso);
+        }
+
+        .brand-img {
+            width: 100%;
+            height: 450px;
+            object-fit: contain;
+            /* Для логотипів краще contain */
+            border: 1px solid var(--gold);
+            padding: 40px;
+            background: white;
+            transition: 0.5s;
+        }
+
+        .brand-img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-discover {
+            margin-top: 30px;
+            display: inline-block;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-decoration: none !important;
+            border-bottom: 1px solid var(--gold);
+            padding-bottom: 5px;
+            transition: 0.4s;
+        }
+
+        .btn-discover:hover {
+            color: var(--espresso);
+            border-color: var(--espresso);
+            padding-left: 15px;
+        }
+
+        footer {
+            background: var(--espresso);
+            color: var(--gold);
+            padding: 60px 0;
+            text-align: center;
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg fixed-top navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" th:href="@{/}">
+                <i class="fas fa-seedling mr-2"></i> IJO COFFEE
+            </a>
+            <div class="ml-auto d-flex align-items-center">
+                <a th:href="@{/history}" class="nav-brand-link">Шлях IJO</a>
+                <a th:href="@{/brandhistory}" class="nav-brand-link ml-4">Колекція Брендів</a>
+                <a th:href="@{/countries}" class="nav-brand-link ml-4">Походження Кави</a>
+                <a th:href="@{/coffee}" class="btn-nav-catalog ml-5">КАТАЛОГ</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="history-hero">
+        <div class="container" data-aos="zoom-out">
+            <h1 class="hero-title">Світові Бренди</h1>
+            <p style="letter-spacing: 5px; text-transform: uppercase; font-weight: 300;">Тільки ті, хто розділяє нашу
+                пристрасть</p>
+        </div>
+    </header>
+
+    <section class="brand-intro">
+        <div class="container" data-aos="fade-up">
+            <h2 style="font-family: 'Playfair Display'; font-style: italic; margin-bottom: 30px;">Мистецтво вибору</h2>
+            <p class="text-muted" style="max-width: 750px; margin: 0 auto; font-weight: 300; font-size: 1.1rem;">
+                IJO COFFEE — це не просто магазин. Це кураторський проєкт. Ми відібрали легендарні кавові доми Європи,
+                які десятиліттями вдосконалювали свої рецептури, щоб ви могли насолодитися еталонним смаком.
+            </p>
+        </div>
+    </section>
+
+    <main class="brand-section">
+        <div class="container">
+            <div th:each="brand, iterStat : ${brands}" class="row align-items-center mb-5 pb-5"
+                th:classappend="${iterStat.even} ? 'flex-md-row-reverse' : ''">
+
+                <div class="col-md-6" th:attr="data-aos=${iterStat.even ? 'fade-left' : 'fade-right'}">
+                    <h2 class="brand-name" th:text="${brand.name}">Назва бренду</h2>
+                    <p th:text="${brand.history}" style="font-weight: 300;">Опис історії бренду...</p>
+                    <a th:href="@{/coffee/filter(brandId=${brand.id})}" class="btn-discover">
+                        До колекції <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+
+                <div class="col-md-6" th:attr="data-aos=${iterStat.even ? 'fade-right' : 'fade-left'}">
+                    <img th:src="@{'/images/' + ${brand.photoPath}}" class="brand-img" th:alt="${brand.name}">
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 IJO COFFEE | Спадщина якості</p>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        AOS.init({ duration: 1200, once: true });
+    </script>
+</body>
+
+</html>

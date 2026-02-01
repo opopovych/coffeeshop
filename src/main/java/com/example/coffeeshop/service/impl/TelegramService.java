@@ -7,6 +7,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -21,14 +22,25 @@ public class TelegramService {
         message.append("📦 *НОВЕ ЗАМОВЛЕННЯ IJO COFFEE*\n\n");
         message.append("👤 *Клієнт:* ").append(order.getCustomerName()).append("\n");
         message.append("📞 *Тел:* ").append(order.getPhone()).append("\n");
-        message.append("📍 *Адреса:* ").append(order.getDeliveryAddress()).append("\n\n");
+        message.append("📍 *Адреса:* ").append(order.getDeliveryAddress()).append("\n");
+
+// ДОДАЄМО СПОСІБ ОПЛАТИ
+        message.append("💳 *Оплата:* ").append(order.getPaymentMethod()).append("\n\n");
 
         message.append("☕ *Товари:*\n");
+// Далі йде цикл по товарах...
         // Припустимо, у вас є список позицій у замовленні
         order.getItems().forEach(item -> {
             message.append("• ").append(item.getCoffeeBrand() + " " + item.getName())
                     .append(" (").append(item.getQuantity()).append(" шт.)\n");
         });
+
+        // Додаємо коментар, якщо він не порожній
+        if (order.getComment() != null && !order.getComment().isBlank()) {
+            message.append("💬 *Коментар:* ").append(order.getComment()).append("\n\n");
+        } else {
+            message.append("\n"); // Просто відступ, якщо коментаря немає
+        }
 
         message.append("\n💰 *РАЗОМ ДО ОПЛАТИ: ").append(order.getTotalPrice()).append(" грн*");
 
@@ -56,4 +68,5 @@ public class TelegramService {
             System.err.println("❌ Помилка відображення: " + e.getMessage());
         }
     }
+
 }

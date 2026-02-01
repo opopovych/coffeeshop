@@ -2,6 +2,7 @@ package com.example.coffeeshop.service.impl;
 
 import com.example.coffeeshop.model.Order;
 import com.example.coffeeshop.model.OrderItem;
+import com.example.coffeeshop.model.Status;
 import com.example.coffeeshop.repository.OrderRepository;
 import com.example.coffeeshop.service.OrderService;
 import java.security.PublicKey;
@@ -19,12 +20,15 @@ public class OrderServiceImpl implements OrderService {
         this.cartService = cartService;
     }
 
-    public Order createOrder(String name, String phone, String address) {
+    public Order createOrder(String name,String surName, String phone, String address, String payment, String comment) {
         Order order = new Order();
         order.setCustomerName(name);
+        order.setSurName(surName);
         order.setPhone(phone);
         order.setDeliveryAddress(address);
         order.setTotalPrice(cartService.getTotal());
+        order.setPaymentMethod(payment);
+        order.setComment(comment);
 
         cartService.getCart().getItems().forEach(item -> {
             OrderItem oi = new OrderItem();
@@ -54,6 +58,23 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order update(Order order) {
         return orderRepository.save(order);
+    }
+
+    // У вашому OrderService (або його імплементації OrderServiceImpl)
+    public void updateStatus(Long orderId, String action) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Замовлення не знайдено: " + orderId));
+
+        switch (action) {
+            case "confirm" -> order.setStatus(Status.AT_WORK); // ✅ Прийняти -> В роботі
+            case "done"    -> order.setStatus(Status.DONE);    // 📦 Виконано -> Виконано
+            case "cancel"  -> {
+                // Тут можна або видалити, або додати статус CANCELED в Enum
+                orderRepository.delete(order);
+                return;
+            }
+        }
+        orderRepository.save(order);
     }
 
     @Override

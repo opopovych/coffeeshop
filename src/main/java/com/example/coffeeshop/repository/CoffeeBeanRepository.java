@@ -9,25 +9,32 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface CoffeeBeanRepository extends JpaRepository<CoffeeBean, Long> {
-    List<CoffeeBean> findByNameContainingIgnoreCase (String name);
-    List<CoffeeBean> findByBrandId(Long brandId);
+    List<CoffeeBean> findByNameContainingIgnoreCaseAndActiveTrue(String name);
+    List<CoffeeBean> findByBrandIdAndActiveTrue(Long brandId);
     @Query("""
     SELECT c FROM CoffeeBean c
-    WHERE (:brandId IS NULL OR c.brand.id = :brandId)
-      AND (:intensity IS NULL OR c.intensity = :intensity)
-      AND (:roast IS NULL OR c.roastLevel = :roast)
-      AND (:bitterness IS NULL OR c.bitterness = :bitterness)
-      AND (:composition IS NULL OR c.composition = :composition)
+    WHERE c.active = true
+      AND (:brandId IS NULL OR c.brand.id = :brandId)
+      AND (:countryId IS NULL OR c.originCountry.id = :countryId)
+      AND (:intensity IS NULL OR c.intensity IN :intensity)
+      AND (:roast IS NULL OR c.roastLevel IN :roast)
+      AND (:bitterness IS NULL OR c.bitterness IN :bitterness)
+      AND (:composition IS NULL OR c.composition IN :composition)
+      AND (:acidity IS NULL OR c.acidity IN :acidity)
 """)
     Page<CoffeeBean> filter(
             @Param("brandId") Long brandId,
-            @Param("intensity") Intensity intensity,
-            @Param("roast") RoastLevel roast,
-            @Param("bitterness") Bitterness bitterness,
-            @Param("composition") Composition composition,
+            @Param("countryId") Long countryId,
+            @Param("intensity") List<Intensity> intensity, // Змінено на List
+            @Param("roast") List<RoastLevel> roast,         // Змінено на List
+            @Param("bitterness") List<Bitterness> bitterness, // Змінено на List
+            @Param("composition") List<Composition> composition, // Змінено на List
+            @Param("acidity") List<Acidity> acidity,
             Pageable pageable
     );
     long count();
+    @Query("SELECT c FROM CoffeeBean c WHERE c.active = true")
+    Page<CoffeeBean> findAllActive(Pageable pageable);
 
 
 

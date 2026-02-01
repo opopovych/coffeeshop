@@ -34,13 +34,16 @@ public class CheckoutController {
 
     @PostMapping
     public String placeOrder(@RequestParam String name,
+                             @RequestParam String surName,
                              @RequestParam String phone,
                              @RequestParam String cityName,
                              @RequestParam String wareHouse,
+                             @RequestParam("paymentMethod") String paymentMethod,
+                             @RequestParam(required = false) String comment,
                              Model model) {
-        String address = "Місто - " + cityName+ " Нова пошта, " + wareHouse;
+        String address = "Місто - " + cityName+ ", Нова пошта, " + wareHouse;
         // 1. Створюємо замовлення в БД
-        Order order = orderService.createOrder(name, phone, address);
+        Order order = orderService.createOrder(name,surName, phone, address,paymentMethod, comment);
 
         // 2. ВІДПРАВЛЯЄМО СПОВІЩЕННЯ В ТЕЛЕГРАМ
         // Передаємо об'єкт замовлення, щоб дістати з нього склад та ціну

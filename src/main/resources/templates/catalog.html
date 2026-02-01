@@ -81,11 +81,55 @@
 
 
         /* --- ФІЛЬТРИ --- */
+        /* Стилізація випадаючого меню */
+        /* Базовий контейнер випадаючого списку */
         .dropdown-menu {
+            min-width: 250px;
+            /* Встановлюємо мінімальну ширину */
+            background-color: #0d0a09;
+            /* Темний еспресо */
+            border: 1px solid #c5a059;
+            /* Золота тонка рамка */
             border-radius: 0;
-            border: 1px solid var(--gold);
-            min-width: 340px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            /* Гострі кути для преміального вигляду */
+            padding: 10px 0;
+            margin-top: 15px !important;
+            /* Відступ від навігації */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            /* Глибока тінь */
+        }
+
+        /* Стиль кожного пункту */
+        .dropdown-item {
+            color: #e0e0e0 !important;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            /* Трохи збільшений шрифт */
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 15px 25px;
+            /* Збільшені відступи всередині (клікабельна зона) */
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            /* Заготовка для ефекту при наведенні */
+        }
+
+        /* Ефект при наведенні */
+        .dropdown-item:hover {
+            background-color: rgba(197, 160, 89, 0.1);
+            /* Легкий золотавий фон */
+            color: #c5a059 !important;
+            /* Золотий текст */
+            border-left: 3px solid #c5a059;
+            /* Золота лінія зліва */
+            padding-left: 35px;
+            /* Ефект зсуву тексту */
+        }
+
+        /* Додаємо розділювач, якщо потрібно (опціонально) */
+        .dropdown-divider {
+            border-top: 1px solid rgba(197, 160, 89, 0.1);
+            margin: 5px 20px;
         }
 
         .filter-label {
@@ -95,6 +139,62 @@
             text-transform: uppercase;
             margin-bottom: 2px;
             display: block;
+        }
+
+        .filter-chip {
+            background: #fff;
+            border: 1px solid var(--gold);
+            padding: 5px 12px;
+            margin: 5px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            color: var(--espresso);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .filter-chip span {
+            font-weight: 600;
+        }
+
+        .filter-chip a {
+            color: #ccc;
+            margin-left: 10px;
+            text-decoration: none !important;
+            transition: 0.3s;
+        }
+
+        .filter-chip a:hover {
+            color: var(--accent-red);
+        }
+
+        .btn-clear-all {
+            font-size: 0.7rem;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid transparent;
+        }
+
+        .btn-clear-all:hover {
+            color: var(--espresso);
+            border-color: var(--espresso);
+            text-decoration: none;
+        }
+
+        .btn-clear-all {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #999;
+            border-bottom: 1px solid #ddd;
+            text-decoration: none !important;
+            transition: 0.3s;
+        }
+
+        .btn-clear-all:hover {
+            color: var(--dark-espresso);
+            border-color: var(--dark-espresso);
         }
 
         .form-select-custom {
@@ -206,14 +306,6 @@
             color: var(--gold);
         }
 
-        footer {
-            background: var(--espresso);
-            color: var(--gold);
-            border-top: 2px solid var(--gold);
-            padding: 1.5rem 0;
-            margin-top: 50px;
-        }
-
         /* Стиль для всієї назви */
         .card-title-main {
             font-family: 'Playfair Display', serif;
@@ -227,23 +319,24 @@
             flex-wrap: wrap;
             /* Щоб на мобільних назва не ламалася */
         }
+
         /* Прибираємо стандартне підкреслення посилань */
-.coffee-card-link {
-    text-decoration: none !important;
-    color: inherit !important;
-    display: block;
-}
+        .coffee-card-link {
+            text-decoration: none !important;
+            color: inherit !important;
+            display: block;
+        }
 
-/* Новий ефект для картки */
-.coffee-card-link:hover .card {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(46, 42, 40, 0.15);
-    border-color: var(--gold);
-}
+        /* Новий ефект для картки */
+        .coffee-card-link:hover .card {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(46, 42, 40, 0.15);
+            border-color: var(--gold);
+        }
 
-.coffee-card-link:hover .brand-label {
-    color: var(--dark-gold);
-}
+        .coffee-card-link:hover .brand-label {
+            color: var(--dark-gold);
+        }
 
         /* Стиль для ваги */
         .weight-badge {
@@ -326,7 +419,21 @@
         .btn-coffee-outline:hover {
             background: var(--espresso);
             color: var(--gold);
-        }
+        }/* Початковий стан: картка прозора і трохи зміщена вниз */
+.coffee-card-animated {
+    opacity: 0;
+    filter: blur(5px); /* Початкове розмиття */
+    transform: translateY(40px); /* Більший зсув для плавності */
+    animation: slowFadeIn 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes slowFadeIn {
+    to {
+        opacity: 1;
+        filter: blur(0);
+        transform: translateY(0);
+    }
+}
 
         footer {
             background: var(--espresso);
@@ -346,160 +453,208 @@
     <div th:replace="~{fragments/clientnavbar :: navbar}"></div>
 
     <div class="container mt-5">
-        <div class="row">
-            <div class="col-lg-4 col-md-6 mb-5" th:each="coffee : ${coffeeList}">
-                <a th:href="@{'/coffee/' + ${coffee.id}}" class="coffee-card-link">
-                <div class="card h-100 text-center">
-                    <div class="card-img-container">
-                        <img th:src="@{'/images/' + ${coffee.photoPath}}" class="card-img-top" alt="Coffee">
-                    </div>
+        <div class="container mb-4"
+            th:if="${brandId != null or countryId != null or (intensity != null and !intensity.isEmpty()) or (roast != null and !roast.isEmpty()) or (bitterness != null and !bitterness.isEmpty()) or (composition != null and !composition.isEmpty()) or (acidity != null and !acidity.isEmpty())}">
+            <div class="d-flex align-items-center flex-wrap">
+                <span class="mr-3 text-uppercase"
+                    style="letter-spacing: 2px; font-size: 0.7rem; color: var(--gold); font-weight: 600;">
+                    Ваш вибір:
+                </span>
 
-                    <div class="card-body d-flex flex-column">
-                        <h6 class="text-muted small text-uppercase mb-1" th:text="${coffee.brand?.name}">BRAND</h6>
-                        <h5 class="card-title-main mb-3">
-                            <span th:text="${coffee.name}">Coffee Name</span>
-                            <span class="weight-badge" th:text="${coffee.weight?.displayName}">250г</span>
-                        </h5>
-                        <span class="composition-tag" th:text="${coffee.composition?.displayName}">100% Arabica</span>
-
-                        <div class="mb-4">
-
-                            <div class="bean-rating">
-                                <span class="bean-label">Кислотність</span>
-                                <th:block th:each="i : ${#numbers.sequence(1, 5)}">
-                                    <i class="fas fa-seedling bean-icon"
-                                       th:classappend="${i <= (coffee.acidity?.ordinal() + 1)} ? '' : 'inactive'"></i>
-                                </th:block>
-                            </div>
-
-                            <div class="bean-rating">
-                                <span class="bean-label">Інтенсивність</span>
-                                <th:block th:each="i : ${#numbers.sequence(1, 5)}">
-                                    <i class="fas fa-seedling bean-icon"
-                                       th:classappend="${i <= (coffee.intensity?.ordinal() + 1)} ? '' : 'inactive'"></i>
-                                </th:block>
-                            </div>
-
-                            <div class="bean-rating">
-                                <span class="bean-label">Обжарка</span>
-                                <th:block th:each="i : ${#numbers.sequence(1, 5)}">
-                                    <i class="fas fa-seedling bean-icon"
-                                       th:classappend="${i <= (coffee.roastLevel?.ordinal() + 1)} ? '' : 'inactive'"></i>
-                                </th:block>
-                            </div>
-
-                            <div class="bean-rating">
-                                <span class="bean-label">Гіркота</span>
-                                <th:block th:each="i : ${#numbers.sequence(1, 5)}">
-                                    <i class="fas fa-seedling bean-icon"
-                                       th:classappend="${i <= (coffee.bitterness?.ordinal() + 1)} ? '' : 'inactive'"></i>
-                                </th:block>
-                            </div>
-                        </div>
-
-                        <div class="mt-auto">
-                            <h4 class="font-weight-bold mb-3">
-                                ₴ <span
-                                    th:text="${#numbers.formatDecimal(coffee.price, 0, 'POINT', 0, 'COMMA')}">450</span>
-                            </h4>
-                        </div>
-                    </div>
+                <div class="filter-chip" th:if="${brandId != null}">
+                    Бренд: <span class="ml-1" th:each="b : ${brands}" th:if="${b.id == brandId}"
+                        th:text="${b.name}"></span>
+                    <a
+                        th:href="@{/coffee/filter(countryId=${countryId}, intensity=${intensity}, roast=${roast}, bitterness=${bitterness}, composition=${composition}, acidity=${acidity}, sort=${sort})}">
+                        <i class="fas fa-times"></i>
+                    </a>
                 </div>
+
+                <div class="filter-chip" th:if="${countryId != null}">
+                    Країна: <span class="ml-1" th:each="c : ${countries}" th:if="${c.id == countryId}"
+                        th:text="${c.name}"></span>
+                    <a
+                        th:href="@{/coffee/filter(brandId=${brandId}, intensity=${intensity}, roast=${roast}, bitterness=${bitterness}, composition=${composition}, acidity=${acidity}, sort=${sort})}">
+                        <i class="fas fa-times"></i>
+                    </a>
+                </div>
+
+                <th:block th:if="${intensity != null}">
+                    <div class="filter-chip" th:each="i : ${intensity}">
+                        <i class="fas fa-bolt mr-1 text-primary"></i>
+                        <span th:text="${i.getDisplayName()}"></span>
+                        <a
+                            th:href="@{/coffee/filter(brandId=${brandId}, countryId=${countryId}, sort=${sort}, roast=${roast}, bitterness=${bitterness}, composition=${composition}, acidity=${acidity}, intensity=${#lists.toList(intensity).?[#this != __${i}__]})}">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </div>
+                </th:block>
+
+                <th:block th:if="${roast != null}">
+                    <div class="filter-chip" th:each="r : ${roast}">
+                        <i class="fas fa-fire-alt mr-1 text-warning"></i>
+                        <span th:text="${r.getDisplayName()}"></span>
+                        <a
+                            th:href="@{/coffee/filter(brandId=${brandId}, countryId=${countryId}, sort=${sort}, intensity=${intensity}, bitterness=${bitterness}, composition=${composition}, acidity=${acidity}, roast=${#lists.toList(roast).?[#this != __${r}__]})}">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </div>
+                </th:block>
+
+                <th:block th:if="${composition != null}">
+                    <div class="filter-chip" th:each="c : ${composition}">
+                        <i class="fas fa-seedling mr-1 text-success"></i>
+                        <span th:text="${c.getDisplayName()}"></span>
+                        <a
+                            th:href="@{/coffee/filter(brandId=${brandId}, countryId=${countryId}, sort=${sort}, intensity=${intensity}, roast=${roast}, bitterness=${bitterness}, acidity=${acidity}, composition=${#lists.toList(composition).?[#this != __${c}__]})}">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </div>
+                </th:block>
+
+                <th:block th:if="${acidity != null}">
+                    <div class="filter-chip" th:each="a : ${acidity}">
+                        <i class="fas fa-lemon mr-1 text-warning"></i>
+                        <span th:text="${a.getDisplayName()}"></span>
+                        <a
+                            th:href="@{/coffee/filter(brandId=${brandId}, countryId=${countryId}, sort=${sort}, intensity=${intensity}, roast=${roast}, bitterness=${bitterness}, composition=${composition}, acidity=${#lists.toList(acidity).?[#this != __${a}__]})}">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </div>
+                </th:block>
+
+                <a th:href="@{/coffee}" class="btn-clear-all ml-3">Скинути все</a>
+            </div>
+        </div>
+
+        <div class="container text-center py-5 my-5" th:if="${#lists.isEmpty(coffeeList)}">
+            <div style="opacity: 0.5;">
+                <i class="fas fa-search mb-3" style="font-size: 3rem; color: var(--gold);"></i>
+            </div>
+            <h2 style="font-family: 'Playfair Display', serif;">Нічого не знайдено</h2>
+            <p class="text-muted">На жаль, за обраними фільтрами кави не знайдено. Спробуйте змінити критерії пошуку.
+            </p>
+            <a th:href="@{/coffee}" class="btn-nav-catalog mt-3">Показати всю каву</a>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-6 mb-5 coffee-card-animated"
+                 th:each="coffee, iterStat : ${coffeeList}"
+                 th:style="'animation-delay: ' + ${iterStat.index * 0.2} + 's'">
+                <a th:href="@{'/coffee/' + ${coffee.id}}" class="coffee-card-link">
+                    <div class="card h-100 text-center">
+                        <div class="card-img-container">
+                            <img th:src="@{'/images/' + ${coffee.photoPath}}" class="card-img-top" alt="Coffee">
+                        </div>
+
+                        <div class="card-body d-flex flex-column">
+                            <h6 class="text-muted small text-uppercase mb-1" th:text="${coffee.brand?.name}">BRAND</h6>
+                            <h5 class="card-title-main mb-3">
+                                <span th:text="${coffee.name}">Coffee Name</span>
+                                <span class="weight-badge" th:text="${coffee.weight?.displayName}">250г</span>
+                            </h5>
+                            <span class="composition-tag" th:text="${coffee.composition?.displayName}">100%
+                                Arabica</span>
+
+                            <div class="mb-4">
+
+                                <div class="bean-rating">
+                                    <span class="bean-label">Інтенсивність</span>
+                                    <th:block th:each="i : ${#numbers.sequence(1, 4)}">
+                                        <i class="fas fa-seedling bean-icon"
+                                            th:classappend="${i <= (coffee.intensity?.ordinal() + 1)} ? '' : 'inactive'"></i>
+                                    </th:block>
+                                </div>
+
+                                <div class="bean-rating">
+                                    <span class="bean-label">Кислотність</span>
+                                    <th:block th:each="i : ${#numbers.sequence(1, 4)}">
+                                        <i class="fas fa-seedling bean-icon"
+                                            th:classappend="${i <= (coffee.acidity?.ordinal() + 1)} ? '' : 'inactive'"></i>
+                                    </th:block>
+                                </div>
+
+                                <div class="bean-rating">
+                                    <span class="bean-label">Обжарка</span>
+                                    <th:block th:each="i : ${#numbers.sequence(1, 4)}">
+                                        <i class="fas fa-seedling bean-icon"
+                                            th:classappend="${i <= (coffee.roastLevel?.ordinal() + 1)} ? '' : 'inactive'"></i>
+                                    </th:block>
+                                </div>
+
+                                <div class="bean-rating">
+                                    <span class="bean-label">Гіркота</span>
+                                    <th:block th:each="i : ${#numbers.sequence(1, 4)}">
+                                        <i class="fas fa-seedling bean-icon"
+                                            th:classappend="${i <= (coffee.bitterness?.ordinal() + 1)} ? '' : 'inactive'"></i>
+                                    </th:block>
+                                </div>
+                            </div>
+
+                            <div class="mt-auto">
+                                <h4 class="font-weight-bold mb-3">
+                                    ₴ <span
+                                        th:text="${#numbers.formatDecimal(coffee.price, 0, 'POINT', 0, 'COMMA')}">450</span>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
                 </a>
             </div>
         </div>
 
-        <div class="row mt-5" th:if="${totalPages != null && totalPages > 1}">
-            <div class="col-12 d-flex justify-content-center pagination">
-                <a th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
-                   th:href="@{/coffee/filter(page=${i}, brandId=${brandId}, intensity=${intensity}, roast=${roast}, composition=${composition}, sort=${sort})}"
-                   th:text="${i + 1}" th:classappend="${i == currentPage} ? 'active' : ''"></a>
-            </div>
+        <div class="pagination justify-content-center mt-5">
+            <a th:if="${currentPage > 0}"
+               th:href="@{/coffee/filter(page=${currentPage - 1}, brandId=${brandId}, countryId=${countryId}, intensity=${intensity}, roast=${roastLevel}, composition=${composition}, acidity=${acidity}, bitterness=${bitterness})}">
+                &laquo;
+            </a>
+
+            <th:block th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                <a th:if="${i >= currentPage - 2 and i <= currentPage + 2}"
+                   th:text="${i + 1}"
+                   th:classappend="${i == currentPage} ? 'active'"
+                   th:href="@{/coffee/filter(page=${i}, brandId=${brandId}, countryId=${countryId}, intensity=${intensity}, roast=${roastLevel}, composition=${composition}, acidity=${acidity}, bitterness=${bitterness})}">
+                </a>
+            </th:block>
+
+            <a th:if="${currentPage < totalPages - 1}"
+               th:href="@{/coffee/filter(page=${currentPage + 1}, brandId=${brandId}, countryId=${countryId}, intensity=${intensity}, roast=${roastLevel}, composition=${composition}, acidity=${acidity}, bitterness=${bitterness})}">
+                &raquo;
+            </a>
         </div>
     </div>
 
-
-    <div class="ai-assistant-btn" onclick="$('#aiModal').modal('show')">
+    <div class="ai-assistant-btn" onclick="openSommelier()">
         <i class="fas fa-robot mr-2"></i> AI Сомельє
     </div>
-
-    <div class="modal fade" id="aiModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
+    <div class="modal fade" id="aiSommelierModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content ai-modal-content">
                 <div class="modal-header border-0">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h5 class="modal-title font-weight-bold" style="font-family: 'Playfair Display', serif;">AI Сомельє
+                        IJO</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-
-                <div class="modal-body p-4">
-                    <div id="progressContainer" class="progress mb-4" style="height: 6px; display: none;">
-                        <div id="aiProgress" class="progress-bar bg-warning" style="width: 0%"></div>
+                <div class="modal-body text-center">
+                    <div id="sommelier-content">
                     </div>
 
-                    <div class="ai-step active" id="step0">
-                        <div class="text-center py-4">
-                            <i class="fas fa-robot mb-3" style="font-size: 3.5rem; color: var(--gold);"></i>
-                            <h3 style="font-family: 'Playfair Display';">Вітаю! Я IJO-сомельє</h3>
-                            <p class="text-muted px-3">Давайте підберемо зерно, яке зробить твій ранок особливим. Я
-                                поставлю декілька запитань, щоб знайти ваш ідеал.</p>
-                            <button type="button" class="btn btn-coffee px-5 mt-4" onclick="goToStep(1)">
-                                Почати підбір
-                            </button>
-                        </div>
+                    <div class="progress mt-4" style="height: 5px; background: #eee;">
+                        <div id="ai-progress" class="progress-bar" style="background: var(--gold); width: 20%;"></div>
                     </div>
-
-                    <div class="ai-step" id="step1">
-                        <h5 class="text-center mb-4 font-weight-bold">1. Як ви готуєте свою каву?</h5>
-                        <div class="option-card" onclick="saveStep(1, 'machine')">
-                            <i class="fas fa-plug mr-3"></i> <b>Кавомашина / Гейзер</b>
-                        </div>
-                        <div class="option-card" onclick="saveStep(1, 'manual')">
-                            <i class="fas fa-fire-alt mr-3"></i> <b>Турка / Чашка / Фільтр</b>
-                        </div>
-                    </div>
-
-                    <div class="ai-step" id="step2">
-                        <h5 class="text-center mb-4 font-weight-bold">2. Додаєте молоко чи п'єте чорну?</h5>
-                        <div class="option-card" onclick="saveStep(2, 'black')">
-                            <i class="fas fa-coffee mr-3"></i> <b>Тільки чорна (чистий смак)</b>
-                        </div>
-                        <div class="option-card" onclick="saveStep(2, 'milk')">
-                            <i class="fas fa-cheese mr-3"></i> <b>З молоком (Latte/Cappuccino)</b>
-                        </div>
-                    </div>
-
-                    <div class="ai-step" id="step3">
-                        <h5 class="text-center mb-4 font-weight-bold">3. Який післясмак ви шукаєте?</h5>
-                        <div class="option-card" onclick="saveStep(3, 'classic')">
-                            <i class="fas fa-cookie mr-3"></i> <b>Горіхово-шоколадна класика</b>
-                        </div>
-                        <div class="option-card" onclick="saveStep(3, 'exotic')">
-                            <i class="fas fa-lemon mr-3"></i> <b>Ягідно-фруктова екзотика</b>
-                        </div>
-                    </div>
-
-                    <div class="ai-step" id="step4">
-                        <h5 class="text-center mb-4 font-weight-bold">4. Наскільки сильною має бути "іскра"?</h5>
-                        <div class="option-card" onclick="finishSelection('STRONG')">
-                            <i class="fas fa-bolt mr-3"></i> <b>Максимальна бадьорість</b>
-                        </div>
-                        <div class="option-card" onclick="finishSelection('SOFT')">
-                            <i class="fas fa-leaf mr-3"></i> <b>М'який ароматний ритуал</b>
-                        </div>
-                    </div>
-
-                    <div id="aiNavigation" class="d-flex justify-content-between mt-4 border-top pt-3"
-                        style="display: none;">
-                        <button type="button" class="btn btn-sm text-muted" onclick="restartAI()">
-                            <i class="fas fa-undo"></i> Спочатку
-                        </button>
-                        <button id="prevBtn" type="button" class="btn btn-sm btn-coffee-outline" onclick="prevStep()">
-                            <i class="fas fa-arrow-left"></i> Назад
-                        </button>
-                    </div>
+                </div>
+                <div class="modal-footer border-0 justify-content-between">
+                    <button type="button" class="btn btn-sm text-muted" id="prevStep" onclick="changeStep(-1)"
+                        style="display:none;">Назад</button>
+                    <small class="text-uppercase" style="letter-spacing: 1px; color: var(--gold);" id="stepCounter">Крок
+                        1 з 5</small>
                 </div>
             </div>
         </div>
     </div>
+
+
     <footer>
         <div class="container-fluid text-center">
             <small>© 2026 IJO Coffee — Тільки преміальні сорти</small>
@@ -510,95 +665,112 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
-    <script th:inline="javascript">
-        let currentStep = 0;
-        let historySteps = [];
-        let aiPrefs = {
-            intensity: '', roast: '', composition: '',
-            bitterness: '', acidity: '', sort: 'priceDesc'
-        };
+    <script>
+        const sommelierSteps = [
+            {
+                title: "Який склад кави ви полюбляєте?",
+                param: "composition",
+                options: [
+                    { value: "ARABICA_100", label: "100% Арабіка", icon: "fa-seedling" },
+                    { value: "MIX", label: "Купаж (Арабіка/Робуста)", icon: "fa-layer-group" }
+                ]
+            },
+            {
+                title: "Оберіть інтенсивність смаку:",
+                param: "intensity",
+                options: [
+                    { value: "SOFT", label: "М'яка", icon: "fa-feather" },
+                    { value: "BALANCED", label: "Середня", icon: "fa-coffee" },
+                    { value: "STRONG", label: "Міцна", icon: "fa-bolt" }
+                ]
+            },
+            {
+                title: "Яке обсмаження вам до душі?",
+                param: "roast",
+                options: [
+                    { value: "LIGHT", label: "Світле", icon: "fa-sun" },
+                    { value: "MEDIUM", label: "Середнє", icon: "fa-adjust" },
+                    { value: "MEDIUM_DARK", label: "Середнє-темне", icon: "fa-adjust" },
+                    { value: "DARK", label: "Темне", icon: "fa-moon" }
+                ]
+            },
+            {
+                title: "Чи важлива для вас кислинка?",
+                param: "acidity",
+                options: [
+                    { value: "LOW", label: "Майже немає", icon: "fa-minus" },
+                    { value: "MEDIUM", label: "Збалансована", icon: "fa-balance-scale" },
+                    { value: "HIGH", label: "Виражена фруктова", icon: "fa-lemon" }
+                ]
+            },
+            {
+                title: "Яку гірчинку ви шукаєте?",
+                param: "bitterness",
+                options: [
+                    { value: "LOW", label: "Делікатна", icon: "fa-tint" },
+                    { value: "MEDIUM", label: "Класична", icon: "fa-mug-hot" },
+                    { value: "HIGH", label: "Глибока шоколадна", icon: "fa-chocolate-bar" }
+                ]
+            }
+        ];
 
-        function goToStep(step) {
-            currentStep = step;
-            $('.ai-step').hide().removeClass('active');
-            $('#step' + step).fadeIn(300).addClass('active');
+        let currentAiStep = 0;
+        let userChoices = {};
 
-            if (step === 0) {
-                $('#progressContainer').hide();
-                $('#aiNavigation').hide();
+        function openSommelier() {
+            currentAiStep = 0;
+            userChoices = {};
+            $('#aiSommelierModal').modal('show');
+            showStep(0);
+        }
+
+        function showStep(stepIndex) {
+            const step = sommelierSteps[stepIndex];
+            let html = `<h4 class="mb-4">${step.title}</h4><div class="row px-3">`;
+
+            step.options.forEach(opt => {
+                html += `
+            <div class="col-12 mb-2">
+                <div class="option-card p-3 d-flex align-items-center" onclick="makeChoice('${step.param}', '${opt.value}')">
+                    <i class="fas ${opt.icon} mr-3"></i>
+                    <span class="font-weight-bold">${opt.label}</span>
+                </div>
+            </div>`;
+            });
+
+            html += `</div>`;
+            document.getElementById('sommelier-content').innerHTML = html;
+
+            // Оновлення прогресу
+            document.getElementById('ai-progress').style.width = ((stepIndex + 1) / sommelierSteps.length * 100) + "%";
+            document.getElementById('stepCounter').innerText = `Крок ${stepIndex + 1} з ${sommelierSteps.length}`;
+            document.getElementById('prevStep').style.display = stepIndex > 0 ? 'block' : 'none';
+        }
+
+        function makeChoice(param, value) {
+            userChoices[param] = value;
+            if (currentAiStep < sommelierSteps.length - 1) {
+                currentAiStep++;
+                showStep(currentAiStep);
             } else {
-                $('#progressContainer').show();
-                $('#aiNavigation').css('display', 'flex');
-                $('#aiProgress').css('width', (step * 25) + '%');
-
-                // Ховаємо "Назад" тільки на першому питанні
-                if (step === 1) $('#prevBtn').css('visibility', 'hidden');
-                else $('#prevBtn').css('visibility', 'visible');
+                finishSommelier();
             }
         }
 
-        function saveStep(step, value) {
-            // Зберігаємо копію поточних налаштувань перед зміною
-            historySteps[step] = JSON.parse(JSON.stringify(aiPrefs));
+        function changeStep(delta) {
+            currentAiStep += delta;
+            showStep(currentAiStep);
+        }
 
-            if (step === 1) {
-                aiPrefs.roast = (value === 'machine') ? 'DARK' : 'LIGHT';
-            } else if (step === 2) {
-                if (value === 'milk') {
-                    aiPrefs.composition = 'MIX_70_30';
-                    aiPrefs.bitterness = 'HIGH';
-                } else {
-                    aiPrefs.composition = 'ARABICA_100';
-                }
-            } else if (step === 3) {
-                if (value === 'classic') {
-                    aiPrefs.acidity = 'LOW';
-                    aiPrefs.bitterness = 'MEDIUM';
-                } else {
-                    aiPrefs.acidity = 'HIGH';
-                    aiPrefs.bitterness = 'LOW';
-                }
+        function finishSommelier() {
+            // Формуємо URL на основі зібраних даних
+            let url = '/coffee/filter?';
+            const params = [];
+            for (let key in userChoices) {
+                params.push(`${key}=${userChoices[key]}`);
             }
-            goToStep(step + 1);
+            window.location.href = url + params.join('&');
         }
-
-        function prevStep() {
-            if (currentStep > 1) {
-                aiPrefs = historySteps[currentStep - 1];
-                goToStep(currentStep - 1);
-            }
-        }
-
-        function restartAI() {
-            aiPrefs = { intensity: '', roast: '', composition: '', bitterness: '', acidity: '', sort: 'priceDesc' };
-            historySteps = [];
-            goToStep(0);
-        }
-
-        function finishSelection(intensityValue) {
-            aiPrefs.intensity = intensityValue;
-
-            // Візуалізація аналізу
-            $('.ai-modal-content').html(`
-            <div class="text-center p-5">
-                <div class="spinner-grow text-warning mb-4" role="status" style="width: 3rem; height: 3rem;"></div>
-                <h4 style="font-family: 'Playfair Display'">IJO AI аналізує ваші смаки...</h4>
-                <p class="text-muted">Шукаю найкраще зерно в нашій колекції</p>
-            </div>
-        `);
-
-            const baseUrl = [[@{/coffee/filter}]];
-        const params = new URLSearchParams();
-
-        // Додаємо тільки заповнені параметри
-        Object.keys(aiPrefs).forEach(key => {
-            if (aiPrefs[key]) params.append(key, aiPrefs[key]);
-        });
-
-        setTimeout(() => {
-            window.location.href = baseUrl + '?' + params.toString();
-        }, 2000);
-    }
     </script>
 </body>
 

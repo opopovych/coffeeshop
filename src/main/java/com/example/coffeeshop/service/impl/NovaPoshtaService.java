@@ -40,12 +40,26 @@ public class NovaPoshtaService {
         request.put("apiKey", apiKey);
         request.put("modelName", "Address");
         request.put("calledMethod", "getWarehouses");
-        
+
         Map<String, String> methodProps = new HashMap<>();
         methodProps.put("CityRef", cityRef);
+        // Додаємо ліміт, щоб API не "зависало" на великих списках
+        methodProps.put("Limit", "500");
         request.put("methodProperties", methodProps);
 
-        Map<String, Object> response = restTemplate.postForObject(apiUrl, request, Map.class);
-        return (List<Map<String, Object>>) response.get("data");
+        try {
+            Map<String, Object> response = restTemplate.postForObject(apiUrl, request, Map.class);
+
+            // Перевірка: чи прийшла відповідь і чи немає в ній помилок від НП
+            if (response != null && Boolean.TRUE.equals(response.get("success"))) {
+                return (List<Map<String, Object>>) response.get("data");
+            } else if (response != null) {
+                System.err.println("Помилка НП: " + response.get("errors"));
+            }
+        } catch (Exception e) {
+            System.err.println("Помилка при запиті до Нової Пошти: " + e.getMessage());
+        }
+
+        return List.of(); // Повертаємо порожній список, щоб контролер не падав
     }
 }

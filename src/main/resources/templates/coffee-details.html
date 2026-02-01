@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${coffee.brand.name} + ' ' + ${coffee.name}">Coffee Details</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 
@@ -45,7 +48,7 @@
             background: var(--white);
             margin-top: 50px;
             padding: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
         }
 
         .product-image img {
@@ -71,7 +74,6 @@
             font-size: 0.9rem;
         }
 
-        /* Склад під назвою */
         .composition-header {
             font-size: 1.1rem;
             color: var(--dark-gold);
@@ -80,7 +82,7 @@
             font-style: italic;
         }
 
-        /* --- ЗЕРНЯТКА (ПЕЛЮСТКИ) --- */
+        /* --- ХАРАКТЕРИСТИКИ --- */
         .bean-group {
             margin: 20px 0;
             padding: 20px 0;
@@ -102,19 +104,23 @@
             width: 130px;
         }
 
-        .bean-icon { 
-            font-size: 0.85rem; 
-            color: var(--gold); 
+        .bean-icon {
+            font-size: 0.85rem;
+            color: var(--gold);
             margin-right: 5px;
             transform: rotate(-15deg);
         }
-        .bean-icon.inactive { color: #e0e0e0; opacity: 0.4; }
 
-        /* --- ІНША ІНФО --- */
+        .bean-icon.inactive {
+            color: #e0e0e0;
+            opacity: 0.4;
+        }
+
         .info-row {
             margin-bottom: 10px;
             font-size: 0.95rem;
         }
+
         .info-label {
             font-weight: 700;
             color: var(--espresso);
@@ -127,13 +133,46 @@
             margin: 25px 0;
         }
 
-        .quantity-input {
-            width: 70px;
-            height: 48px;
+        /* --- КЕРУВАННЯ КІЛЬКІСТЮ --- */
+        .quantity-control {
+            display: flex;
+            align-items: center;
             border: 1px solid var(--gold);
+            width: fit-content;
+            margin-right: 20px;
+        }
+
+        .qty-btn {
+            background: none;
+            border: none;
+            width: 40px;
+            height: 48px;
+            color: var(--espresso);
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: 0.3s;
+        }
+
+        .qty-btn:hover {
+            background: var(--gold);
+            color: white;
+        }
+
+        .quantity-input {
+            width: 60px;
+            height: 48px;
+            border: none !important;
             text-align: center;
-            margin-right: 15px;
-            border-radius: 0;
+            font-weight: 700;
+            background: transparent;
+            margin: 0 !important;
+            -moz-appearance: textfield;
+        }
+
+        .quantity-input::-webkit-outer-spin-button,
+        .quantity-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
         }
 
         .btn-add-cart {
@@ -146,6 +185,7 @@
             letter-spacing: 1px;
             border-radius: 0;
             transition: 0.3s;
+            height: 50px;
         }
 
         .btn-add-cart:hover {
@@ -153,36 +193,31 @@
             color: var(--espresso);
         }
 
-        .description-text {
-            margin-top: 30px;
-            color: #555;
-            line-height: 1.7;
-            border-left: 3px solid var(--gold);
-            padding-left: 20px;
+        /* --- ОПИС (УКУЛЬТУРЕНИЙ) --- */
+        .description-wrapper {
+            margin-top: 5px;
+            padding-top: 25px;
+            border-top: 1px solid #f0f0f0;
         }
-/* Робимо стрілочки видимими в Chrome, Safari, Edge та Opera */
-.quantity-input::-webkit-outer-spin-button,
-.quantity-input::-webkit-inner-spin-button {
-    opacity: 1 !important;
-    display: block !important;
-}
 
-/* Для Firefox */
-.quantity-input {
-    -moz-appearance: textfield !important;
-    appearance: auto !important; /* Дозволяє браузеру показати стандартні елементи */
-}
+        .description-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-style: italic;
+            color: var(--dark-gold);
+            margin-bottom: 15px;
+            display: block;
+            text-align: center;
+        }
 
-/* Додатково стилізуємо саме поле, щоб воно виглядало вишукано */
-.quantity-input {
-    width: 80px;
-    height: 50px;
-    text-align: center;
-    border: 1px solid #ddd;
-    border-radius: 0; /* Прямі кути для преміальності */
-    margin-right: 10px;
-    background: transparent;
-}
+        .description-text {
+            color: #555;
+            line-height: 1.8;
+            font-weight: 300;
+            font-size: 1.05rem;
+            text-align: justify;
+        }
+
         footer {
             background: var(--espresso);
             color: var(--gold);
@@ -192,6 +227,11 @@
             width: 100%;
             padding: 15px 0;
             z-index: 1000;
+        }
+
+        .footer-logo {
+            max-width: 30px;
+            margin-bottom: 5px;
         }
     </style>
 </head>
@@ -210,69 +250,82 @@
     </nav>
 
     <div class="container details-container">
-        <div class="row">
-            <div class="col-md-6 mb-4 mb-md-0">
-                <div class="product-image">
-                    <img th:src="@{'/images/' + ${coffee.photoPath}}" alt="Coffee Photo"/>
+        <div class="column">
+            <div class="row">
+                <div class="col-md-6 mb-4 mb-md-0">
+                    <div class="product-image">
+                        <img th:src="@{'/images/' + ${coffee.photoPath}}" alt="Coffee Photo" />
+                    </div>
+                </div>
+
+                <div class="col-md-6 product-info">
+                    <span class="brand-name" th:text="${coffee.brand.name}">BRAND</span>
+                    <h1 th:text="${coffee.name}">Coffee Name</h1>
+
+                    <div class="composition-header" th:text="${coffee.composition.getDisplayName()}">
+                        100% Arabica
+                    </div>
+
+                    <div class="bean-group">
+                        <div class="bean-rating">
+                            <span class="bean-label">Інтенсивність</span>
+                            <th:block th:each="i : ${#numbers.sequence(1, 3)}">
+                                <i class="fas fa-seedling bean-icon"
+                                    th:classappend="${i <= (coffee.intensity?.ordinal() + 1)} ? '' : 'inactive'"></i>
+                            </th:block>
+                        </div>
+                        <div class="bean-rating">
+                            <span class="bean-label">Обжарка</span>
+                            <th:block th:each="i : ${#numbers.sequence(1, 4)}">
+                                <i class="fas fa-seedling bean-icon"
+                                    th:classappend="${i <= (coffee.roastLevel?.ordinal() + 1)} ? '' : 'inactive'"></i>
+                            </th:block>
+                        </div>
+                        <div class="bean-rating">
+                            <span class="bean-label">Гіркота</span>
+                            <th:block th:each="i : ${#numbers.sequence(1, 3)}">
+                                <i class="fas fa-seedling bean-icon"
+                                    th:classappend="${i <= (coffee.bitterness?.ordinal() + 1)} ? '' : 'inactive'"></i>
+                            </th:block>
+                        </div>
+                        <div class="bean-rating">
+                            <span class="bean-label">Кислотність</span>
+                            <th:block th:each="i : ${#numbers.sequence(1, 3)}">
+                                <i class="fas fa-seedling bean-icon"
+                                    th:classappend="${i <= (coffee.acidity?.ordinal() + 1)} ? '' : 'inactive'"></i>
+                            </th:block>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label">Країна:</span>
+                        <span th:text="${coffee.originCountry.name}">Країна</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Вага:</span>
+                        <span th:text="${coffee.weight.getDisplayName()}">250г</span>
+                    </div>
+
+                    <div class="price-tag">
+                        ₴ <span th:text="${#numbers.formatDecimal(coffee.price, 0, 'POINT', 0, 'COMMA')}">450</span>
+                    </div>
+
+                    <form th:action="@{'/cart/add/' + ${coffee.id}}" method="post"
+                        class="d-flex align-items-center mb-4">
+                        <div class="quantity-control">
+                            <button type="button" class="qty-btn" onclick="decrementQty()">-</button>
+                            <input type="number" id="quantity" name="quantity" value="1" min="1" class="quantity-input"
+                                readonly>
+                            <button type="button" class="qty-btn" onclick="incrementQty()">+</button>
+                        </div>
+                        <button type="submit" class="btn btn-add-cart">У кошик</button>
+                    </form>
+
                 </div>
             </div>
 
-            <div class="col-md-6 product-info">
-                <span class="brand-name" th:text="${coffee.brand.name}">BRAND</span>
-                <h1 th:text="${coffee.name}">Coffee Name</h1>
-                
-                <div class="composition-header" th:text="${coffee.composition.getDisplayName()}">
-                    100% Arabica
-                </div>
-                
-                <div class="bean-group">
-                    <div class="bean-rating">
-                        <span class="bean-label">Інтенсивність</span>
-                        <th:block th:each="i : ${#numbers.sequence(1, 5)}">
-                            <i class="fas fa-seedling bean-icon" th:classappend="${i <= (coffee.intensity?.ordinal() + 1)} ? '' : 'inactive'"></i>
-                        </th:block>
-                    </div>
-
-                    <div class="bean-rating">
-                        <span class="bean-label">Обжарка</span>
-                        <th:block th:each="i : ${#numbers.sequence(1, 5)}">
-                            <i class="fas fa-seedling bean-icon" th:classappend="${i <= (coffee.roastLevel?.ordinal() + 1)} ? '' : 'inactive'"></i>
-                        </th:block>
-                    </div>
-
-                    <div class="bean-rating">
-                        <span class="bean-label">Гіркота</span>
-                        <th:block th:each="i : ${#numbers.sequence(1, 5)}">
-                            <i class="fas fa-seedling bean-icon" th:classappend="${i <= (coffee.bitterness?.ordinal() + 1)} ? '' : 'inactive'"></i>
-                        </th:block>
-                    </div>
-
-                    <div class="bean-rating">
-                        <span class="bean-label">Кислотність</span>
-                        <th:block th:each="i : ${#numbers.sequence(1, 5)}">
-                            <i class="fas fa-seedling bean-icon" th:classappend="${i <= (coffee.acidity?.ordinal() + 1)} ? '' : 'inactive'"></i>
-                        </th:block>
-                    </div>
-                </div>
-
-                <div class="info-row">
-                    <span class="info-label">Країна:</span>
-                    <span th:text="${coffee.originCountry.name}">Країна</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Вага:</span>
-                    <span th:text="${coffee.weight.getDisplayName()}">250г</span>
-                </div>
-
-                <div class="price-tag">
-                    ₴ <span th:text="${#numbers.formatDecimal(coffee.price, 0, 'POINT', 0, 'COMMA')}">450</span>
-                </div>
-
-                <form th:action="@{'/cart/add/' + ${coffee.id}}" method="post" class="d-flex align-items-center mb-4">
-                    <input type="number" name="quantity" value="1" min="1" class="form-control quantity-input">
-                    <button type="submit" class="btn btn-add-cart">У кошик</button>
-                </form>
-
+            <div class="description-wrapper">
+                <span class="description-title">Профіль смаку та особливості</span>
                 <div class="description-text">
                     <p th:text="${coffee.description}">Опис...</p>
                 </div>
@@ -281,13 +334,28 @@
     </div>
 
     <footer>
-        <div class="container text-center">
-            <small>© 2026 IJO Coffee — Смак справжньої якості</small>
+        <div class="container-fluid text-center">
+            <small>© 2026 IJO Coffee — Тільки преміальні сорти</small>
         </div>
     </footer>
 
+    <script>
+        function incrementQty() {
+            var input = document.getElementById('quantity');
+            input.value = parseInt(input.value) + 1;
+        }
+
+        function decrementQty() {
+            var input = document.getElementById('quantity');
+            var value = parseInt(input.value);
+            if (value > 1) {
+                input.value = value - 1;
+            }
+        }
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
 </body>
+
 </html>

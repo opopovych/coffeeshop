@@ -5,7 +5,6 @@ import com.example.coffeeshop.model.*;
 import com.example.coffeeshop.model.dto.CoffeeBeanDto;
 import com.example.coffeeshop.repository.CoffeeBeanRepository;
 import com.example.coffeeshop.service.CoffeeBeanService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -54,28 +53,49 @@ public class CoffeeBeanServiceImpl implements CoffeeBeanService {
         if (query == null || query.isBlank()){
             return coffeeBeanRepository.findAll();
         }
-        return coffeeBeanRepository.findByNameContainingIgnoreCase(query);
+        return coffeeBeanRepository.findByNameContainingIgnoreCaseAndActiveTrue(query);
     }
 
     @Override
     public List<CoffeeBean> findByBrandId(Long brandId) {
-        return coffeeBeanRepository.findByBrandId(brandId);
+        return coffeeBeanRepository.findByBrandIdAndActiveTrue(brandId);
     }
 
     @Override
     public Page<CoffeeBean> filter(
             Long brandId,
-            Intensity intensity,
-            RoastLevel roast,
-            Bitterness bitterness,
-            Composition composition,
+            Long countryId,
+            List<Intensity> intensity,
+            List<RoastLevel> roast,
+            List<Bitterness> bitterness,
+            List<Composition> composition,
+            List<Acidity> acidity,
             Pageable pageable
     ) {
         return coffeeBeanRepository.filter(
-                brandId, intensity, roast, bitterness, composition, pageable
+                brandId,countryId, intensity, roast, bitterness, composition,acidity, pageable
         );
     }
 
+    @Override
+    public List<CoffeeBean> findAllById(List<Long> productIds) {
+        return coffeeBeanRepository.findAllById(productIds);
+    }
+
+    @Override
+    public void saveAll(List<CoffeeBean> products) {
+coffeeBeanRepository.saveAll(products);
+    }
+
+    @Override
+    public void deleteAllById(List<Long> productIds) {
+coffeeBeanRepository.deleteAllById(productIds);
+    }
+
+    @Override
+    public Page<CoffeeBean> findAllActive(Pageable pageable) {
+        return coffeeBeanRepository.findAllActive(pageable);
+    }
 
 
 }

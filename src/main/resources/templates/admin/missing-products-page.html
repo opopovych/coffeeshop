@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Нові товари | IJO</title>
+    <style>
+        body { background: #f8f9fa; font-family: 'Montserrat', sans-serif; }
+        .card- новинки { border-radius: 15px; border: none; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+        .sku-badge { background: #eee; font-family: monospace; padding: 4px 8px; border-radius: 5px; color: #555; }
+        .price-text { color: #27ae60; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div th:replace="~{fragments/adminnavbar :: navbar}"></div>
+
+    <div class="container py-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3><i class="fas fa-magic text-warning mr-2"></i> Виявлено нові товари</h3>
+            <a th:href="@{/admin/coffeeList}" class="btn btn-outline-secondary">
+                <i class="fas fa-undo mr-1"></i> Назад до списку
+            </a>
+        </div>
+
+        <div th:if="${message}" class="alert alert-info" th:text="${message}"></div>
+
+        <div class="card card-новинки" th:if="${missingProducts != null && !missingProducts.isEmpty()}">
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead class="thead-light">
+                        <tr>
+                            <th class="pl-4">SKU (Код)</th>
+                            <th>Назва товару</th>
+                            <th>Прихідна ціна</th>
+                            <th class="text-right pr-4">Дія</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="entry : ${missingProducts}">
+                            <td class="pl-4 pt-3">
+                                <span class="sku-badge" th:text="${entry.key}"></span>
+                            </td>
+                            <td class="pt-3 font-weight-bold" th:text="${entry.value.name}"></td>
+                            <td class="pt-3 price-text" th:text="${entry.value.price + ' ₴'}"></td>
+                            <td class="text-right pr-4">
+                                <a th:href="@{/admin/coffee/add(sku=${entry.key}, name=${entry.value.name})}" 
+                                   class="btn btn-sm btn-primary">
+                                    <i class="fas fa-plus"></i> Створити
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

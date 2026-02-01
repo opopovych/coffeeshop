@@ -6,8 +6,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig  implements WebMvcConfigurer {
-    public void addResourceHandlers(ResourceHandlerRegistry registry){
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/images/**")
-                .addResourceLocations("file:uploads/");
+                // Спочатку шукаємо у зовнішній папці uploads (file:uploads/)
+                // Потім шукаємо у стандартній папці ресурсів (classpath:/static/images/)
+                .addResourceLocations("file:uploads/", "classpath:/static/images/");
     }
 }
