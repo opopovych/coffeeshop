@@ -7,11 +7,19 @@ import com.example.coffeeshop.service.OriginCountryService;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.List;
+import java.util.Map;
+
+import com.example.coffeeshop.service.SyncService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/admin/coffee")
@@ -26,6 +34,8 @@ public class CoffeeAdminController {
 
     @Autowired
     private OriginCountryService originCountryService;
+    @Autowired
+    private SyncService syncService;
 
     @GetMapping
     public String list(Model model) {
@@ -70,6 +80,65 @@ public class CoffeeAdminController {
         coffeeBeanService.save(coffeeBean);
         return "redirect:/admin/coffeeList";
     }
+    @PostMapping("/adjust-prices")
+    public String adjustPrices(@RequestParam("percent") Double percent) {
+        List<CoffeeBean> coffeeList = coffeeBeanService.findAll();
+
+        for (CoffeeBean coffee : coffeeList) {
+            if (coffee.getPrice() != null) {
+                // Розраховуємо нову ціну
+                double newPrice = coffee.getPrice() * (1 + (percent / 100));
+
+                // Закруглюємо до цілого числа (Math.round повертає long, тому перетворюємо в Double)
+                coffee.setPrice((double) Math.round(newPrice));
+            }
+        }
+        coffeeBeanService.saveAll(coffeeList);
+        return "redirect:/admin/coffeeList";
+    }
+
+    @PostMapping("/bulk-status")
+    public String bulkStatus(
+            @RequestParam(value = "productIds", required = false) List<Long> productIds,
+            @RequestParam(value = "action", required = false) String action) {
+
+        if (productIds != null && !productIds.isEmpty() && action != null) {
+
+            if ("delete".equals(action)) {
+                // Множинне видалення
+                coffeeBeanService.deleteAllById(productIds);
+            } else {
+                // Активація або Деактивація
+                List<CoffeeBean> products = coffeeBeanService.findAllById(productIds);
+                boolean targetStatus = action.equals("activate");
+
+                products.forEach(p -> {
+                    p.setActive(targetStatus);
+                    // Про всяк випадок закругляємо ціну при збереженні
+                    if (p.getPrice() != null) {
+                        p.setPrice((double) Math.round(p.getPrice()));
+                    }
+                });
+                coffeeBeanService.saveAll(products);
+            }
+        }
+
+        return "redirect:/admin/coffeeList";
+    }
+
+    @GetMapping("/toggle/{id}")
+    public String toggleStatus(@PathVariable Long id) {
+        CoffeeBean coffee = coffeeBeanService.findById(id);
+        if (coffee != null) {
+            coffee.setActive(!coffee.isActive());
+            // Закругляємо ціну при будь-якому збереженні, щоб не було .0
+            if (coffee.getPrice() != null) {
+                coffee.setPrice((double) Math.round(coffee.getPrice()));
+            }
+            coffeeBeanService.save(coffee);
+        }
+        return "redirect:/admin/coffeeList";
+    }
 
     @GetMapping("/edit/{id}")
     public String editForm(@PathVariable Long id, Model model) {
@@ -100,6 +169,7 @@ public class CoffeeAdminController {
 
         // --- ОНОВЛЮЄМО ПОЛЯ ---
         existing.setName(coffeeBean.getName());
+        existing.setSku(coffeeBean.getSku());
         existing.setDescription(coffeeBean.getDescription());
         existing.setPrice(coffeeBean.getPrice());
         existing.setBrand(coffeeBean.getBrand());
@@ -136,7 +206,7 @@ public class CoffeeAdminController {
         // --- ЗБЕРЕГТИ ---
         coffeeBeanService.save(existing);
 
-        return "redirect:/admin/coffee";
+        return "redirect:/admin/coffeeList";
     }
 
 
@@ -145,4 +215,82 @@ public class CoffeeAdminController {
         coffeeBeanService.delete(id);
         return "redirect:/admin/coffee";
     }
+    @PostMapping("/upload-price")
+    public String uploadPrice(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+        if (file.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Будь ласка, виберіть файл.");
+            return "redirect:/admin/coffeeList";
+        }
+
+        try {
+            // Отримуємо звіт від сервісу
+            SyncReport report = syncService.syncWithPriceList(file);
+
+            String message = String.format("Синхронізація завершена! Оновлено: %d, Вимкнено: %d",
+                    report.getUpdated(), report.getDeactivated());
+
+            redirectAttributes.addFlashAttribute("success", message);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Помилка при читанні файлу: " + e.getMessage());
+        }
+
+        return "redirect:/admin/coffeeList";
+    }
+    @PostMapping("/upload-available")
+    public String uploadAvailable(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+        if (file.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Будь ласка, виберіть файл.");
+            return "redirect:/admin/coffeeList";
+        }
+
+        try {
+            // Отримуємо звіт від сервісу
+            SyncReport report = syncService.syncStatusOnly(file);
+
+            String message = String.format("Синхронізація завершена! Оновлено: %d, Вимкнено: %d",
+                    report.getUpdated(), report.getDeactivated());
+
+            redirectAttributes.addFlashAttribute("success", message);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Помилка при читанні файлу: " + e.getMessage());
+        }
+
+        return "redirect:/admin/coffeeList";
+    }
+
+    @PostMapping("/missing-products")
+    public String handleMissingProducts(@RequestParam("file") MultipartFile file,
+                                        HttpSession session,
+                                        RedirectAttributes ra) {
+        if (file.isEmpty()) {
+            ra.addFlashAttribute("error", "Файл не обрано!");
+            return "redirect:/admin/coffeeList";
+        }
+
+        try {
+            // Отримуємо мапу відсутніх товарів (SKU -> ProductData)
+            Map<String, ProductData> missingProducts = syncService.lookMissingProducts(file);
+
+            // Зберігаємо в сесію
+            session.setAttribute("missingProductsMap", missingProducts);
+
+            return "redirect:/admin/coffee/missing-products-view";
+        } catch (Exception e) {
+            ra.addFlashAttribute("error", "Помилка обробки: " + e.getMessage());
+            return "redirect:/admin/coffeeList";
+        }
+    }
+
+    @GetMapping("/missing-products-view")
+    public String showMissingProducts(HttpSession session, Model model) {
+        Map<String, ProductData> missing = (Map<String, ProductData>) session.getAttribute("missingProductsMap");
+
+        if (missing == null || missing.isEmpty()) {
+            model.addAttribute("message", "Нових товарів не знайдено (всі товари з файлу вже є в базі).");
+        }
+
+        model.addAttribute("missingProducts", missing);
+        return "admin/missing-products-page"; // Назва нового HTML файлу
+    }
+
 }

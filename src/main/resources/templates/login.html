@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <title>Вхід до кав'ярні</title>
+    <style>
+        body { background: #2e2a28; display: flex; align-items: center; height: 100vh; color: white; }
+        .login-card { background: white; color: #333; padding: 30px; border-radius: 12px; width: 100%; max-width: 400px; margin: auto; }
+        .btn-coffee { background: #d1b894; color: #2e2a28; font-weight: bold; }
+    </style>
+</head>
+<body>
+<div class="login-card shadow">
+    <h3 class="text-center mb-4">Адмін-панель</h3>
+    <form th:action="@{/login}" method="post">
+        <div class="form-group">
+            <label>Логін</label>
+            <input type="text" name="username" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label>Пароль</label>
+            <input type="password" name="password" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-coffee btn-block">Увійти</button>
+        <div th:if="${param.error}" class="text-danger mt-2 text-center small">
+            Невірний логін або пароль
+        </div>
+    </form>
+</div>
+</body>
+</html>

@@ -15,13 +15,16 @@ public class Order {
     private Long id;
 
     private String customerName;
+    private String surName;
     private String phone;
     private String deliveryAddress;
     private Double totalPrice;
     private Status status;
+    private String paymentMethod; // Додайте це поле
     //Поля для нової пошти
     private String city;        // Назва міста
     private String warehouse;   // Назва/номер відділення
+    private String comment;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> items = new ArrayList<>();

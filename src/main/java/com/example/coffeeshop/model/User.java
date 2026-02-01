@@ -1,0 +1,23 @@
+package com.example.coffeeshop.model;
+
+import jakarta.persistence.*;
+import lombok.Data;
+
+@Entity
+@Data
+@Table(name = "users")
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true, nullable = false)
+    private String username;
+
+    @Column(nullable = false)
+    private String password; // Тут буде тільки хеш!
+
+    private String role; // Наприклад: "ROLE_ADMIN"
+
+    // Геттери та сеттери
+}

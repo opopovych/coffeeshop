@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IJO Coffee | Оформлення</title>
+    <title>IJO Coffee | Оформлення замовлення</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-    
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
     <style>
@@ -18,6 +17,7 @@
             --gold: #d1b894;
             --dark-gold: #b08d5b;
             --white: #ffffff;
+            --light-bg: #fafafa;
         }
 
         body {
@@ -28,79 +28,121 @@
             padding-bottom: 80px;
         }
 
+        /* Navbar */
         .navbar {
             background: var(--espresso) !important;
             padding: 1rem 2rem;
             border-bottom: 2px solid var(--gold);
         }
-
         .navbar-brand {
             font-family: 'Playfair Display', serif;
             color: var(--gold) !important;
             letter-spacing: 2px;
         }
 
-        .card-custom {
+        /* Блочна структура */
+        .checkout-block {
             background: var(--white);
-            border: none;
-            padding: 40px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.03);
-            border-radius: 0;
+            border: 1px solid #eee;
+            padding: 35px;
+            margin-bottom: 25px;
+            position: relative;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .checkout-block:hover {
+            border-color: var(--gold);
         }
 
-        h2 {
+        .block-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #f5f5f5;
+            padding-bottom: 15px;
+        }
+
+        .step-number {
+            background: var(--espresso);
+            color: var(--gold);
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: 700;
+            margin-right: 15px;
+            font-size: 0.85rem;
+        }
+
+        .block-header h4 {
+            margin: 0;
             font-family: 'Playfair Display', serif;
             font-weight: 700;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            position: relative;
-        }
-        h2::after {
-            content: '';
-            position: absolute;
-            bottom: 0; left: 0; width: 50px; height: 2px;
-            background: var(--gold);
+            font-size: 1.4rem;
         }
 
+        /* Поля форми */
         .form-label {
             font-size: 0.7rem;
             font-weight: 700;
             letter-spacing: 1px;
             color: var(--dark-gold);
             text-transform: uppercase;
-            margin-top: 15px;
+            margin-bottom: 8px;
+            display: block;
         }
 
-        /* Стилізація полів та Select2 під дизайн IJO */
         .form-control, .select2-container--default .select2-selection--single {
             border-radius: 0 !important;
             border: 1px solid #eee !important;
             height: 52px !important;
-            background: #fafafa !important;
-        }
-        
-        .select2-container--default .select2-selection--single .select2-selection__rendered {
-            line-height: 50px !important;
-            padding-left: 15px !important;
-            color: var(--espresso) !important;
+            background: var(--light-bg) !important;
+            padding-left: 15px;
         }
 
+        textarea.form-control {
+            height: auto !important;
+            padding-top: 15px;
+        }
+
+        /* Select2 Customization */
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 50px !important;
+            color: var(--espresso) !important;
+        }
         .select2-container--default .select2-selection--single .select2-selection__arrow {
             height: 50px !important;
         }
 
+        /* Радіо-кнопки */
+        .payment-option {
+            border: 1px solid #eee;
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .payment-option:hover { background: #fcfcfc; }
+
+        .custom-control-input:checked ~ .custom-control-label::before {
+            background-color: var(--gold) !important;
+            border-color: var(--gold) !important;
+        }
+
+        /* Sidebar підсумок */
         .summary-box {
             background: var(--espresso);
             color: var(--gold);
             padding: 40px;
             position: sticky;
-            top: 100px;
+            top: 40px;
             border-top: 5px solid var(--gold);
         }
 
         .total-price {
             font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             margin: 20px 0;
         }
 
@@ -114,25 +156,17 @@
             letter-spacing: 2px;
             width: 100%;
             transition: 0.4s;
-            cursor: pointer;
+            margin-top: 20px;
         }
-
         .btn-confirm:hover:not(:disabled) {
             background: var(--white);
             color: var(--espresso);
             transform: translateY(-3px);
         }
 
-        .ijo-badge {
-            font-size: 0.6rem;
-            letter-spacing: 3px;
-            border: 1px solid var(--gold);
-            padding: 5px 10px;
-            display: inline-block;
-            margin-bottom: 20px;
+        @media (max-width: 991px) {
+            .summary-box { position: static; margin-top: 30px; }
         }
-        
-        #warehouseSelect:disabled { opacity: 0.5; cursor: not-allowed; }
     </style>
 </head>
 
@@ -140,91 +174,135 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
-        <a class="navbar-brand" th:href="@{/coffee}">IJO COFFEE</a>
+        <a class="navbar-brand" th:href="@{/}">
+            <i class="fas fa-seedling mr-2"></i> IJO COFFEE
+        </a>
     </div>
 </nav>
 
 <div class="container mt-5">
     <div class="row">
+        <div class="col-lg-8">
+            <a th:href="@{/cart/view}" class="text-muted small mb-4 d-inline-block text-decoration-none">
+                <i class="fas fa-arrow-left mr-1"></i> Повернутись до кошика
+            </a>
 
-        <div class="col-lg-7">
-            <div class="card-custom">
-                <a th:href="@{/cart/view}" class="text-muted small mb-4 d-inline-block text-decoration-none">
-                    <i class="fas fa-chevron-left mr-1"></i> ПОВЕРНУТИСЬ ДО КОШИКА
-                </a>
+            <form th:action="@{/order/checkout}" method="post" id="checkoutForm">
 
-                <div class="mt-2">
-                    <div class="ijo-badge">IJO - ПРАВИЛЬНИЙ ВИБІР</div>
-                    <h2>Деталі доставки</h2>
+                <div class="checkout-block">
+                    <div class="block-header">
+                        <span class="step-number">1</span>
+                        <h4>Контактні дані</h4>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label class="form-label">Ім'я</label>
+                            <input type="text" name="name" class="form-control" placeholder="Введіть ім'я" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label class="form-label">Прізвище</label>
+                            <input type="text" name="surName" class="form-control" placeholder="Введіть прізвище" required>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <label class="form-label">Телефон</label>
+                            <input type="tel" id="phoneInput" name="phone" class="form-control" placeholder="+38 (0__) ___ __ __" required>
+                        </div>
+                    </div>
                 </div>
 
-                <form th:action="@{/order/checkout}" method="post" id="checkoutForm">
-                    <div class="form-group">
-                        <label class="form-label">Ваше ім'я</label>
-                        <input type="text" name="name" class="form-control" placeholder="Олександр Іванов" required>
+                <div class="checkout-block">
+                    <div class="block-header">
+                        <span class="step-number">2</span>
+                        <h4>Доставка Новою Поштою</h4>
                     </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Контактний телефон</label>
-                        <input type="tel" id="phoneInput" name="phone" class="form-control" placeholder="+38 (0__) ___ __ __" required>
-                    </div>
-
-                    <hr class="my-4">
 
                     <input type="hidden" name="cityName" id="cityNameHidden">
 
                     <div class="form-group">
-                        <label class="form-label">Місто (Нова Пошта)</label>
-                        <select id="citySelect" class="form-control" required>
+                        <label class="form-label">Ваше місто</label>
+                        <select id="citySelect" class="form-control" required style="width: 100%;">
                             <option value="">Почніть вводити назву міста...</option>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Оберіть відділення</label>
-                        <select id="warehouseSelect" name="wareHouse" class="form-control" disabled required>
+                        <label class="form-label">Відділення</label>
+                        <select id="warehouseSelect" name="wareHouse" class="form-control" disabled required style="width: 100%;">
                             <option value="">Спочатку оберіть місто</option>
                         </select>
                     </div>
-                </form>
-            </div>
-        </div>
-
-        <div class="col-lg-5 mt-4 mt-lg-0">
-            <div class="summary-box">
-                <h6 class="text-uppercase mb-2" style="letter-spacing: 3px; opacity: 0.8;">Підсумок замовлення</h6>
-                <div class="total-price">
-                    <span th:text="${total}">0</span> <small style="font-size: 1rem;">ГРН</small>
                 </div>
 
-                <p class="small mb-5" style="opacity: 0.7;">
-                    Доставка здійснюється Новою Поштою. Оплата послуг доставки згідно з тарифами перевізника при отриманні.
-                </p>
+                <div class="checkout-block">
+                    <div class="block-header">
+                        <span class="step-number">3</span>
+                        <h4>Оплата та побажання</h4>
+                    </div>
 
-                <button type="submit" form="checkoutForm" id="submitBtn" class="btn btn-confirm">
-                    Підтвердити замовлення
-                </button>
-            </div>
+                    <label class="form-label mb-3">Виберіть спосіб оплати</label>
+                    <div class="payment-options">
+                        <div class="payment-option custom-control custom-radio">
+                            <input type="radio" id="payCash" name="paymentMethod" value="При отриманні" class="custom-control-input" checked required>
+                            <label class="custom-control-label w-100" for="payCash" style="cursor:pointer;">
+                                <strong>Накладений платіж</strong>
+                                <small class="d-block text-muted">Оплата в касі Нової Пошти</small>
+                            </label>
+                        </div>
+
+                        <div class="payment-option custom-control custom-radio">
+                            <input type="radio" id="payCard" name="paymentMethod" value="На рахунок (IBAN)" class="custom-control-input" required>
+                            <label class="custom-control-label w-100" for="payCard" style="cursor:pointer;">
+                                <strong>Оплата на рахунок (IBAN)</strong>
+                                <small class="d-block text-muted">Надішлемо реквізити в SMS/Viber</small>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-4">
+                        <label class="form-label">Коментар до замовлення</label>
+                        <textarea name="comment" class="form-control" rows="3" placeholder="Додаткова інформація (необов'язково)"></textarea>
+                    </div>
+                </div>
+            </form>
         </div>
 
+        <div class="col-lg-4">
+            <div class="summary-box">
+                <h6 class="text-uppercase mb-3" style="letter-spacing: 2px; opacity: 0.8;">До сплати</h6>
+                <div class="total-price">
+                    <span th:text="${total}">0</span> <small style="font-size: 1.2rem;">грн</small>
+                </div>
+
+                <hr style="border-top: 1px solid rgba(209, 184, 148, 0.2);">
+
+                <ul class="list-unstyled small mb-4" style="opacity: 0.8; line-height: 2;">
+                    <li><i class="fas fa-truck mr-2"></i> Відправка протягом 48 годин</li>
+                </ul>
+
+                <button type="submit" form="checkoutForm" id="submitBtn" class="btn btn-confirm">
+                    Оформити замовлення
+                </button>
+
+                <p class="text-center mt-3 mb-0" style="font-size: 0.7rem; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px;">
+                    Натискаючи кнопку, ви погоджуєтесь з умовами сервісу
+                </p>
+            </div>
+        </div>
     </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/uk.js"></script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
+
 <script>
     $(document).ready(function() {
-        // 1. Маска телефону
+        // Маска для телефону
         $("#phoneInput").mask("+38 (099) 999 99 99");
 
-        // 2. Ініціалізація Select2 для міст
+        // Ініціалізація міст Нової Пошти
         $('#citySelect').select2({
             language: "uk",
             minimumInputLength: 2,
@@ -232,37 +310,27 @@
                 url: '/api/shipping/cities',
                 dataType: 'json',
                 delay: 250,
-                data: function (params) {
-                    return { name: params.term };
-                },
+                data: function (params) { return { name: params.term }; },
                 processResults: function (data) {
                     return {
                         results: $.map(data, function (item) {
-                            return {
-                                text: item.Description,
-                                id: item.Ref // Відправляємо Ref (код) для отримання відділень
-                            }
+                            return { text: item.Description, id: item.Ref }
                         })
                     };
                 }
             }
         });
 
-        // 3. Обробка вибору міста
+        // Завантаження відділень при виборі міста
         $('#citySelect').on('select2:select', function (e) {
             const data = e.params.data;
-            const cityRef = data.id;      // Код для API
-            const cityName = data.text;   // Назва для людини
+            $('#cityNameHidden').val(data.text);
 
-            // Записуємо назву міста в приховане поле
-            $('#cityNameHidden').val(cityName);
-
-            // Отримуємо відділення
             const warehouseSelect = $('#warehouseSelect');
             warehouseSelect.prop('disabled', true).html('<option>Завантаження відділень...</option>');
 
-            $.get('/api/shipping/warehouses', { cityRef: cityRef }, function(data) {
-                let options = '<option value="">Оберіть номер відділення...</option>';
+            $.get('/api/shipping/warehouses', { cityRef: data.id }, function(data) {
+                let options = '<option value="">Оберіть номер або адресу відділення...</option>';
                 data.forEach(function(w) {
                     options += `<option value="${w.Description}">${w.Description}</option>`;
                 });
@@ -270,14 +338,15 @@
             });
         });
 
-        // 4. Запобігання подвійній відправці
+        // Ефект при відправці форми
         $('#checkoutForm').on('submit', function() {
             const btn = $('#submitBtn');
             btn.prop('disabled', true);
-            btn.html('<i class="fas fa-circle-notch fa-spin mr-2"></i> ОФОРМЛЕННЯ...');
+            btn.html('<i class="fas fa-circle-notch fa-spin mr-2"></i> Створюємо замовлення...');
             return true;
         });
     });
 </script>
+
 </body>
 </html>

@@ -48,7 +48,7 @@ public class CountryAdminController {
     ) {
         country.setId(id);
         originCountryService.save(country);
-        return "redirect:/admin/coffee/country";
+        return "redirect:/admin/countries";
     }
 
     // -------------------- DELETE COUNTRY --------------------

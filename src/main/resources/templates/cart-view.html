@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>IJO Coffee | Кошик</title>
 
     <link
@@ -27,7 +27,7 @@
             background: var(--cream);
             color: var(--espresso);
             margin: 0;
-            padding-bottom: 120px;
+            padding-bottom: 140px; /* Відступ, щоб футер не перекривав контент */
         }
 
         /* --- НАВБАР --- */
@@ -67,10 +67,37 @@
             border-left: 4px solid var(--gold);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
             transition: 0.3s;
+            position: relative;
         }
 
-        .cart-card:hover {
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+        /* Адаптація для мобільних */
+        @media (max-width: 767px) {
+            .cart-card {
+                grid-template-columns: 80px 1fr;
+                gap: 15px;
+                padding: 15px;
+            }
+            
+            .cart-card img {
+                grid-row: span 1;
+            }
+
+            /* Контейнер ціни та кількості на весь рядок знизу */
+            .mobile-price-row {
+                grid-column: span 2;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-top: 1px solid rgba(0,0,0,0.05);
+                padding-top: 15px;
+                margin-top: 5px;
+            }
+            
+            .remove-btn {
+                position: absolute;
+                top: 10px;
+                right: 5px;
+            }
         }
 
         .cart-card img {
@@ -78,6 +105,13 @@
             height: 100px;
             object-fit: contain;
             background: #fcfcfc;
+        }
+
+        @media (max-width: 767px) {
+            .cart-card img {
+                width: 80px;
+                height: 80px;
+            }
         }
 
         .coffee-details .coffee-name {
@@ -95,13 +129,6 @@
             font-weight: 600;
         }
 
-        .coffee-details .characteristics {
-            font-size: 0.7rem;
-            color: #888;
-            margin-top: 5px;
-        }
-
-        /* --- ЦІНА ТА КІЛЬКІСТЬ --- */
         .price {
             font-size: 1.2rem;
             font-weight: 700;
@@ -110,16 +137,6 @@
             text-align: center;
         }
 
-        .qty-input {
-            width: 60px;
-            height: 40px;
-            border: 1px solid var(--gold);
-            text-align: center;
-            font-weight: 600;
-            border-radius: 0;
-        }
-
-        /* --- КНОПКА ВИДАЛЕННЯ --- */
         .remove-btn {
             background: transparent;
             color: #ccc;
@@ -130,9 +147,7 @@
             cursor: pointer;
         }
 
-        .remove-btn:hover {
-            color: var(--accent-red);
-        }
+        .remove-btn:hover { color: var(--accent-red); }
 
         /* --- ПІДСУМОК --- */
         .summary-block {
@@ -145,21 +160,24 @@
             align-items: center;
         }
 
-        .total-label {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
+        @media (max-width: 576px) {
+            .summary-block { padding: 20px; }
+            .total-amount { font-size: 1.5rem !important; }
         }
 
-        .total-amount {
-            font-size: 2rem;
-            font-weight: 700;
-        }
+        .total-label { font-family: 'Playfair Display', serif; font-size: 1.5rem; }
+        .total-amount { font-size: 2rem; font-weight: 700; }
 
         .actions {
             margin-top: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 15px;
+        }
+
+        @media (max-width: 767px) {
+            .actions { flex-direction: column-reverse; align-items: stretch; text-align: center; }
         }
 
         .btn-checkout {
@@ -172,12 +190,10 @@
             letter-spacing: 1px;
             text-decoration: none !important;
             transition: 0.3s;
+            display: inline-block;
         }
 
-        .btn-checkout:hover {
-            background: var(--gold);
-            color: var(--espresso);
-        }
+        .btn-checkout:hover { background: var(--gold); color: var(--espresso); }
 
         .btn-continue {
             color: var(--espresso);
@@ -188,115 +204,38 @@
             text-decoration: none !important;
             border-bottom: 2px solid var(--gold);
             padding-bottom: 5px;
+            display: inline-block;
         }
 
-        .empty-cart {
-            text-align: center;
-            padding: 100px 20px;
-        }
-
-        .empty-cart i {
-            font-size: 4rem;
-            color: var(--gold);
-            margin-bottom: 20px;
-            display: block;
-        }
-
+        /* --- ФУТЕР (ФІКСОВАНИЙ) --- */
         footer {
             background: var(--espresso);
             color: var(--gold);
             border-top: 2px solid var(--gold);
             position: fixed;
             bottom: 0;
+            left: 0;
             width: 100%;
             padding: 15px 0;
             z-index: 1000;
-        }
-
-        /* Контейнер назви та ваги */
-        .coffee-name-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 5px;
-        }
-
-        .coffee-name {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--espresso);
-        }
-
-        .weight-badge {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 500;
-            color: var(--dark-gold);
-            border: 1px solid var(--gold);
-            padding: 1px 5px;
-        }
-
-        .characteristics {
-            font-size: 0.8rem;
-            color: var(--espresso);
-            opacity: 0.85;
-        }
-
-        /* Кожна характеристика з однаковим відступом */
-        .char-item {
-            margin-bottom: 3px;
-            display: block;
-            /* Можна змінити на inline-block, якщо хочете в рядок */
-        }
-
-        /* Стиль для іконок, щоб вони були золотистими як у каталозі */
-        .char-item i {
-            color: var(--gold);
-            width: 16px;
             text-align: center;
         }
 
-        .brand-info {
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--dark-gold);
-        }
+        /* Характеристики */
+        .coffee-name-container { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; flex-wrap: wrap; }
+        .weight-badge { font-size: 0.7rem; color: var(--dark-gold); border: 1px solid var(--gold); padding: 1px 5px; }
+        .char-item { margin-bottom: 3px; display: block; font-size: 0.8rem; opacity: 0.85; }
+        .char-item i { color: var(--gold); width: 16px; text-align: center; }
 
-        /* Робимо стрілочки завжди видимими для Chrome, Safari, Edge, Opera */
-.qty-input::-webkit-outer-spin-button,
-.qty-input::-webkit-inner-spin-button {
-    opacity: 1 !important;
-    -webkit-appearance: inner-spin-button !important;
-}
+        /* Керування кількістю */
+        .qty-control { display: flex; align-items: center; border: 1px solid rgba(209, 184, 148, 0.4); background: var(--white); padding: 2px; }
+        .qty-btn { background: transparent; border: none; color: var(--espresso); width: 35px; height: 35px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+        .qty-btn:hover { color: var(--gold); background-color: rgba(209, 184, 148, 0.1); }
+        .qty-display { width: 40px; text-align: center; border: none; background: transparent; font-weight: 600; color: var(--espresso); font-size: 0.9rem; -moz-appearance: textfield; }
+        .qty-display::-webkit-outer-spin-button, .qty-display::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
-/* Для Firefox (у Firefox стрілочки зазвичай з'являються при типі 'number', 
-   але ми додаємо це для стабільності) */
-.qty-input {
-    -moz-appearance: number-input !important;
-    appearance: auto !important;
-}
-
-/* Додаткові стилі, щоб поле виглядало акуратно та вишукано */
-.qty-input {
-    width: 70px; /* Оптимальна ширина */
-    height: 40px;
-    padding: 5px;
-    text-align: center;
-    border: 1px solid #ddd;
-    border-radius: 0; /* Рівні краї додають преміальності */
-    background: transparent;
-    font-weight: 500;
-    font-family: 'Montserrat', sans-serif;
-}
-
-/* Прибираємо синій контур при натисканні (фокусі) */
-.qty-input:focus {
-    outline: none;
-    border-color: #c5a059; /* Ваш золотий колір для акценту */
-}
-        
+        .empty-cart { text-align: center; padding: 100px 20px; }
+        .empty-cart i { font-size: 4rem; color: var(--gold); margin-bottom: 20px; display: block; }
     </style>
 </head>
 
@@ -307,9 +246,6 @@
             <a class="navbar-brand" th:href="@{/coffee}">
                 <i class="fas fa-seedling mr-2"></i> IJO COFFEE
             </a>
-            <div class="ml-auto">
-                <span class="text-white small text-uppercase" style="letter-spacing: 1px;">Ваш кошик</span>
-            </div>
         </div>
     </nav>
 
@@ -337,33 +273,29 @@
                     </div>
 
                     <div class="characteristics">
-                        <div class="char-item">
-                            <i class="fas fa-leaf mr-1"></i>
-                            Склад: <span th:text="${item.composition}">Арабіка</span>
-                        </div>
-                        <div class="char-item">
-                            <i class="fas fa-fire mr-1"></i>
-                            Обжарка: <span th:text="${item.roastLevel}">Середня</span>
-                        </div>
-                        <div class="char-item">
-                            <i class="fas fa-bolt mr-1"></i>
-                            Міцність: <span th:text="${item.intensity}">3</span>
-                        </div>
-                        <div class="char-item">
-                            <i class="fas fa-tint-slash mr-1"></i>
-                            Гіркота: <span th:text="${item.bitterness}">2</span>
-                        </div>
+                        <div class="char-item"><i class="fas fa-leaf mr-1"></i> Склад: <span th:text="${item.composition}">Арабіка</span></div>
+                        <div class="char-item"><i class="fas fa-fire mr-1"></i> Обжарка: <span th:text="${item.roastLevel}">Середня</span></div>
+                        <div class="char-item"><i class="fas fa-bolt mr-1"></i> Міцність: <span th:text="${item.intensity}">3</span></div>
+                        <div class="char-item"><i class="fas fa-tint-slash mr-1"></i> Гіркота: <span th:text="${item.bitterness}">2</span></div>
                     </div>
                 </div>
 
-                <div class="price">
-                    ₴ <span th:text="${item.price}">0</span>
-                </div>
+                <div class="mobile-price-row">
+                    <div class="price">
+                        ₴ <span th:text="${item.price}">0</span>
+                    </div>
 
-                <form th:action="@{'/cart/update/' + ${item.coffeeId}}" method="post">
-                    <input type="number" name="quantity" th:value="${item.quantity}" onchange="this.form.submit()"
-                        class="qty-input" min="1">
-                </form>
+                    <form th:action="@{'/cart/update/' + ${item.coffeeId}}" method="post" class="qty-control">
+                        <button type="button" class="qty-btn" th:onclick="'changeQty(' + ${item.coffeeId} + ', -1)'">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <input type="number" th:id="'qty-' + ${item.coffeeId}" name="quantity" th:value="${item.quantity}"
+                            readonly class="qty-display" placeholder="0">
+                        <button type="button" class="qty-btn" th:onclick="'changeQty(' + ${item.coffeeId} + ', 1)'">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </form>
+                </div>
 
                 <form th:action="@{'/cart/remove/' + ${item.coffeeId}}" method="post">
                     <button type="submit" class="remove-btn">
@@ -389,15 +321,24 @@
     </div>
 
     <footer>
-        <div class="container-fluid text-center">
+        <div class="container-fluid">
             <small>© 2026 IJO Coffee — Тільки преміальні сорти</small>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function changeQty(coffeeId, delta) {
+            const input = document.getElementById('qty-' + coffeeId);
+            let currentValue = parseInt(input.value);
+            let newValue = currentValue + delta;
 
+            if (newValue >= 1) {
+                input.value = newValue;
+                input.closest('form').submit();
+            }
+        }
+    </script>
 </body>
-
 </html>
