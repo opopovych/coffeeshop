@@ -4,9 +4,12 @@ import com.example.coffeeshop.model.CoffeeBean;
 import com.example.coffeeshop.model.dto.CartItem;
 import com.example.coffeeshop.service.CoffeeBeanService;
 import com.example.coffeeshop.service.impl.CartService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @Controller
 @RequestMapping("/cart")
@@ -59,5 +62,10 @@ public class CartController {
     public String removeFromCart(@PathVariable Long coffeeId) {
         cartService.removeFromCart(coffeeId);
         return "redirect:/cart/view";
+    }
+    @GetMapping("/api/count")
+    @ResponseBody // Повертає просто дані (число), а не HTML-шаблон
+    public long getCartCountApi() {
+        return cartService.getCartItemCount();
     }
 }

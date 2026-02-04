@@ -218,6 +218,82 @@
             text-align: justify;
         }
 
+        /* Стилі для кошика та бейджа */
+        .cart-wrapper {
+            position: relative;
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+
+        .cart-wrapper:hover {
+            transform: scale(1.1);
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -10px;
+            background: var(--accent-red);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            /* Буде змінено скриптом */
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--espresso);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Вирівнювання навбару */
+        .navbar-brand {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        @media (max-width: 1000px) {
+            .btn-add-cart {
+            /* Менші внутрішні відступи */
+            width: 100%;                       /* Кнопка на всю ширину */
+        padding: 12px 10px !important;  
+        font-size: 0.9rem;                 /* Трішки менший шрифт */
+    }
+        }
+
+        @media (max-width: 576px) {
+            .navbar-brand {
+                font-size: 1.2rem;
+            }
+        }
+        /* Робимо форму додавання в кошик адаптивною */
+@media (max-width: 576px) {
+    .add-to-cart-form {
+        flex-direction: column !important; /* Елементи один під одним */
+        align-items: stretch !important;   /* Розтягуємо на всю ширину */
+    }
+
+    .quantity-control {
+        margin-right: 0 !important;        /* Прибираємо правий відступ */
+        margin-bottom: 15px;               /* Додаємо відступ знизу */
+        width: 100% !important;            /* Контроль кількості на всю ширину */
+        justify-content: center;
+    }
+
+    .btn-add-cart {
+        width: 100%;                       /* Кнопка на всю ширину */
+        padding: 12px 10px !important;     /* Менші внутрішні відступи */
+        font-size: 0.9rem;                 /* Трішки менший шрифт */
+    }
+}
+
+/* Додаткове виправлення для футера, щоб не заважав */
+body {
+    padding-bottom: 80px !important; /* Зменшуємо відступ знизу */
+}
+
         footer {
             background: var(--espresso);
             color: var(--gold);
@@ -239,12 +315,22 @@
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" th:href="@{/coffee}">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <div style="width: 150px;"> <a th:href="@{/coffee}" class="text-white small text-uppercase"
+                    style="letter-spacing: 1px;">
+                    <i class="fas fa-chevron-left mr-1"></i> Назад
+                </a>
+            </div>
+
+            <a class="navbar-brand m-0" th:href="@{/coffee}">
                 <i class="fas fa-seedling mr-2"></i> IJO COFFEE
             </a>
-            <div class="ml-auto">
-                <a th:href="@{/coffee}" class="text-white small text-uppercase" style="letter-spacing: 1px;">← Назад</a>
+
+            <div style="width: 150px;" class="text-right">
+                <a th:href="@{/cart/view}" class="cart-wrapper">
+                    <i class="fas fa-shopping-basket text-white" style="font-size: 1.2rem;"></i>
+                    <span id="cart-count-badge" class="cart-badge" style="display: none;">0</span>
+                </a>
             </div>
         </div>
     </nav>
@@ -311,15 +397,16 @@
                     </div>
 
                     <form th:action="@{'/cart/add/' + ${coffee.id}}" method="post"
-                        class="d-flex align-items-center mb-4">
-                        <div class="quantity-control">
-                            <button type="button" class="qty-btn" onclick="decrementQty()">-</button>
-                            <input type="number" id="quantity" name="quantity" value="1" min="1" class="quantity-input"
-                                readonly>
-                            <button type="button" class="qty-btn" onclick="incrementQty()">+</button>
-                        </div>
-                        <button type="submit" class="btn btn-add-cart">У кошик</button>
-                    </form>
+      class="d-flex align-items-center mb-4 add-to-cart-form">
+    
+    <div class="quantity-control">
+        <button type="button" class="qty-btn" onclick="decrementQty()">-</button>
+        <input type="number" id="quantity" name="quantity" value="1" min="1" class="quantity-input" readonly>
+        <button type="button" class="qty-btn" onclick="incrementQty()">+</button>
+    </div>
+    
+    <button type="submit" class="btn btn-add-cart">У кошик</button>
+</form>
 
                 </div>
             </div>
@@ -352,6 +439,25 @@
                 input.value = value - 1;
             }
         }
+    </script>
+    <script>
+        function refreshCartCount() {
+            fetch('/cart/api/count')
+                .then(response => response.json())
+                .then(count => {
+                    const badge = document.getElementById('cart-count-badge');
+                    if (count > 0) {
+                        badge.textContent = count;
+                        badge.style.display = 'flex';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                })
+                .catch(err => console.log("Помилка завантаження кошика"));
+        }
+
+        // Викликаємо при завантаженні
+        document.addEventListener('DOMContentLoaded', refreshCartCount);
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>

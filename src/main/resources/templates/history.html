@@ -21,6 +21,13 @@
             --white: #ffffff;
         }
 
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+            /* Ключовий фікс для видалення горизонтального скролу */
+        }
+
         body {
             font-family: 'Montserrat', sans-serif;
             background-color: var(--cream);
@@ -33,6 +40,9 @@
             background: rgba(26, 23, 21, 0.98);
             padding: 1.5rem 2rem;
             border-bottom: 1px solid var(--gold);
+            width: 100%;
+            left: 0;
+            right: 0;
         }
 
         .navbar-brand {
@@ -55,7 +65,6 @@
             color: var(--gold) !important;
         }
 
-        /* Нова кнопка Каталогу */
         .btn-nav-catalog {
             border: 1px solid var(--gold);
             color: var(--gold) !important;
@@ -69,7 +78,28 @@
 
         .btn-nav-catalog:hover {
             background: var(--gold);
-            color: var(--dark-espresso) !important;
+            color: var(--espresso) !important;
+        }
+
+        /* Адаптація меню під мобільні */
+        @media (max-width: 991px) {
+            .navbar-collapse {
+                background: var(--espresso);
+                padding: 20px;
+                margin-top: 15px;
+                border-radius: 8px;
+            }
+
+            .nav-brand-link {
+                display: block;
+                margin: 10px 0 !important;
+            }
+
+            .btn-nav-catalog {
+                display: block;
+                text-align: center;
+                margin: 20px 0 0 0 !important;
+            }
         }
 
         /* --- HERO SECTION --- */
@@ -86,7 +116,7 @@
 
         .hero-title {
             font-family: 'Playfair Display', serif;
-            font-size: 4rem;
+            font-size: clamp(2.5rem, 7vw, 4rem);
             margin-bottom: 20px;
         }
 
@@ -99,7 +129,7 @@
         .quote-text {
             font-family: 'Playfair Display', serif;
             font-style: italic;
-            font-size: 1.8rem;
+            font-size: clamp(1.4rem, 4vw, 1.8rem);
             color: var(--espresso);
             max-width: 800px;
             margin: 0 auto;
@@ -108,7 +138,8 @@
 
         /* --- PROCESS STEPS --- */
         .process-section {
-            padding: 120px 0;
+            padding: 80px 0;
+            overflow: hidden;
         }
 
         .step-number {
@@ -154,12 +185,13 @@
         }
 
         footer {
-            background: var(--espresso);
-            color: var(--gold);
-            padding: 40px 0;
+            padding: 60px 0;
+            background: #0a0a0a;
+            color: #555;
             text-align: center;
-            font-size: 0.8rem;
-            letter-spacing: 3px;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
     </style>
 </head>
@@ -171,11 +203,18 @@
             <a class="navbar-brand" th:href="@{/}">
                 <i class="fas fa-seedling mr-2"></i> IJO COFFEE
             </a>
-            <div class="ml-auto d-flex align-items-center">
-                <a th:href="@{/history}" class="nav-brand-link">Шлях IJO</a>
-                <a th:href="@{/brandhistory}" class="nav-brand-link ml-4">Колекція Брендів</a>
-                <a th:href="@{/countries}" class="nav-brand-link ml-4">Походження Кави</a>
-                <a th:href="@{/coffee}" class="btn-nav-catalog ml-5">КАТАЛОГ</a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNav">
+                <div class="ml-auto d-flex flex-column flex-lg-row align-items-lg-center">
+                    <a th:href="@{/history}" class="nav-brand-link">Шлях IJO</a>
+                    <a th:href="@{/brandhistory}" class="nav-brand-link ml-lg-4">Колекція Брендів</a>
+                    <a th:href="@{/countries}" class="nav-brand-link ml-lg-4">Походження Кави</a>
+                    <a th:href="@{/coffee}" class="btn-nav-catalog ml-lg-5">КАТАЛОГ</a>
+                </div>
             </div>
         </div>
     </nav>
@@ -195,8 +234,9 @@
                 з вас».
             </div>
             <p class="text-muted" style="max-width: 600px; margin: 0 auto; font-weight: 300;">
-                Ми створили цей проєкт як приватну колекцію. Тут немає випадкових сортів. Тут лише те, що ми обрали для
-                своїх близьких, пройшовши шлях від гірських плантацій до ідеального обсмаження.
+                Роками працюючи з великим оптом, я вивчив кожен нюанс: від якості зерна до секретів обсмаження провідних
+                європейських брендів. Сьогодні я використовую ці знання, щоб відібрати для вас лише те, що дійсно варте
+                уваги.
             </p>
         </div>
     </section>
@@ -207,26 +247,23 @@
             <div class="row align-items-center mb-5 pb-5">
                 <div class="col-md-6" data-aos="fade-right">
                     <span class="step-number">01</span>
-                    <h2 class="mb-4" style="font-family: 'Playfair Display';">Витоки та Теруар</h2>
-                    <p>Як міцне коріння нашої сімʼї дає нам силу, так і кава IJO починається з багатого вулканічного
-                        ґрунту. Ми відбираємо зерна з плантацій, розташованих на висоті понад 1800 метрів, де розріджене
-                        повітря та тропічне сонце створюють унікальну щільність смаку.</p>
+                    <h2 class="mb-4" style="font-family: 'Playfair Display';">Досвід, що працює на вас</h2>
+                    <p>За моїми плечима — тисячі тонн реалізованої кави та сотні дегустацій. Я знаю ринок зсередини й
+                        відібрав до колекції IJO лише ті європейські бренди, які тримають найвищий стандарт якості
+                        незалежно від партії.</p>
                 </div>
                 <div class="col-md-6" data-aos="fade-left">
-                    <img src="https://blog.namma.coffee/content/images/size/w2000/2024/09/Coffee-plantation-1019x573.webp"
-                        class="process-img" alt="IJO Coffee Plantation">
+                    <img src="images/deg.jpg" class="process-img" alt="IJO Coffee Degustation">
                 </div>
             </div>
-
-
 
             <div class="row align-items-center mb-5 pb-5 flex-md-row-reverse">
                 <div class="col-md-6 text-md-right" data-aos="fade-left">
                     <span class="step-number">02</span>
-                    <h2 class="mb-4" style="font-family: 'Playfair Display';">Турбота про Кожне Зерно</h2>
-                    <p>Для своїх ми обираємо найкраще. Тільки 5% світового врожаю відповідає нашим критеріям. Це ручний
-                        збір, де кожна ягода перевіряється на стиглість. Ми віримо, що увага до деталей — це і є
-                        справжня розкіш.</p>
+                    <h2 class="mb-4" style="font-family: 'Playfair Display';">Прямий доступ до кращого</h2>
+                    <p>Робота в оптовій торгівлі навчила мене відсіювати зайве. Ми не женемося за кількістю позицій.
+                        Кожен бренд у нашому роздрібному каталозі — це перевірений часом виробник, який завоював мою
+                        довіру.</p>
                 </div>
                 <div class="col-md-6" data-aos="fade-right">
                     <img src="https://www.partstown.com/about-us/wp-content/uploads/2022/09/Collection-of-Various-Coffee-Drinks-15-Different-Types-of-Coffee.png"
@@ -237,10 +274,11 @@
             <div class="row align-items-center mb-5 pb-5">
                 <div class="col-md-6" data-aos="fade-right">
                     <span class="step-number">03</span>
-                    <h2 class="mb-4" style="font-family: 'Playfair Display';">Алхімія Обсмаження</h2>
-                    <p>У серці IJO лежить мистецтво вогню. Ми пропонуємо бренди кава, сорти яких зосередженні на
-                        повільному обсмаженні, щоб розкрити "генетичний код" сорту. Це процес, який неможливо
-                        автоматизувати повністю — він потребує досвіду, інтуїції та любові до своєї справи.</p>
+                    <h2 class="mb-4" style="font-family: 'Playfair Display';">Гарантія Автентичності</h2>
+                    <p>Роки роботи в опті навчили мене головному — як відрізнити справжній європейський продукт від
+                        майстерної підробки. В IJO Coffee ми маємо «нульову толерантність» до реплік. Кожна пачка у
+                        нашому магазині — це 100% оригінал, отриманий через перевірені канали постачання. Я особисто
+                        гарантую, що всередині саме те зерно, яке вказано на етикетці.</p>
                 </div>
                 <div class="col-md-6" data-aos="fade-left">
                     <img src="https://images.unsplash.com/photo-1511537190424-bbbab87ac5eb?q=80&w=2070"
@@ -261,11 +299,16 @@
 
     <footer>
         <div class="container">
-            <p>© 2026 IJO</p>
+            <div class="mb-4">
+                <i class="fas fa-seedling mb-3" style="color: var(--gold); font-size: 1.5rem;"></i>
+                <p style="color: #fff; font-family: 'Cinzel', serif; letter-spacing: 3px;">IJO COFFEE</p>
+            </div>
+            <p>© 2026 Всі права захищені</p>
         </div>
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script>
         AOS.init({ duration: 1200, once: true });

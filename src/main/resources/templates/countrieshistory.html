@@ -19,20 +19,29 @@
             --white: #ffffff;
         }
 
-        body {
-            font-family: 'Montserrat', sans-serif;
+        /* ЗАХИСТ ВІД ГОРИЗОНТАЛЬНОГО СКРОЛУ */
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
             background-color: var(--cream);
             color: var(--espresso);
             line-height: 1.7;
-            overflow-x: hidden;
-            /* ВИДАЛЕНО opacity: 0, щоб сторінка не була білою при завантаженні */
+            margin: 0;
+            padding: 0;
         }
 
-        /* --- NAVBAR --- */
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* --- NAVIGATION --- */
         .navbar {
             background: rgba(26, 23, 21, 0.98);
             padding: 1.5rem 2rem;
             border-bottom: 1px solid var(--gold);
+            width: 100%;
+            left: 0;
+            right: 0;
         }
 
         .navbar-brand {
@@ -47,8 +56,8 @@
             font-size: 0.75rem;
             letter-spacing: 2px;
             text-transform: uppercase;
-            text-decoration: none !important;
             transition: 0.3s;
+            text-decoration: none !important;
         }
 
         .nav-brand-link:hover {
@@ -62,8 +71,8 @@
             font-size: 0.7rem;
             letter-spacing: 3px;
             text-transform: uppercase;
-            text-decoration: none !important;
             transition: 0.4s;
+            text-decoration: none !important;
         }
 
         .btn-nav-catalog:hover {
@@ -71,9 +80,21 @@
             color: var(--espresso) !important;
         }
 
+        /* Адаптація меню */
+        @media (max-width: 991px) {
+            .navbar-collapse {
+                background: var(--espresso);
+                padding: 20px;
+                margin-top: 15px;
+                border-radius: 8px;
+            }
+            .nav-brand-link { display: block; margin: 10px 0 !important; }
+            .btn-nav-catalog { display: block; text-align: center; margin: 20px 0 0 0 !important; }
+        }
+
         /* --- HERO --- */
         .history-hero {
-            height: 80vh; /* Збільшено до 80vh як в інших файлах */
+            height: 80vh;
             background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
                 url('/images/country-bg.webp') center/cover no-repeat;
             display: flex;
@@ -81,17 +102,18 @@
             justify-content: center;
             color: var(--white);
             text-align: center;
+            width: 100%;
         }
 
         .hero-title {
             font-family: 'Playfair Display', serif;
-            font-size: 4rem; /* Збільшено до 4rem як в інших файлах */
+            font-size: clamp(2.5rem, 7vw, 4rem);
             margin-bottom: 20px;
         }
 
         /* --- COUNTRY VISUAL BOX --- */
         .country-visual-box {
-            height: 450px; /* Збільшено як висота зображень у брендах */
+            height: 450px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -117,7 +139,6 @@
             text-align: center;
             line-height: 1.2;
             z-index: 2;
-            pointer-events: none;
         }
 
         .country-visual-box::after {
@@ -133,7 +154,7 @@
         /* --- CONTENT STYLE --- */
         .step-number {
             font-family: 'Playfair Display', serif;
-            font-size: 5rem; /* Як у history.html */
+            font-size: 5rem;
             color: var(--gold);
             opacity: 0.3;
             line-height: 1;
@@ -141,7 +162,7 @@
 
         .country-name {
             font-family: 'Playfair Display', serif;
-            font-size: 3rem; /* Як у brandhistory.html */
+            font-size: clamp(2rem, 5vw, 3rem);
             margin-bottom: 20px;
             color: var(--espresso);
         }
@@ -167,74 +188,87 @@
         }
 
         footer {
-            background: var(--espresso);
-            color: var(--gold);
             padding: 60px 0;
+            background: #0a0a0a;
+            color: #555;
             text-align: center;
-            font-size: 0.8rem;
-            letter-spacing: 3px;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
     </style>
 </head>
 
 <body>
 
-    <nav class="navbar navbar-expand-lg fixed-top navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" th:href="@{/}">
-                <i class="fas fa-seedling mr-2"></i> IJO COFFEE
-            </a>
-            <div class="ml-auto d-flex align-items-center">
+<nav class="navbar navbar-expand-lg fixed-top navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}">
+            <i class="fas fa-seedling mr-2"></i> IJO COFFEE
+        </a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#countryNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="countryNav">
+            <div class="ml-auto d-flex flex-column flex-lg-row align-items-lg-center">
                 <a th:href="@{/history}" class="nav-brand-link">Шлях IJO</a>
-                <a th:href="@{/brandhistory}" class="nav-brand-link ml-4">Колекція Брендів</a>
-                <a th:href="@{/countries}" class="nav-brand-link ml-4">Походження Кави</a>
-                <a th:href="@{/coffee}" class="btn-nav-catalog ml-5">КАТАЛОГ</a>
+                <a th:href="@{/brandhistory}" class="nav-brand-link ml-lg-4">Колекція Брендів</a>
+                <a th:href="@{/countries}" class="nav-brand-link ml-lg-4">Походження Кави</a>
+                <a th:href="@{/coffee}" class="btn-nav-catalog ml-lg-5">КАТАЛОГ</a>
             </div>
         </div>
-    </nav>
+    </div>
+</nav>
 
-    <header class="history-hero">
-        <div class="container" data-aos="zoom-out">
-            <h1 class="hero-title">Походження Брендів</h1>
-            <p style="letter-spacing: 5px; text-transform: uppercase; font-weight: 300;">Історія країн, де народжується легендарна кава</p>
-        </div>
-    </header>
+<header class="history-hero">
+    <div class="container" data-aos="zoom-out">
+        <h1 class="hero-title">Походження Брендів</h1>
+        <p style="letter-spacing: 5px; text-transform: uppercase; font-weight: 300;">Історія країн, де народжується легендарна кава</p>
+    </div>
+</header>
 
-    <main class="py-5 mt-5">
-        <div class="container">
-            <div th:each="country, iterStat : ${countries}" class="row align-items-center mb-5 pb-5"
-                th:classappend="${iterStat.even} ? 'flex-md-row-reverse' : ''">
+<main class="py-5 mt-5">
+    <div class="container">
+        <div th:each="country, iterStat : ${countries}" class="row align-items-center mb-5 pb-5 no-gutters"
+             th:classappend="${iterStat.even} ? 'flex-md-row-reverse' : ''">
 
-                <div class="col-md-6 mb-4 mb-md-0" th:attr="data-aos=${iterStat.even ? 'fade-left' : 'fade-right'}">
-                    <span class="step-number" th:text="${iterStat.count < 10 ? '0' + iterStat.count : iterStat.count}">01</span>
-                    <h2 class="country-name" th:text="${country.name}">Назва країни</h2>
-                    <div th:utext="${country.history}" style="font-weight: 300; color: #444;">Історія...</div>
-                    <a th:href="@{/coffee/filter(countryId=${country.id})}" class="btn-discover">
-                        Переглянути врожай <i class="fas fa-arrow-right ml-2"></i>
-                    </a>
-                </div>
+            <div class="col-md-6 p-4" th:attr="data-aos=${iterStat.even ? 'fade-left' : 'fade-right'}">
+                <span class="step-number" th:text="${iterStat.count < 10 ? '0' + iterStat.count : iterStat.count}">01</span>
+                <h2 class="country-name" th:text="${country.name}">Назва країни</h2>
+                <div th:utext="${country.history}" style="font-weight: 300;">Історія...</div>
+                <a th:href="@{/coffee/filter(countryId=${country.id})}" class="btn-discover">
+                    Переглянути врожай <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
 
-                <div class="col-md-6" th:attr="data-aos=${iterStat.even ? 'fade-right' : 'fade-left'}">
-                    <div class="country-visual-box">
-                        <div class="country-visual-name" th:text="${country.name}">UKRAINE</div>
-                    </div>
+            <div class="col-md-6 p-4" th:attr="data-aos=${iterStat.even ? 'fade-right' : 'fade-left'}">
+                <div class="country-visual-box">
+                    <div class="country-visual-name" th:text="${country.name}">COUNTRY</div>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
+</main>
 
-    <footer>
-        <div class="container">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Target_Corporation_logo_vector.svg/30px-Target_Corporation_logo_vector.svg.png" class="mb-4" alt="Logo">
-            <p>© 2026 IJO COFFEE | Спадщина якості</p>
+<footer>
+    <div class="container">
+        <div class="mb-4">
+            <i class="fas fa-seedling mb-3" style="color: var(--gold); font-size: 1.5rem;"></i>
+            <p style="color: #fff; font-family: 'Cinzel', serif; letter-spacing: 3px;">IJO COFFEE</p>
         </div>
-    </footer>
+        <p>© 2026 Всі права захищені</p>
+    </div>
+</footer>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    <script>
-        // Стандартна ініціалізація як у brandhistory.html
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script>
+    $(document).ready(function() {
         AOS.init({ duration: 1200, once: true });
-    </script>
+    });
+</script>
 </body>
 </html>

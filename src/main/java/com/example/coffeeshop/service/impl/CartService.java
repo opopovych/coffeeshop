@@ -41,5 +41,8 @@ public class CartService {
     public void clear() {
         cart.clear();
     }
+    public long getCartItemCount(){
+        return cart.getItems().stream().count();
+    }
 
 }

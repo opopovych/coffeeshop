@@ -419,21 +419,149 @@
         .btn-coffee-outline:hover {
             background: var(--espresso);
             color: var(--gold);
-        }/* Початковий стан: картка прозора і трохи зміщена вниз */
-.coffee-card-animated {
-    opacity: 0;
-    filter: blur(5px); /* Початкове розмиття */
-    transform: translateY(40px); /* Більший зсув для плавності */
-    animation: slowFadeIn 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
+        }
 
-@keyframes slowFadeIn {
-    to {
-        opacity: 1;
-        filter: blur(0);
-        transform: translateY(0);
-    }
-}
+        /* Початковий стан: картка прозора і трохи зміщена вниз */
+        .coffee-card-animated {
+            opacity: 0;
+            filter: blur(5px);
+            /* Початкове розмиття */
+            transform: translateY(40px);
+            /* Більший зсув для плавності */
+            animation: slowFadeIn 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        /* Стиль для цифри над кошиком */
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -10px;
+            background: #e63946;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--espresso);
+        }
+
+        .cart-wrapper {
+            position: relative;
+            /* Це важливо для позиціонування бейджа */
+            display: inline-block;
+        }
+
+        @keyframes slowFadeIn {
+            to {
+                opacity: 1;
+                filter: blur(0);
+                transform: translateY(0);
+            }
+        }
+
+        /* Якщо екран менший за 992px, десктопні елементи ПРИМУСОВО ховаються */
+        @media (max-width: 991.98px) {
+            .d-lg-flex {
+                display: none !important;
+            }
+
+            /* Робимо кошик у списку видимим та гарним */
+            .navbar-nav .nav-item.d-lg-none {
+                display: block !important;
+            }
+        }
+
+        @media (max-width: 991px) {
+            .navbar-nav {
+                background: rgba(255, 255, 255, 0.03);
+                border-radius: 10px;
+                padding: 10px 0 !important;
+            }
+
+            .mobile-nav-btn {
+                text-align: center;
+                font-size: 0.7rem !important;
+                color: var(--white) !important;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                min-width: 70px;
+            }
+
+            .mobile-nav-btn i {
+                font-size: 1.2rem;
+                color: var(--gold);
+            }
+
+            /* Стиль пошуку */
+            .search-mobile-wrapper {
+                position: relative;
+                display: flex;
+                align-items: center;
+            }
+
+            .mobile-input {
+                background: #222 !important;
+                border: 1px solid var(--gold) !important;
+                color: white !important;
+                border-radius: 25px;
+                padding-right: 45px;
+            }
+
+            .search-btn-icon {
+                position: absolute;
+                right: 15px;
+                background: none;
+                border: none;
+                color: var(--gold);
+            }
+
+            /* Бейдж кошика для мобайла */
+            .cart-badge-mobile {
+                position: absolute;
+                top: 5px;
+                right: 15px;
+                background: var(--gold);
+                color: black;
+                font-size: 0.6rem;
+                font-weight: bold;
+                padding: 2px 5px;
+                border-radius: 50%;
+            }
+        }
+
+        /* Колір бейджа — ваше золото */
+        .badge-gold {
+            background-color: #d1b894;
+            /* Золото */
+            color: #1a1716;
+            position: absolute;
+            top: -5px;
+            right: -10px;
+            font-size: 0.75rem;
+            padding: 2px 6px;
+        }
+
+        /* Позиціювання для десктопа */
+        .badge-desktop {
+            position: absolute;
+            top: -8px;
+            right: -10px;
+            font-size: 0.7rem;
+            padding: 3px 6px;
+            border: 2px solid #1a1716;
+            /* Рамка в колір фону навбара */
+        }
+
+        /* Стиль для мобільного бейджа в списку */
+        .nav-item .badge-gold {
+            margin-left: 5px;
+            vertical-align: middle;
+        }
 
         footer {
             background: var(--espresso);
@@ -537,9 +665,8 @@
             <a th:href="@{/coffee}" class="btn-nav-catalog mt-3">Показати всю каву</a>
         </div>
         <div class="row">
-            <div class="col-lg-4 col-md-6 mb-5 coffee-card-animated"
-                 th:each="coffee, iterStat : ${coffeeList}"
-                 th:style="'animation-delay: ' + ${iterStat.index * 0.2} + 's'">
+            <div class="col-lg-4 col-md-6 mb-5 coffee-card-animated" th:each="coffee, iterStat : ${coffeeList}"
+                th:style="'animation-delay: ' + ${iterStat.index * 0.2} + 's'">
                 <a th:href="@{'/coffee/' + ${coffee.id}}" class="coffee-card-link">
                     <div class="card h-100 text-center">
                         <div class="card-img-container">
@@ -604,20 +731,19 @@
 
         <div class="pagination justify-content-center mt-5">
             <a th:if="${currentPage > 0}"
-               th:href="@{/coffee/filter(page=${currentPage - 1}, brandId=${brandId}, countryId=${countryId}, intensity=${intensity}, roast=${roastLevel}, composition=${composition}, acidity=${acidity}, bitterness=${bitterness})}">
+                th:href="@{/coffee/filter(page=${currentPage - 1}, brandId=${brandId}, countryId=${countryId}, intensity=${intensity}, roast=${roastLevel}, composition=${composition}, acidity=${acidity}, bitterness=${bitterness})}">
                 &laquo;
             </a>
 
             <th:block th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-                <a th:if="${i >= currentPage - 2 and i <= currentPage + 2}"
-                   th:text="${i + 1}"
-                   th:classappend="${i == currentPage} ? 'active'"
-                   th:href="@{/coffee/filter(page=${i}, brandId=${brandId}, countryId=${countryId}, intensity=${intensity}, roast=${roastLevel}, composition=${composition}, acidity=${acidity}, bitterness=${bitterness})}">
+                <a th:if="${i >= currentPage - 2 and i <= currentPage + 2}" th:text="${i + 1}"
+                    th:classappend="${i == currentPage} ? 'active'"
+                    th:href="@{/coffee/filter(page=${i}, brandId=${brandId}, countryId=${countryId}, intensity=${intensity}, roast=${roastLevel}, composition=${composition}, acidity=${acidity}, bitterness=${bitterness})}">
                 </a>
             </th:block>
 
             <a th:if="${currentPage < totalPages - 1}"
-               th:href="@{/coffee/filter(page=${currentPage + 1}, brandId=${brandId}, countryId=${countryId}, intensity=${intensity}, roast=${roastLevel}, composition=${composition}, acidity=${acidity}, bitterness=${bitterness})}">
+                th:href="@{/coffee/filter(page=${currentPage + 1}, brandId=${brandId}, countryId=${countryId}, intensity=${intensity}, roast=${roastLevel}, composition=${composition}, acidity=${acidity}, bitterness=${bitterness})}">
                 &raquo;
             </a>
         </div>
@@ -772,6 +898,29 @@
             window.location.href = url + params.join('&');
         }
     </script>
+    <script>
+    function refreshCartCount() {
+        fetch('/cart/api/count')
+            .then(response => response.json())
+            .then(count => {
+                // Знаходимо всі бейджі (і мобільний, і десктопний)
+                const badges = document.querySelectorAll('.js-cart-count');
+                
+                badges.forEach(badge => {
+                    if (count > 0) {
+                        badge.textContent = count;
+                        badge.style.display = 'flex';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                });
+            })
+            .catch(err => console.log("Помилка завантаження кошика"));
+    }
+
+    // Викликаємо при завантаженні
+    document.addEventListener('DOMContentLoaded', refreshCartCount);
+</script>
 </body>
 
 </html>
