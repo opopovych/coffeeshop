@@ -2,13 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IJO Coffee | Каталог</title>
 
     <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400;500;600&display=swap"
-        rel="stylesheet">
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400;500;600&display=swap"
+            rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 
@@ -84,20 +84,19 @@
         /* Стилізація випадаючого меню */
         /* Базовий контейнер випадаючого списку */
         .dropdown-menu {
-            min-width: 250px;
-            /* Встановлюємо мінімальну ширину */
-            background-color: #0d0a09;
-            /* Темний еспресо */
-            border: 1px solid #c5a059;
-            /* Золота тонка рамка */
-            border-radius: 0;
-            /* Гострі кути для преміального вигляду */
-            padding: 10px 0;
-            margin-top: 15px !important;
-            /* Відступ від навігації */
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            /* Глибока тінь */
-        }
+    background-color: #0d0a09;
+    border: 1px solid #c5a059;
+    border-radius: 0;
+    padding: 10px 0;
+    margin-top: 15px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+
+    /* ВИПРАВЛЕННЯ ТУТ: */
+    width: 100%;             /* За замовчуванням на мобайлі на всю ширину */
+    max-width: 90vw;        /* Не дає вийти за межі в’юпорту */
+    min-width: auto;        /* Прибираємо фіксований мінімум */
+    box-sizing: border-box; /* Враховуємо внутрішні відступи у ширину */
+}
 
         /* Стиль кожного пункту */
         .dropdown-item {
@@ -533,6 +532,61 @@
                 border-radius: 50%;
             }
         }
+        /* --- ВИПРАВЛЕННЯ ПОШУКУ ТА МОБІЛЬНИХ СТИЛІВ --- */
+@media (max-width: 991px) {
+.nav-item.dropdown {
+        position: static !important; /* Важливо: прибираємо прив'язку меню до кнопки */
+    }
+    .dropdown-menu {
+        /* 2. Позиціонуємо відносно всього екрана */
+        position: absolute !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: calc(100vw - 30px) !important; /* Ширина екрана мінус відступи */
+        margin: 10px auto 0 auto !important; /* Центрування */
+
+        /* 3. Корегуємо відступи для контенту всередині */
+        max-width: none !important;
+        box-sizing: border-box;
+    }
+    .dropdown-item {
+        text-align: center; /* За бажанням: центруємо текст */
+        border-left: none !important;
+        border-bottom: 1px solid rgba(197, 160, 89, 0.1);
+    }
+
+    .dropdown-item:last-child {
+        border-bottom: none;
+    }
+
+    .search-mobile-wrapper {
+        width: 100%;
+        padding: 0 15px; /* Бокові відступи, щоб не липло до країв */
+        box-sizing: border-box;
+    }
+
+    .mobile-input {
+        width: 100% !important; /* Пошук тепер займає доступний простір */
+        max-width: 100%;
+        background: #222 !important;
+        border: 1px solid var(--gold) !important;
+        color: white !important;
+        border-radius: 25px;
+        padding: 10px 45px 10px 20px;
+        box-sizing: border-box;
+    }
+}
+
+/* --- ДОДАТКОВЕ ВИПРАВЛЕННЯ ДЛЯ ДУЖЕ МАЛИХ ЕКРАНІВ (iPhone SE тощо) --- */
+@media (max-width: 375px) {
+    .navbar-brand {
+        font-size: 1.3rem; /* Зменшуємо логотип, щоб звільнити місце */
+    }
+
+    .dropdown-menu {
+        max-width: 95vw;
+    }
+}
 
         /* Колір бейджа — ваше золото */
         .badge-gold {
@@ -573,225 +627,227 @@
             padding: 15px 0;
             z-index: 1000;
         }
+
     </style>
 </head>
 
 <body>
 
-    <div th:replace="~{fragments/clientnavbar :: navbar}"></div>
+<div th:replace="~{fragments/clientnavbar :: navbar}"></div>
 
-    <div class="container mt-5">
-        <div class="container mb-4"
-            th:if="${brandId != null or countryId != null or (intensity != null and !intensity.isEmpty()) or (roast != null and !roast.isEmpty()) or (bitterness != null and !bitterness.isEmpty()) or (composition != null and !composition.isEmpty()) or (acidity != null and !acidity.isEmpty())}">
-            <div class="d-flex align-items-center flex-wrap">
+<div class="container mt-5">
+    <div class="container mb-4"
+         th:if="${brandId != null or countryId != null or (intensity != null and !intensity.isEmpty()) or (roast != null and !roast.isEmpty()) or (bitterness != null and !bitterness.isEmpty()) or (composition != null and !composition.isEmpty()) or (acidity != null and !acidity.isEmpty())}">
+        <div class="d-flex align-items-center flex-wrap">
                 <span class="mr-3 text-uppercase"
-                    style="letter-spacing: 2px; font-size: 0.7rem; color: var(--gold); font-weight: 600;">
+                      style="letter-spacing: 2px; font-size: 0.7rem; color: var(--gold); font-weight: 600;">
                     Ваш вибір:
                 </span>
 
-                <div class="filter-chip" th:if="${brandId != null}">
-                    Бренд: <span class="ml-1" th:each="b : ${brands}" th:if="${b.id == brandId}"
-                        th:text="${b.name}"></span>
-                    <a
+            <div class="filter-chip" th:if="${brandId != null}">
+                Бренд: <span class="ml-1" th:each="b : ${brands}" th:if="${b.id == brandId}"
+                             th:text="${b.name}"></span>
+                <a
                         th:href="@{/coffee/filter(countryId=${countryId}, intensity=${intensity}, roast=${roast}, bitterness=${bitterness}, composition=${composition}, acidity=${acidity}, sort=${sort})}">
-                        <i class="fas fa-times"></i>
-                    </a>
-                </div>
+                    <i class="fas fa-times"></i>
+                </a>
+            </div>
 
-                <div class="filter-chip" th:if="${countryId != null}">
-                    Країна: <span class="ml-1" th:each="c : ${countries}" th:if="${c.id == countryId}"
-                        th:text="${c.name}"></span>
-                    <a
+            <div class="filter-chip" th:if="${countryId != null}">
+                Країна: <span class="ml-1" th:each="c : ${countries}" th:if="${c.id == countryId}"
+                              th:text="${c.name}"></span>
+                <a
                         th:href="@{/coffee/filter(brandId=${brandId}, intensity=${intensity}, roast=${roast}, bitterness=${bitterness}, composition=${composition}, acidity=${acidity}, sort=${sort})}">
+                    <i class="fas fa-times"></i>
+                </a>
+            </div>
+
+            <th:block th:if="${intensity != null}">
+                <div class="filter-chip" th:each="i : ${intensity}">
+                    <i class="fas fa-bolt mr-1 text-primary"></i>
+                    <span th:text="${i.getDisplayName()}"></span>
+                    <a
+                            th:href="@{/coffee/filter(brandId=${brandId}, countryId=${countryId}, sort=${sort}, roast=${roast}, bitterness=${bitterness}, composition=${composition}, acidity=${acidity}, intensity=${#lists.toList(intensity).?[#this != __${i}__]})}">
                         <i class="fas fa-times"></i>
                     </a>
                 </div>
-
-                <th:block th:if="${intensity != null}">
-                    <div class="filter-chip" th:each="i : ${intensity}">
-                        <i class="fas fa-bolt mr-1 text-primary"></i>
-                        <span th:text="${i.getDisplayName()}"></span>
-                        <a
-                            th:href="@{/coffee/filter(brandId=${brandId}, countryId=${countryId}, sort=${sort}, roast=${roast}, bitterness=${bitterness}, composition=${composition}, acidity=${acidity}, intensity=${#lists.toList(intensity).?[#this != __${i}__]})}">
-                            <i class="fas fa-times"></i>
-                        </a>
-                    </div>
-                </th:block>
-
-                <th:block th:if="${roast != null}">
-                    <div class="filter-chip" th:each="r : ${roast}">
-                        <i class="fas fa-fire-alt mr-1 text-warning"></i>
-                        <span th:text="${r.getDisplayName()}"></span>
-                        <a
-                            th:href="@{/coffee/filter(brandId=${brandId}, countryId=${countryId}, sort=${sort}, intensity=${intensity}, bitterness=${bitterness}, composition=${composition}, acidity=${acidity}, roast=${#lists.toList(roast).?[#this != __${r}__]})}">
-                            <i class="fas fa-times"></i>
-                        </a>
-                    </div>
-                </th:block>
-
-                <th:block th:if="${composition != null}">
-                    <div class="filter-chip" th:each="c : ${composition}">
-                        <i class="fas fa-seedling mr-1 text-success"></i>
-                        <span th:text="${c.getDisplayName()}"></span>
-                        <a
-                            th:href="@{/coffee/filter(brandId=${brandId}, countryId=${countryId}, sort=${sort}, intensity=${intensity}, roast=${roast}, bitterness=${bitterness}, acidity=${acidity}, composition=${#lists.toList(composition).?[#this != __${c}__]})}">
-                            <i class="fas fa-times"></i>
-                        </a>
-                    </div>
-                </th:block>
-
-                <th:block th:if="${acidity != null}">
-                    <div class="filter-chip" th:each="a : ${acidity}">
-                        <i class="fas fa-lemon mr-1 text-warning"></i>
-                        <span th:text="${a.getDisplayName()}"></span>
-                        <a
-                            th:href="@{/coffee/filter(brandId=${brandId}, countryId=${countryId}, sort=${sort}, intensity=${intensity}, roast=${roast}, bitterness=${bitterness}, composition=${composition}, acidity=${#lists.toList(acidity).?[#this != __${a}__]})}">
-                            <i class="fas fa-times"></i>
-                        </a>
-                    </div>
-                </th:block>
-
-                <a th:href="@{/coffee}" class="btn-clear-all ml-3">Скинути все</a>
-            </div>
-        </div>
-
-        <div class="container text-center py-5 my-5" th:if="${#lists.isEmpty(coffeeList)}">
-            <div style="opacity: 0.5;">
-                <i class="fas fa-search mb-3" style="font-size: 3rem; color: var(--gold);"></i>
-            </div>
-            <h2 style="font-family: 'Playfair Display', serif;">Нічого не знайдено</h2>
-            <p class="text-muted">На жаль, за обраними фільтрами кави не знайдено. Спробуйте змінити критерії пошуку.
-            </p>
-            <a th:href="@{/coffee}" class="btn-nav-catalog mt-3">Показати всю каву</a>
-        </div>
-        <div class="row">
-            <div class="col-lg-4 col-md-6 mb-5 coffee-card-animated" th:each="coffee, iterStat : ${coffeeList}"
-                th:style="'animation-delay: ' + ${iterStat.index * 0.2} + 's'">
-                <a th:href="@{'/coffee/' + ${coffee.id}}" class="coffee-card-link">
-                    <div class="card h-100 text-center">
-                        <div class="card-img-container">
-                            <img th:src="@{'/images/' + ${coffee.photoPath}}" class="card-img-top" alt="Coffee">
-                        </div>
-
-                        <div class="card-body d-flex flex-column">
-                            <h6 class="text-muted small text-uppercase mb-1" th:text="${coffee.brand?.name}">BRAND</h6>
-                            <h5 class="card-title-main mb-3">
-                                <span th:text="${coffee.name}">Coffee Name</span>
-                                <span class="weight-badge" th:text="${coffee.weight?.displayName}">250г</span>
-                            </h5>
-                            <span class="composition-tag" th:text="${coffee.composition?.displayName}">100%
-                                Arabica</span>
-
-                            <div class="mb-4">
-
-                                <div class="bean-rating">
-                                    <span class="bean-label">Інтенсивність</span>
-                                    <th:block th:each="i : ${#numbers.sequence(1, 4)}">
-                                        <i class="fas fa-seedling bean-icon"
-                                            th:classappend="${i <= (coffee.intensity?.ordinal() + 1)} ? '' : 'inactive'"></i>
-                                    </th:block>
-                                </div>
-
-                                <div class="bean-rating">
-                                    <span class="bean-label">Кислотність</span>
-                                    <th:block th:each="i : ${#numbers.sequence(1, 4)}">
-                                        <i class="fas fa-seedling bean-icon"
-                                            th:classappend="${i <= (coffee.acidity?.ordinal() + 1)} ? '' : 'inactive'"></i>
-                                    </th:block>
-                                </div>
-
-                                <div class="bean-rating">
-                                    <span class="bean-label">Обжарка</span>
-                                    <th:block th:each="i : ${#numbers.sequence(1, 4)}">
-                                        <i class="fas fa-seedling bean-icon"
-                                            th:classappend="${i <= (coffee.roastLevel?.ordinal() + 1)} ? '' : 'inactive'"></i>
-                                    </th:block>
-                                </div>
-
-                                <div class="bean-rating">
-                                    <span class="bean-label">Гіркота</span>
-                                    <th:block th:each="i : ${#numbers.sequence(1, 4)}">
-                                        <i class="fas fa-seedling bean-icon"
-                                            th:classappend="${i <= (coffee.bitterness?.ordinal() + 1)} ? '' : 'inactive'"></i>
-                                    </th:block>
-                                </div>
-                            </div>
-
-                            <div class="mt-auto">
-                                <h4 class="font-weight-bold mb-3">
-                                    ₴ <span
-                                        th:text="${#numbers.formatDecimal(coffee.price, 0, 'POINT', 0, 'COMMA')}">450</span>
-                                </h4>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        </div>
-
-        <div class="pagination justify-content-center mt-5">
-            <a th:if="${currentPage > 0}"
-                th:href="@{/coffee/filter(page=${currentPage - 1}, brandId=${brandId}, countryId=${countryId}, intensity=${intensity}, roast=${roastLevel}, composition=${composition}, acidity=${acidity}, bitterness=${bitterness})}">
-                &laquo;
-            </a>
-
-            <th:block th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-                <a th:if="${i >= currentPage - 2 and i <= currentPage + 2}" th:text="${i + 1}"
-                    th:classappend="${i == currentPage} ? 'active'"
-                    th:href="@{/coffee/filter(page=${i}, brandId=${brandId}, countryId=${countryId}, intensity=${intensity}, roast=${roastLevel}, composition=${composition}, acidity=${acidity}, bitterness=${bitterness})}">
-                </a>
             </th:block>
 
-            <a th:if="${currentPage < totalPages - 1}"
-                th:href="@{/coffee/filter(page=${currentPage + 1}, brandId=${brandId}, countryId=${countryId}, intensity=${intensity}, roast=${roastLevel}, composition=${composition}, acidity=${acidity}, bitterness=${bitterness})}">
-                &raquo;
+            <th:block th:if="${roast != null}">
+                <div class="filter-chip" th:each="r : ${roast}">
+                    <i class="fas fa-fire-alt mr-1 text-warning"></i>
+                    <span th:text="${r.getDisplayName()}"></span>
+                    <a
+                            th:href="@{/coffee/filter(brandId=${brandId}, countryId=${countryId}, sort=${sort}, intensity=${intensity}, bitterness=${bitterness}, composition=${composition}, acidity=${acidity}, roast=${#lists.toList(roast).?[#this != __${r}__]})}">
+                        <i class="fas fa-times"></i>
+                    </a>
+                </div>
+            </th:block>
+
+            <th:block th:if="${composition != null}">
+                <div class="filter-chip" th:each="c : ${composition}">
+                    <i class="fas fa-seedling mr-1 text-success"></i>
+                    <span th:text="${c.getDisplayName()}"></span>
+                    <a
+                            th:href="@{/coffee/filter(brandId=${brandId}, countryId=${countryId}, sort=${sort}, intensity=${intensity}, roast=${roast}, bitterness=${bitterness}, acidity=${acidity}, composition=${#lists.toList(composition).?[#this != __${c}__]})}">
+                        <i class="fas fa-times"></i>
+                    </a>
+                </div>
+            </th:block>
+
+            <th:block th:if="${acidity != null}">
+                <div class="filter-chip" th:each="a : ${acidity}">
+                    <i class="fas fa-lemon mr-1 text-warning"></i>
+                    <span th:text="${a.getDisplayName()}"></span>
+                    <a
+                            th:href="@{/coffee/filter(brandId=${brandId}, countryId=${countryId}, sort=${sort}, intensity=${intensity}, roast=${roast}, bitterness=${bitterness}, composition=${composition}, acidity=${#lists.toList(acidity).?[#this != __${a}__]})}">
+                        <i class="fas fa-times"></i>
+                    </a>
+                </div>
+            </th:block>
+
+            <a th:href="@{/coffee}" class="btn-clear-all ml-3">Скинути все</a>
+        </div>
+    </div>
+
+    <div class="container text-center py-5 my-5" th:if="${#lists.isEmpty(coffeeList)}">
+        <div style="opacity: 0.5;">
+            <i class="fas fa-search mb-3" style="font-size: 3rem; color: var(--gold);"></i>
+        </div>
+        <h2 style="font-family: 'Playfair Display', serif;">Нічого не знайдено</h2>
+        <p class="text-muted">На жаль, за обраними фільтрами кави не знайдено. Спробуйте змінити критерії пошуку.
+        </p>
+        <a th:href="@{/coffee}" class="btn-nav-catalog mt-3">Показати всю каву</a>
+    </div>
+    <div class="row">
+        <div class="col-lg-4 col-md-6 mb-5 coffee-card-animated" th:each="coffee, iterStat : ${coffeeList}"
+             th:style="'animation-delay: ' + ${iterStat.index * 0.2} + 's'">
+            <a th:href="@{'/coffee/' + ${coffee.id}}" class="coffee-card-link">
+                <div class="card h-100 text-center">
+                    <div class="card-img-container">
+                        <img th:src="@{'/images/' + ${coffee.photoPath}}" class="card-img-top" alt="Coffee">
+                    </div>
+
+                    <div class="card-body d-flex flex-column">
+                        <h6 class="text-muted small text-uppercase mb-1" th:text="${coffee.brand?.name}">BRAND</h6>
+                        <h5 class="card-title-main mb-3">
+                            <span th:text="${coffee.name}">Coffee Name</span>
+                            <span class="weight-badge" th:text="${coffee.weight?.displayName}">250г</span>
+                        </h5>
+                        <span class="composition-tag" th:text="${coffee.composition?.displayName}">100%
+                                Arabica</span>
+
+                        <div class="mb-4">
+
+                            <div class="bean-rating">
+                                <span class="bean-label">Інтенсивність</span>
+                                <th:block th:each="i : ${#numbers.sequence(1, 4)}">
+                                    <i class="fas fa-seedling bean-icon"
+                                       th:classappend="${i <= (coffee.intensity?.ordinal() + 1)} ? '' : 'inactive'"></i>
+                                </th:block>
+                            </div>
+
+                            <div class="bean-rating">
+                                <span class="bean-label">Кислотність</span>
+                                <th:block th:each="i : ${#numbers.sequence(1, 4)}">
+                                    <i class="fas fa-seedling bean-icon"
+                                       th:classappend="${i <= (coffee.acidity?.ordinal() + 1)} ? '' : 'inactive'"></i>
+                                </th:block>
+                            </div>
+
+                            <div class="bean-rating">
+                                <span class="bean-label">Обжарка</span>
+                                <th:block th:each="i : ${#numbers.sequence(1, 4)}">
+                                    <i class="fas fa-seedling bean-icon"
+                                       th:classappend="${i <= (coffee.roastLevel?.ordinal() + 1)} ? '' : 'inactive'"></i>
+                                </th:block>
+                            </div>
+
+                            <div class="bean-rating">
+                                <span class="bean-label">Гіркота</span>
+                                <th:block th:each="i : ${#numbers.sequence(1, 4)}">
+                                    <i class="fas fa-seedling bean-icon"
+                                       th:classappend="${i <= (coffee.bitterness?.ordinal() + 1)} ? '' : 'inactive'"></i>
+                                </th:block>
+                            </div>
+                        </div>
+
+                        <div class="mt-auto">
+                            <h4 class="font-weight-bold mb-3">
+                                ₴ <span
+                                    th:text="${#numbers.formatDecimal(coffee.price, 0, 'POINT', 0, 'COMMA')}">450</span>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
             </a>
         </div>
     </div>
 
-    <div class="ai-assistant-btn" onclick="openSommelier()">
-        <i class="fas fa-robot mr-2"></i> AI Сомельє
-    </div>
-    <div class="modal fade" id="aiSommelierModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content ai-modal-content">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title font-weight-bold" style="font-family: 'Playfair Display', serif;">AI Сомельє
-                        IJO</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body text-center">
-                    <div id="sommelier-content">
-                    </div>
+    <div class="pagination justify-content-center mt-5">
+        <a th:if="${currentPage > 0}"
+           th:href="@{/coffee/filter(page=${currentPage - 1}, brandId=${brandId}, countryId=${countryId}, intensity=${intensity}, roast=${roastLevel}, composition=${composition}, acidity=${acidity}, bitterness=${bitterness})}">
+            &laquo;
+        </a>
 
-                    <div class="progress mt-4" style="height: 5px; background: #eee;">
-                        <div id="ai-progress" class="progress-bar" style="background: var(--gold); width: 20%;"></div>
-                    </div>
+        <th:block th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+            <a th:if="${i >= currentPage - 2 and i <= currentPage + 2}" th:text="${i + 1}"
+               th:classappend="${i == currentPage} ? 'active'"
+               th:href="@{/coffee/filter(page=${i}, brandId=${brandId}, countryId=${countryId}, intensity=${intensity}, roast=${roastLevel}, composition=${composition}, acidity=${acidity}, bitterness=${bitterness})}">
+            </a>
+        </th:block>
+
+        <a th:if="${currentPage < totalPages - 1}"
+           th:href="@{/coffee/filter(page=${currentPage + 1}, brandId=${brandId}, countryId=${countryId}, intensity=${intensity}, roast=${roastLevel}, composition=${composition}, acidity=${acidity}, bitterness=${bitterness})}">
+            &raquo;
+        </a>
+    </div>
+</div>
+
+<div class="ai-assistant-btn" onclick="openSommelier()">
+    <i class="fas fa-robot mr-2"></i> AI Сомельє
+</div>
+<div class="modal fade" id="aiSommelierModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content ai-modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title font-weight-bold" style="font-family: 'Playfair Display', serif;">AI Сомельє
+                    IJO</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <div id="sommelier-content">
                 </div>
-                <div class="modal-footer border-0 justify-content-between">
-                    <button type="button" class="btn btn-sm text-muted" id="prevStep" onclick="changeStep(-1)"
-                        style="display:none;">Назад</button>
-                    <small class="text-uppercase" style="letter-spacing: 1px; color: var(--gold);" id="stepCounter">Крок
-                        1 з 5</small>
+
+                <div class="progress mt-4" style="height: 5px; background: #eee;">
+                    <div id="ai-progress" class="progress-bar" style="background: var(--gold); width: 20%;"></div>
                 </div>
+            </div>
+            <div class="modal-footer border-0 justify-content-between">
+                <button type="button" class="btn btn-sm text-muted" id="prevStep" onclick="changeStep(-1)"
+                        style="display:none;">Назад
+                </button>
+                <small class="text-uppercase" style="letter-spacing: 1px; color: var(--gold);" id="stepCounter">Крок
+                    1 з 5</small>
             </div>
         </div>
     </div>
+</div>
 
 
-    <footer>
-        <div class="container-fluid text-center">
-            <small>© 2026 IJO Coffee — Тільки преміальні сорти</small>
-        </div>
-    </footer>
+<footer>
+    <div class="container-fluid text-center">
+        <small>© 2026 IJO Coffee — Тільки преміальні сорти</small>
+    </div>
+</footer>
 
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
-    <script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+<script>
         const sommelierSteps = [
             {
                 title: "Який склад кави ви полюбляєте?",
@@ -897,8 +953,9 @@
             }
             window.location.href = url + params.join('&');
         }
-    </script>
-    <script>
+
+</script>
+<script>
     function refreshCartCount() {
         fetch('/cart/api/count')
             .then(response => response.json())
@@ -920,6 +977,7 @@
 
     // Викликаємо при завантаженні
     document.addEventListener('DOMContentLoaded', refreshCartCount);
+
 </script>
 </body>
 
