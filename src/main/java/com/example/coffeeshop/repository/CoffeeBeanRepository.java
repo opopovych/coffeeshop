@@ -35,6 +35,8 @@ public interface CoffeeBeanRepository extends JpaRepository<CoffeeBean, Long> {
     long count();
     @Query("SELECT c FROM CoffeeBean c WHERE c.active = true")
     Page<CoffeeBean> findAllActive(Pageable pageable);
+    @Query(value = "SELECT * FROM coffee_bean WHERE active = true ORDER BY id DESC", nativeQuery = true)
+    Page<CoffeeBean> findAllActiveById(Pageable pageable);
 
 
 

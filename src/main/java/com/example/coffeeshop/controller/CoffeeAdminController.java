@@ -216,7 +216,7 @@ public class CoffeeAdminController {
         return "redirect:/admin/coffee";
     }
     @PostMapping("/upload-price")
-    public String uploadPrice(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+    public String uploadPrice(@RequestParam("file") MultipartFile file, Double percent, RedirectAttributes redirectAttributes) {
         if (file.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "Будь ласка, виберіть файл.");
             return "redirect:/admin/coffeeList";
@@ -224,7 +224,7 @@ public class CoffeeAdminController {
 
         try {
             // Отримуємо звіт від сервісу
-            SyncReport report = syncService.syncWithPriceList(file);
+            SyncReport report = syncService.syncWithPriceList(file,percent);
 
             String message = String.format("Синхронізація завершена! Оновлено: %d, Вимкнено: %d",
                     report.getUpdated(), report.getDeactivated());

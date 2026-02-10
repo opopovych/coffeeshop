@@ -21,7 +21,7 @@ public class SyncServiceImpl implements SyncService {
 
     @Transactional
     @Override
-    public SyncReport syncWithPriceList(MultipartFile file) throws IOException {
+    public SyncReport syncWithPriceList(MultipartFile file,Double percent) throws IOException {
         Map<String, Double> priceMapFromFile = new HashMap<>();
 
         try (InputStream is = file.getInputStream();
@@ -64,7 +64,8 @@ public class SyncServiceImpl implements SyncService {
             String productSku = product.getSku();
 
             if (productSku != null && priceMapFromFile.containsKey(productSku)) {
-                product.setPrice(priceMapFromFile.get(productSku)*1.3);
+                double newPrice = priceMapFromFile.get(productSku)*(1+(percent/100));
+                product.setPrice((double) Math.round(newPrice));
                 product.setActive(true);
                 updatedCount++;
             } else {

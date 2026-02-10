@@ -39,4 +39,5 @@ public interface CoffeeBeanService {
     void deleteAllById(List<Long> productIds);
 
     Page<CoffeeBean> findAllActive(Pageable pageable);
+    Page<CoffeeBean> findAllActiveRandom(Pageable pageable);
 }

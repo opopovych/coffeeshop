@@ -1,15 +1,13 @@
 package com.example.coffeeshop.controller;
 
-import com.example.coffeeshop.model.CoffeeBean;
-import com.example.coffeeshop.model.Order;
-import com.example.coffeeshop.model.RoastLevel;
-import com.example.coffeeshop.model.Status;
+import com.example.coffeeshop.model.*;
 import com.example.coffeeshop.repository.OrderRepository;
 import com.example.coffeeshop.service.BrandService;
 import com.example.coffeeshop.service.CoffeeBeanService;
 import com.example.coffeeshop.service.OrderService;
 import com.example.coffeeshop.service.OriginCountryService;
 import com.example.coffeeshop.service.impl.DashboardService;
+import com.example.coffeeshop.service.impl.DiscountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,6 +39,8 @@ public class AdminController {
     private DashboardService dashboardService;
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private DiscountService discountService;
 
     @GetMapping()
     public String adminPanel(Model model) {
@@ -82,7 +82,14 @@ public class AdminController {
             // Якщо бренд не обрано — показуємо все
             list = coffeeBeanService.findAll();
         }
+// Отримуємо налаштування з бази (або створюємо порожній об'єкт, щоб не було null)
+        DiscountSettings settings = discountService.getSettings();
 
+        if (settings == null) {
+            settings = new DiscountSettings(); // об'єкт з дефолтними значеннями
+        }
+
+        model.addAttribute("discountSettings", settings);
         model.addAttribute("coffeeList", list);
         model.addAttribute("brands", brandService.findAll()); // Потрібно для випадаючого списку
         model.addAttribute("selectedBrandId", brandId); // Щоб зберегти вибір у селекті

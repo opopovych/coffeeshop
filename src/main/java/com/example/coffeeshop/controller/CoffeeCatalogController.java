@@ -10,6 +10,7 @@ import com.example.coffeeshop.service.CoffeeBeanService;
 import java.util.List;
 
 import com.example.coffeeshop.service.OriginCountryService;
+import com.example.coffeeshop.service.impl.DiscountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +31,8 @@ public class CoffeeCatalogController {
     private BrandService brandService;
     @Autowired
     private OriginCountryService originCountryService;
+    @Autowired
+    private DiscountService discountService;
 
     @GetMapping("/brandhistory")
     public String showHistoryPage(Model model) {
@@ -58,9 +61,17 @@ public class CoffeeCatalogController {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
 
         // 2. Отримуємо СТОРІНКУ активних товарів
-        Page<CoffeeBean> coffeePage = coffeeBeanService.findAllActive(pageable);
+        //Page<CoffeeBean> coffeePage = coffeeBeanService.findAllActive(pageable);
+        // Замість findAllActive використовуй:
+        Page<CoffeeBean> coffeePage = coffeeBeanService.findAllActiveRandom(pageable);
 
         // 3. Передаємо дані, які очікує ваш catalog.html
+        DiscountSettings settings = discountService.getSettings();
+        if (settings != null && settings.isActive()) {
+            model.addAttribute("discountSettings", settings);
+        } else {
+            model.addAttribute("discountSettings", null);
+        }
         model.addAttribute("coffeeList", coffeePage.getContent()); // Список товарів для поточної сторінки
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", coffeePage.getTotalPages());
@@ -129,6 +140,12 @@ public class CoffeeCatalogController {
                 brandId, countryId, intensityParam, roastParam,
                 bitternessParam, compositionParam, acidityParam, pageable
         );
+        DiscountSettings settings = discountService.getSettings();
+        if (settings != null && settings.isActive()) {
+            model.addAttribute("discountSettings", settings);
+        } else {
+            model.addAttribute("discountSettings", null);
+        }
 
         model.addAttribute("coffeeList", coffeePage.getContent());
         model.addAttribute("currentPage", page);

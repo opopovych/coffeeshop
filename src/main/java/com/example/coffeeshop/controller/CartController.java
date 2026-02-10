@@ -1,9 +1,12 @@
 package com.example.coffeeshop.controller;
 
 import com.example.coffeeshop.model.CoffeeBean;
+import com.example.coffeeshop.model.DiscountSettings;
+import com.example.coffeeshop.model.dto.Cart;
 import com.example.coffeeshop.model.dto.CartItem;
 import com.example.coffeeshop.service.CoffeeBeanService;
 import com.example.coffeeshop.service.impl.CartService;
+import com.example.coffeeshop.service.impl.DiscountService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,10 +20,12 @@ public class CartController {
 
     private final CoffeeBeanService coffeeBeanService;
     private final CartService cartService;
+    private final DiscountService discountService;
 
-    public CartController(CoffeeBeanService coffeeBeanService, CartService cartService) {
+    public CartController(CoffeeBeanService coffeeBeanService, CartService cartService, DiscountService discountService) {
         this.coffeeBeanService = coffeeBeanService;
         this.cartService = cartService;
+        this.discountService = discountService;
     }
 
     @PostMapping("/add/{coffeeId}")
@@ -53,8 +58,31 @@ public class CartController {
 
     @GetMapping("/view")
     public String viewCart(Model model) {
-        model.addAttribute("cart", cartService.getCart());
-        model.addAttribute("total", cartService.getTotal());
+        Cart cart = cartService.getCart();
+        double subtotal = cartService.getTotal();
+
+        DiscountSettings settings = discountService.getSettings();
+
+        double total = subtotal;
+        double discountPercent = 0;
+
+        // Додаємо settings.isActive() в перевірку
+        if (settings != null && settings.getThreshold() != null && settings.isActive()) {
+            if (subtotal >= settings.getThreshold()) {
+                discountPercent = settings.getDiscountPercent();
+                total = subtotal * (1 - (discountPercent / 100));
+            }
+            model.addAttribute("discountSettings", settings);
+        } else {
+            model.addAttribute("discountSettings", null);
+        }
+
+        model.addAttribute("cart", cart);
+        model.addAttribute("subtotal", subtotal);
+        // Використовуємо Math.round для відображення цілого числа
+        model.addAttribute("total", Math.round(total));
+        model.addAttribute("discountPercent", discountPercent);
+
         return "cart-view";
     }
 

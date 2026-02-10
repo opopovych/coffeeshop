@@ -96,6 +96,10 @@ coffeeBeanRepository.deleteAllById(productIds);
     public Page<CoffeeBean> findAllActive(Pageable pageable) {
         return coffeeBeanRepository.findAllActive(pageable);
     }
+    @Override
+    public Page<CoffeeBean> findAllActiveRandom(Pageable pageable){
+        return coffeeBeanRepository.findAllActiveById(pageable);
+    }
 
 
 }

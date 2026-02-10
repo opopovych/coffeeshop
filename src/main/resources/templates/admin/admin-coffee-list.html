@@ -196,16 +196,30 @@
 
                         <div class="mb-4 pt-3 border-top">
                             <label class="section-title mb-2">Оновлення цін та наявності</label>
-                            <form th:action="@{/admin/coffee/upload-price}" method="post" enctype="multipart/form-data">
-                                <div class="input-group">
-                                    <div class="custom-file">
-                                        <input type="file" name="file" class="custom-file-input" id="filePrice"
-                                            required>
-                                        <label class="custom-file-label" for="filePrice">Оберіть .xlsx або .ods</label>
+                            <form th:action="@{/admin/coffee/upload-price}" method="post" enctype="multipart/form-data"
+                                class="bg-light p-3 border rounded">
+                                <div class="form-row align-items-center">
+                                    <div class="col-md-5 mb-2 mb-md-0">
+                                        <div class="custom-file">
+                                            <input type="file" name="file" class="custom-file-input" id="filePrice"
+                                                required>
+                                            <label class="custom-file-label" for="filePrice">Прайс (.xlsx, .ods)</label>
+                                        </div>
                                     </div>
-                                    <div class="input-group-append ml-2">
-                                        <button class="btn btn-primary btn-action" type="submit">
-                                            <i class="fas fa-sync-alt mr-1"></i> Оновити все
+
+                                    <div class="col-md-4 mb-2 mb-md-0">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                            <input type="number" step="any" name="percent" class="form-control"
+                                                placeholder="Націнка (напр. 10.5)" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <button class="btn btn-primary btn-block btn-action" type="submit">
+                                            <i class="fas fa-upload mr-1"></i> Оновити ціни
                                         </button>
                                     </div>
                                 </div>
@@ -257,32 +271,71 @@
                     <div class="card-body p-4">
                         <div class="d-flex align-items-center mb-4">
                             <div class="bg-success-light p-2 rounded-circle mr-3">
-                                <i class="fas fa-percentage text-success fa-lg"></i>
+                                <i class="fas fa-cash-register text-success fa-lg"></i>
                             </div>
-                            <h5 class="m-0 font-weight-bold text-success">Масова зміна цін</h5>
+                            <h5 class="m-0 font-weight-bold text-success">Ціни та Знижки</h5>
                         </div>
 
-                        <p class="text-muted small">Вкажіть відсоток, щоб змінити ціни на всі товари в базі (напр.
-                            <code>10</code> або <code>-5.5</code>).</p>
-
-                        <form th:action="@{/admin/coffee/adjust-prices}" method="post" class="mt-4">
-                            <div class="input-group input-group-lg mb-3">
-                                <input type="number" step="any" name="percent" class="form-control input-custom"
-                                    placeholder="0.00" required>
+                        <p class="text-muted small mb-2"><strong>Масова зміна:</strong> змінює ціни всіх товарів у базі
+                            назавжди.</p>
+                        <form th:action="@{/admin/coffee/adjust-prices}" method="post" class="mb-4">
+                            <div class="input-group mb-3">
+                                <input type="number" step="any" name="percent" class="form-control"
+                                    placeholder="Відсоток (напр. 10)" required>
                                 <div class="input-group-append">
-                                    <span class="input-group-text bg-light border-left-0"
-                                        style="border-radius: 0 8px 8px 0;">%</span>
+                                    <button class="btn btn-success" type="submit">Оновити базу</button>
                                 </div>
                             </div>
-                            <button class="btn btn-success btn-block btn-action shadow-sm" type="submit">
-                                Підтвердити зміну цін
-                            </button>
-                            <div class="mt-3 text-center">
-                                <span class="badge badge-pill badge-warning-light text-warning p-2">
-                                    <i class="fas fa-exclamation-triangle mr-1"></i> Це змінить ціни в базі назавжди
-                                </span>
-                            </div>
                         </form>
+
+                        <hr class="my-4" style="border-top: 1px dashed #28a745; opacity: 0.3;">
+
+                        <p class="text-muted small mb-2"><strong>Знижка в кошику:</strong> діє, якщо сума більша за
+                            поріг.</p>
+                        <form th:action="@{/admin/settings/discount}" method="post">
+                            <div class="row no-gutters">
+                                <div class="col-7 pr-1">
+                                    <div class="input-group input-group-sm mb-2">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text small">Від:</span>
+                                        </div>
+                                        <input type="number" name="threshold"
+                                            th:value="${discountSettings?.threshold ?: 0}" class="form-control"
+                                            placeholder="грн" required>
+                                    </div>
+                                </div>
+                                <div class="col-5">
+                                    <div class="input-group input-group-sm mb-2">
+                                        <input type="number" step="any" name="discountPercent"
+                                            th:value="${discountSettings?.discountPercent ?: 0}" class="form-control"
+                                            placeholder="%" required>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="custom-control custom-switch my-3">
+                                <input type="checkbox" class="custom-control-input" id="promoActive" name="active"
+                                    th:checked="${discountSettings?.active}">
+                                <label class="custom-control-label small text-muted" for="promoActive">
+                                    Показувати банер у каталозі
+                                </label>
+                            </div>
+
+                            <button class="btn btn-outline-success btn-sm btn-block mt-2" type="submit">
+                                <i class="fas fa-save mr-1"></i> Зберегти налаштування
+                            </button>
+                        </form>
+
+                        <div class="mt-4 text-center">
+                            <span class="badge badge-pill badge-warning-light text-warning p-2"
+                                style="font-size: 0.75rem;">
+                                <i class="fas fa-exclamation-triangle mr-1"></i> Будьте уважні зі зміною цін у базі!
+                            </span>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -387,9 +440,8 @@
                                     style="object-fit: contain; border-radius: 4px;"></td>
                             <td>
                                 <strong>
-    <span th:if="${coffee.brand != null}"
-          th:text="${coffee.brand.name} + ' '"
-          style="color: #817846;"></span>
+                                    <span th:if="${coffee.brand != null}" th:text="${coffee.brand.name} + ' '"
+                                        style="color: #817846;"></span>
                                     <span th:text="${coffee.name}"></span>
                                 </strong>
                                 <small class="text-muted" th:text="${coffee.weight?.displayName}"></small>
@@ -550,6 +602,10 @@
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                 });
             });
+        });
+        $('.custom-file-input').on('change', function () {
+            let fileName = $(this).val().split('\\').pop();
+            $(this).next('.custom-file-label').addClass("selected").html(fileName);
         });
     </script>
 

@@ -254,13 +254,16 @@
             left: 50%;
             transform: translateX(-50%);
         }
+
         @media (max-width: 1000px) {
             .btn-add-cart {
-            /* Менші внутрішні відступи */
-            width: 100%;                       /* Кнопка на всю ширину */
-        padding: 12px 10px !important;  
-        font-size: 0.9rem;                 /* Трішки менший шрифт */
-    }
+                /* Менші внутрішні відступи */
+                width: 100%;
+                /* Кнопка на всю ширину */
+                padding: 12px 10px !important;
+                font-size: 0.9rem;
+                /* Трішки менший шрифт */
+            }
         }
 
         @media (max-width: 576px) {
@@ -268,31 +271,117 @@
                 font-size: 1.2rem;
             }
         }
+
         /* Робимо форму додавання в кошик адаптивною */
-@media (max-width: 576px) {
-    .add-to-cart-form {
-        flex-direction: column !important; /* Елементи один під одним */
-        align-items: stretch !important;   /* Розтягуємо на всю ширину */
-    }
+        @media (max-width: 576px) {
+            .add-to-cart-form {
+                flex-direction: column !important;
+                /* Елементи один під одним */
+                align-items: stretch !important;
+                /* Розтягуємо на всю ширину */
+            }
 
-    .quantity-control {
-        margin-right: 0 !important;        /* Прибираємо правий відступ */
-        margin-bottom: 15px;               /* Додаємо відступ знизу */
-        width: 100% !important;            /* Контроль кількості на всю ширину */
-        justify-content: center;
-    }
+            .quantity-control {
+                margin-right: 0 !important;
+                /* Прибираємо правий відступ */
+                margin-bottom: 15px;
+                /* Додаємо відступ знизу */
+                width: 100% !important;
+                /* Контроль кількості на всю ширину */
+                justify-content: center;
+            }
 
-    .btn-add-cart {
-        width: 100%;                       /* Кнопка на всю ширину */
-        padding: 12px 10px !important;     /* Менші внутрішні відступи */
-        font-size: 0.9rem;                 /* Трішки менший шрифт */
-    }
-}
+            .btn-add-cart {
+                width: 100%;
+                /* Кнопка на всю ширину */
+                padding: 12px 10px !important;
+                /* Менші внутрішні відступи */
+                font-size: 0.9rem;
+                /* Трішки менший шрифт */
+            }
+        }
 
-/* Додаткове виправлення для футера, щоб не заважав */
-body {
-    padding-bottom: 80px !important; /* Зменшуємо відступ знизу */
-}
+        @media (max-width: 400px) {
+            .navbar {
+                padding: 0.8rem 0.5rem !important;
+                /* Зменшуємо відступи по боках */
+            }
+
+            .navbar-brand {
+                font-size: 1rem !important;
+                /* Ще менший шрифт для лого */
+                margin: 0 5px !important;
+            }
+
+            .nav-side-zone {
+                width: 65px;
+                /* Ще компактніше на мікро-екранах */
+            }
+
+            .navbar-brand i {
+                display: none;
+                /* Прибираємо зернятко, якщо екран критично малий */
+            }
+        }
+
+        /* --- ФІКСАЦІЯ НАВБАРУ ДЛЯ ДЕТАЛЕЙ --- */
+        .navbar .container-fluid {
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            /* ЗАБОРОНЯЄМО кошику падати вниз */
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Бокові зони однакової ширини для ідеального центрування лого */
+        .navbar .nav-side-zone {
+            width: 80px;
+            /* Фіксуємо ширину, щоб центр не "гуляв" */
+            flex-shrink: 0;
+            /* Забороняємо звужуватися більше за 80px */
+        }
+
+        @media (max-width: 400px) {
+            .navbar {
+                padding: 0.8rem 0.5rem !important;
+                /* Зменшуємо відступи по боках */
+            }
+
+            .navbar-brand {
+                font-size: 1rem !important;
+                /* Ще менший шрифт для лого */
+                margin: 0 5px !important;
+            }
+
+            .nav-side-zone {
+                width: 65px;
+                /* Ще компактніше на мікро-екранах */
+            }
+
+            .navbar-brand i {
+                display: none;
+                /* Прибираємо зернятко, якщо екран критично малий */
+            }
+        }
+
+        /* Для зовсім маленьких телефонів (менше 330px) */
+        @media (max-width: 330px) {
+            .navbar-brand {
+                font-size: 1rem !important;
+            }
+
+            .navbar a.text-white.small span {
+                display: none;
+                /* Лишаємо тільки стрілочку, прибираємо слово "Назад" */
+            }
+        }
+
+        /* Додаткове виправлення для футера, щоб не заважав */
+        body {
+            padding-bottom: 80px !important;
+            /* Зменшуємо відступ знизу */
+        }
 
         footer {
             background: var(--espresso);
@@ -315,18 +404,18 @@ body {
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
-        <div class="container-fluid d-flex justify-content-between align-items-center">
-            <div style="width: 150px;"> <a th:href="@{/coffee}" class="text-white small text-uppercase"
-                    style="letter-spacing: 1px;">
-                    <i class="fas fa-chevron-left mr-1"></i> Назад
-                </a>
+        <div class="container-fluid">
+            <div class="nav-side-zone">
+                <a th:href="@{/coffee(page=${param.page != null ? param.page : 0})}" class="text-white small text-uppercase">
+                    <i class="fas fa-chevron-left mr-1"></i>
+                    <span class="d-none d-sm-inline">Назад</span> </a>
             </div>
 
             <a class="navbar-brand m-0" th:href="@{/coffee}">
                 <i class="fas fa-seedling mr-2"></i> IJO COFFEE
             </a>
 
-            <div style="width: 150px;" class="text-right">
+            <div class="nav-side-zone text-right">
                 <a th:href="@{/cart/view}" class="cart-wrapper">
                     <i class="fas fa-shopping-basket text-white" style="font-size: 1.2rem;"></i>
                     <span id="cart-count-badge" class="cart-badge" style="display: none;">0</span>
@@ -397,16 +486,17 @@ body {
                     </div>
 
                     <form th:action="@{'/cart/add/' + ${coffee.id}}" method="post"
-      class="d-flex align-items-center mb-4 add-to-cart-form">
-    
-    <div class="quantity-control">
-        <button type="button" class="qty-btn" onclick="decrementQty()">-</button>
-        <input type="number" id="quantity" name="quantity" value="1" min="1" class="quantity-input" readonly>
-        <button type="button" class="qty-btn" onclick="incrementQty()">+</button>
-    </div>
-    
-    <button type="submit" class="btn btn-add-cart">У кошик</button>
-</form>
+                        class="d-flex align-items-center mb-4 add-to-cart-form">
+
+                        <div class="quantity-control">
+                            <button type="button" class="qty-btn" onclick="decrementQty()">-</button>
+                            <input type="number" id="quantity" name="quantity" value="1" min="1" class="quantity-input"
+                                readonly>
+                            <button type="button" class="qty-btn" onclick="incrementQty()">+</button>
+                        </div>
+
+                        <button type="submit" class="btn btn-add-cart">У кошик</button>
+                    </form>
 
                 </div>
             </div>
