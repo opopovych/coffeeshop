@@ -104,21 +104,40 @@ public class CoffeeAdminController {
 
         if (productIds != null && !productIds.isEmpty() && action != null) {
 
+            // 1. Окремий випадок для видалення
             if ("delete".equals(action)) {
-                // Множинне видалення
                 coffeeBeanService.deleteAllById(productIds);
-            } else {
-                // Активація або Деактивація
+            }
+            else {
+                // 2. Для всіх інших дій спочатку отримуємо список об'єктів
                 List<CoffeeBean> products = coffeeBeanService.findAllById(productIds);
-                boolean targetStatus = action.equals("activate");
 
                 products.forEach(p -> {
-                    p.setActive(targetStatus);
-                    // Про всяк випадок закругляємо ціну при збереженні
+                    switch (action) {
+                        case "activate":
+                            p.setActive(true);
+                            break;
+                        case "deactivate":
+                            p.setActive(false);
+                            break;
+                        case "setHit":
+                            p.setHit(true);
+                            break;
+                        case "setPromo":
+                            p.setPromo(true);
+                            break;
+                        case "clearBadges":
+                            p.setHit(false);
+                            p.setPromo(false);
+                            break;
+                    }
+
+                    // Твоя логіка закруглення ціни залишається
                     if (p.getPrice() != null) {
                         p.setPrice((double) Math.round(p.getPrice()));
                     }
                 });
+
                 coffeeBeanService.saveAll(products);
             }
         }

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-    <title>Admin Panel - Coffee Shop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Admin Panel - IJO Coffee</title>
     <style>
+        /* Єдиний стиль для всієї сторінки */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -14,81 +14,51 @@
             background: #f4f4f4;
         }
 
-        header {
-            background: #2e2a28;
+        /* Стилізація твоєї оригінальної верхньої навки (щоб не конфліктувала) */
+        .navbar-dark.bg-dark { background-color: #2e2a28 !important; }
+
+        /* LAYOUT */
+        #wrapper { display: flex; min-height: calc(100vh - 56px); }
+
+        /* SIDEBAR В СТИЛІ IJO */
+        #sidebar-wrapper {
+            min-width: 250px;
+            max-width: 250px;
+            background: #2e2a28; /* Колір як у твого хедера */
+            border-right: 1px solid rgba(197, 160, 89, 0.2);
+        }
+
+        .nav-sidebar-link {
+            padding: 15px 20px;
+            display: block;
             color: white;
-            padding: 15px;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            transition: 0.3s;
+        }
+
+        .nav-sidebar-link:hover {
+            background: #3e2723;
+            color: #c5a059; /* Твоє золото */
+            text-decoration: none;
+        }
+
+        .nav-sidebar-link i {
+            margin-right: 10px;
+            color: #c5a059;
+            width: 20px;
             text-align: center;
         }
 
-        h2 {
-            margin-top: 30px;
-        }
-
-        .container {
-            width: 95%;
-            max-width: 1200px;
-            margin: 20px auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 30px;
-            background: white;
-        }
-
-        th,
-        td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: left;
-        }
-
-        th {
-            background: #eee;
-        }
-
-        a.button {
-            padding: 5px 10px;
-            background: #3e2723;
-            color: white;
-            text-decoration: none;
-            border-radius: 3px;
-            margin-right: 5px;
-        }
-
-        a.button:hover {
-            background: #5d4037;
-        }
-
-        input,
-        select,
-        textarea {
-            padding: 5px;
-            margin: 3px 0;
-            width: 100%;
-        }
-
-        form {
-            margin-top: 10px;
-        }
-
-        .section {
-            background: white;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
+        /* CONTENT */
+        #page-content-wrapper { width: 100%; }
 
         .admin-hero {
             background: linear-gradient(rgba(46, 42, 40, 0.8), rgba(46, 42, 40, 0.8)),
                 url('https://images.pexels.com/photos/302899/pexels-photo-302899.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2') center/cover;
             padding: 60px 0;
             color: white;
-            border-radius: 0 0 20px 20px;
-            margin-bottom: 40px;
+            text-align: center;
         }
 
         .stat-card {
@@ -97,17 +67,18 @@
             padding: 30px;
             text-align: center;
             transition: 0.3s;
+            border-radius: 5px;
+            height: 100%;
         }
 
         .stat-card:hover {
             border-color: #c5a059;
-            /* Твоє золото */
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transform: translateY(-3px);
         }
 
         .stat-number {
             display: block;
-            font-family: 'Cinzel', serif;
             font-size: 2rem;
             font-weight: 700;
             color: #0d0a09;
@@ -121,159 +92,108 @@
             color: #999;
         }
 
-        .gold-text {
-            color: #c5a059;
-        }
+        .gold-text { color: #c5a059; }
+
+        /* Кнопка виходу в стилі навки */
         .btn-outline-gold:hover {
-    background-color: #c5a059 !important;
-    color: #fff !important;
-}
+            background-color: #c5a059 !important;
+            color: #fff !important;
+        }
     </style>
 </head>
-
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" th:href="@{/admin}">
-            ☕ IJO Coffee | Адмін
-        </a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" th:href="@{/admin}">
+        ☕ IJO Coffee | Адмін
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#adminNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#adminNavbar"
-            aria-controls="adminNavbar" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+    <div class="collapse navbar-collapse" id="adminNavbar">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item"><a class="nav-link" th:href="@{/coffee}">Каталог</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/}">Головна сторінка</a></li>
 
-        <div class="collapse navbar-collapse" id="adminNavbar">
-            <ul class="navbar-nav mr-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="coffeeDropdown" data-toggle="dropdown">Товари</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" th:href="@{/admin/coffee/add}">➕ Створення товару</a>
+                    <a class="dropdown-item" th:href="@{/admin/coffeeList}">📋 Перегляд товарів</a>
+                </div>
+            </li>
 
-                <!-- Головна -->
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/coffee}">
-                        Каталог
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/}">
-                        Головна сторінка
-                    </a>
-                </li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/admin/orders}">📦 Замовлення</a></li>
 
-                <!-- Товари -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="coffeeDropdown" role="button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Товари
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="coffeeDropdown">
-                        <a class="dropdown-item" th:href="@{/admin/coffee/add}">
-                            ➕ Створення товару
-                        </a>
-                        <a class="dropdown-item" th:href="@{/admin/coffeeList}">
-                            📋 Перегляд товарів
-                        </a>
-                    </div>
-                </li>
+            <li class="nav-item ml-lg-4">
+                <form th:action="@{/logout}" method="post" class="form-inline">
+                    <button type="submit" class="btn btn-outline-gold"
+                            style="color: #c5a059; border-color: #c5a059; border-radius: 20px; padding: 2px 15px; font-size: 0.7rem; text-transform: uppercase;">
+                        Вийти
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</nav>
 
-                <!-- Бренди -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="brandDropdown" role="button"
-                        data-toggle="dropdown">
-                        Бренди
-                    </a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" th:href="@{/admin/coffee/add-brand}">
-                            ➕ Створення бренду
-                        </a>
-                        <a class="dropdown-item" th:href="@{/admin/coffee/brands}">
-                            📋 Перегляд брендів
-                        </a>
-                    </div>
-                </li>
-
-                <!-- Країни -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="countryDropdown" role="button"
-                        data-toggle="dropdown">
-                        Країни
-                    </a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" th:href="@{/admin/coffee/add-country}">
-                            ➕ Створення країни
-                        </a>
-                        <a class="dropdown-item" th:href="@{/admin/countries}">
-                            📋 Перегляд країн
-                        </a>
-                    </div>
-                </li>
-
-                <!-- Замовлення -->
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/admin/orders}">
-                        📦 Перегляд замовлень
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <form th:action="@{/logout}" method="post" class="form-inline">
-                        <button type="submit" class="btn btn-outline-gold"
-                                style="color: #c5a059; border-color: #c5a059; border-radius: 20px; padding: 5px 20px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">
-                            Вийти
-                        </button>
-                    </form>
-                </li>
-            </ul>
-        </div>
-    </nav>
-    <div class="admin-hero">
-        <div class="container text-center">
-            <h1 style="font-family: 'Playfair Display', serif;">Вітаємо, Адміністратор IJO</h1>
-            <p class="lead" style="font-weight: 200; letter-spacing: 2px;">Контроль якості та управління замовленнями
-            </p>
-        </div>
+<div id="wrapper">
+    <div id="sidebar-wrapper">
+        <nav class="mt-3">
+            <a th:href="@{/admin}" class="nav-sidebar-link"><i class="fas fa-th-large"></i> Дашборд</a>
+            <a th:href="@{/admin/orders}" class="nav-sidebar-link"><i class="fas fa-shopping-cart"></i> Замовлення</a>
+            <a th:href="@{/admin/coffee/list}" class="nav-sidebar-link"><i class="fas fa-coffee"></i> Склад товарів</a>
+            <a th:href="@{/admin/marketing}" class="nav-sidebar-link"><i class="fas fa-percent"></i> Маркетинг</a>
+            <a th:href="@{/admin/sync}" class="nav-sidebar-link"><i class="fas fa-sync"></i> Синхронізація</a>
+            <a th:href="@{/admin/coffee/brands}" class="nav-sidebar-link"><i class="fas fa-award"></i> Бренди</a>
+            <a th:href="@{/admin/countries}" class="nav-sidebar-link"><i class="fas fa-globe-americas"></i> Країни</a>
+        </nav>
     </div>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-md-3 mb-4">
-                <a class="nav-link" th:href="@{/admin/orders}">
-                    <div class="stat-card">
-                        <i class="fas fa-shopping-bag gold-text mb-2" style="font-size: 1.5rem;"></i>
-                        <span class="stat-number" th:text="${ordersCount}">12</span>
-                        <span class="stat-label">Нових замовлень</span>
-                    </div>
-                </a>
+    <div id="page-content-wrapper">
+        <div class="admin-hero">
+            <div class="container text-center">
+                <h1 style="font-family: 'Playfair Display', serif; font-weight: 700;">Вітаємо, Адміністратор IJO</h1>
+                <p class="lead" style="font-weight: 200; letter-spacing: 2px;">Контроль якості та управління замовленнями</p>
             </div>
+        </div>
 
-            <div class="col-md-3 mb-4">
-                <a class="nav-link" th:href="@{/admin/coffeeList}">
-                    <div class="stat-card">
-                        <i class="fas fa-coffee gold-text mb-2" style="font-size: 1.5rem;"></i>
-                        <span class="stat-number" th:text="${productsCount}">48</span>
-                        <span class="stat-label">Товарів у каталозі</span>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col-md-3 mb-4">
-                <a class="nav-link" th:href="@{/admin/coffee/brands}">
-                    <div class="stat-card">
-                        <i class="fas fa-award gold-text mb-2" style="font-size: 1.5rem;"></i>
-                        <span class="stat-number" th:text="${brandsCount}">6</span>
-                        <span class="stat-label">Активних брендів</span>
-                    </div>
-                </a>
+        <div class="container mt-n5">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <a th:href="@{/admin/orders}" class="text-decoration-none">
+                        <div class="stat-card shadow-sm">
+                            <i class="fas fa-shopping-bag gold-text mb-2" style="font-size: 1.5rem;"></i>
+                            <span class="stat-number" th:text="${ordersCount}">12</span>
+                            <span class="stat-label">Нових замовлень</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <a th:href="@{/admin/coffee/list}" class="text-decoration-none">
+                        <div class="stat-card shadow-sm">
+                            <i class="fas fa-box-open gold-text mb-2" style="font-size: 1.5rem;"></i>
+                            <span class="stat-number" th:text="${productsCount}">48</span>
+                            <span class="stat-label">Товарів у каталозі</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <a th:href="@{/admin/coffee/brands}" class="text-decoration-none">
+                        <div class="stat-card shadow-sm">
+                            <i class="fas fa-award gold-text mb-2" style="font-size: 1.5rem;"></i>
+                            <span class="stat-number" th:text="${brandsCount}">6</span>
+                            <span class="stat-label">Активних брендів</span>
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
+</div>
 
-
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
-
-    <!-- Popper.js -->
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-
-    <!-- Bootstrap 4 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
-
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

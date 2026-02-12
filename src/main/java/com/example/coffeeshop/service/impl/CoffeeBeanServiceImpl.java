@@ -1,5 +1,6 @@
 package com.example.coffeeshop.service.impl;
 
+import jakarta.transaction.*;
 import com.example.coffeeshop.mapper.CoffeeBeanMapper;
 import com.example.coffeeshop.model.*;
 import com.example.coffeeshop.model.dto.CoffeeBeanDto;
@@ -100,6 +101,20 @@ coffeeBeanRepository.deleteAllById(productIds);
     public Page<CoffeeBean> findAllActiveRandom(Pageable pageable){
         return coffeeBeanRepository.findAllActiveById(pageable);
     }
+    @Override
+    @Transactional
+    public void adjustAllPrices(Double percent) {
+        // Один запит до бази, який оновлює все за мілісекунди
+        coffeeBeanRepository.bulkUpdatePrices(1 + (percent / 100));
+    }
 
+    @Override
+    @Transactional
+    public void updateSingleField(Long id, String field, boolean value) {
+        if ("available".equals(field)) coffeeBeanRepository.updateAvailable(id, value);
+        else if ("isHit".equals(field)) coffeeBeanRepository.updateHit(id, value);
+        else if ("isPromotion".equals(field)) coffeeBeanRepository.updatePromotion(id, value);
+
+    }
 
 }

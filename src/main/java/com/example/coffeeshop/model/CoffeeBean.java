@@ -47,6 +47,10 @@ public class CoffeeBean {
     private Double price;
     // price — ціна
 
+    private boolean isHit = false;
+
+    private boolean isPromo = false;
+
     private String photoPath;
     // photoPath — шлях до фото (uploads/filename.jpg)
 

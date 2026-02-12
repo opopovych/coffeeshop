@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background: #f4f4f4; font-family: 'Montserrat', sans-serif; }
+        #wrapper { display: flex; }
+        #sidebar-wrapper { width: 250px; min-height: 100vh; background: #3e2723; color: white; transition: 0.3s; }
+        #wrapper.toggled #sidebar-wrapper { margin-left: -250px; }
+        #page-content-wrapper { width: 100%; padding: 30px; }
+
+        .admin-card { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border-left: 4px solid #28a745; }
+        .nav-sidebar-link { color: #d7ccc8; padding: 15px 20px; display: block; text-decoration: none; }
+        .nav-sidebar-link:hover, .nav-sidebar-link.active { background: rgba(255,255,255,0.1); color: white; }
+        .section-title { font-size: 0.8rem; text-transform: uppercase; color: #5a5c69; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div th:replace="~{fragments/adminnavbar :: navbar}"></div>
+
+    <div id="wrapper">
+        <div id="sidebar-wrapper">
+            <div class="p-4 text-center border-bottom border-secondary mb-3">
+                <h5 class="text-white m-0">Адмін-панель</h5>
+            </div>
+            <nav>
+                <a th:href="@{/admin/coffee/list}" class="nav-sidebar-link"><i class="fas fa-list mr-2"></i> Товари</a>
+                <a th:href="@{/admin/sync}" class="nav-sidebar-link"><i class="fas fa-sync mr-2"></i> Синхронізація</a>
+                <a th:href="@{/admin/marketing}" class="nav-sidebar-link active"><i class="fas fa-bullhorn mr-2"></i> Маркетинг</a>
+            </nav>
+        </div>
+
+        <div id="page-content-wrapper">
+            <button id="menu-toggle" class="btn btn-outline-dark mb-4"><i class="fas fa-bars"></i></button>
+
+            <div class="container-fluid">
+                <h2 class="font-weight-bold mb-4">Ціноутворення та Акції</h2>
+
+                <div th:if="${success}" class="alert alert-success shadow-sm" th:text="${success}"></div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card admin-card p-4 h-100">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-chart-line fa-2x text-success mr-3"></i>
+                                <h5 class="m-0 font-weight-bold">Масова зміна цін</h5>
+                            </div>
+                            <p class="text-muted small">Введіть відсоток, щоб змінити ціни для <strong>всіх</strong> товарів у базі даних.</p>
+
+                            <form th:action="@{/admin/marketing/adjust-prices}" method="post">
+                                <div class="input-group mb-3">
+                                    <input type="number" step="any" name="percent" class="form-control form-control-lg" placeholder="Напр: 10 або -5" required>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-success px-4" type="submit">Оновити базу</button>
+                                    </div>
+                                </div>
+                                <span class="badge badge-warning-light text-warning p-2">
+                                    <i class="fas fa-exclamation-triangle mr-1"></i> Цю дію неможливо скасувати в один клік
+                                </span>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <div class="card admin-card p-4 h-100" style="border-left-color: #f6c23e;">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-percentage fa-2x text-warning mr-3"></i>
+                                <h5 class="m-0 font-weight-bold">Знижка від суми</h5>
+                            </div>
+
+                            <form th:action="@{/admin/marketing/settings/discount}" method="post">
+                                <div class="form-row mt-4">
+                                    <div class="col-7">
+                                        <label class="section-title">Поріг активації (грн)</label>
+                                        <input type="number" name="threshold" th:value="${discountSettings?.threshold}" class="form-control" required>
+                                    </div>
+                                    <div class="col-5">
+                                        <label class="section-title">Знижка (%)</label>
+                                        <input type="number" step="any" name="discountPercent" th:value="${discountSettings?.discountPercent}" class="form-control" required>
+                                    </div>
+                                </div>
+
+                                <div class="custom-control custom-switch mt-4 mb-3">
+                                    <input type="checkbox" class="custom-control-input" id="promoActive" name="active" th:checked="${discountSettings?.active}">
+                                    <label class="custom-control-label font-weight-bold" for="promoActive">Показувати рекламний банер</label>
+                                </div>
+
+                                <button class="btn btn-outline-dark btn-block mt-3" type="submit">
+                                    <i class="fas fa-save mr-2"></i> Зберегти налаштування
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $("#menu-toggle").click(e => { e.preventDefault(); $("#wrapper").toggleClass("toggled"); });
+    </script>
+</body>
+</html>

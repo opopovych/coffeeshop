@@ -40,4 +40,6 @@ public interface CoffeeBeanService {
 
     Page<CoffeeBean> findAllActive(Pageable pageable);
     Page<CoffeeBean> findAllActiveRandom(Pageable pageable);
+    public void adjustAllPrices(Double percent);
+    public void updateSingleField(Long id, String field, boolean value);
 }
