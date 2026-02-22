@@ -11,4 +11,5 @@ public interface BrandService {
     List<Brand> findAll();                    // всі Бренди
 
     void delete(Long id);                          // видалити Бренд
+    List<Brand> getBrandsByCountry(Long countryId);
 }

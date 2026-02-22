@@ -1502,20 +1502,20 @@
                 </span>
 
                 <div class="filter-chip" th:if="${brandId != null}">
-                    Бренд: <span class="ml-1" th:each="b : ${brands}" th:if="${b.id == brandId}"
-                        th:text="${b.name}"></span>
+                    <span class="text-muted small">Бренд:</span>
+                    <strong class="ml-1" th:text="${selectedBrandName}">Назва</strong>
                     <a
                         th:href="@{/coffee/filter(countryId=${countryId}, intensity=${intensity}, roast=${roast}, bitterness=${bitterness}, composition=${composition}, acidity=${acidity}, sort=${sort})}">
-                        <i class="fas fa-times"></i>
+                        <i class="fas fa-times-circle ml-1"></i>
                     </a>
                 </div>
 
                 <div class="filter-chip" th:if="${countryId != null}">
-                    Країна: <span class="ml-1" th:each="c : ${countries}" th:if="${c.id == countryId}"
-                        th:text="${c.name}"></span>
+                    <span class="text-muted small">Країна:</span>
+                    <strong class="ml-1" th:text="${selectedCountryName}">Назва</strong>
                     <a
                         th:href="@{/coffee/filter(brandId=${brandId}, intensity=${intensity}, roast=${roast}, bitterness=${bitterness}, composition=${composition}, acidity=${acidity}, sort=${sort})}">
-                        <i class="fas fa-times"></i>
+                        <i class="fas fa-times-circle ml-1"></i>
                     </a>
                 </div>
 
@@ -1736,6 +1736,52 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const brandSelect = document.querySelector('select[name="brandId"]');
+            const countrySelect = document.querySelector('select[name="countryId"]');
+
+            // ФУНКЦІЯ ДЛЯ ОНОВЛЕННЯ СЕЛЕКТОРІВ
+            function updateDropdown(targetSelect, url, defaultText, autoSelect = false) {
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        targetSelect.innerHTML = `<option value="">${defaultText}</option>`;
+                        data.forEach(item => {
+                            const option = document.createElement('option');
+                            option.value = item.id;
+                            option.textContent = item.name;
+                            targetSelect.appendChild(option);
+                        });
+
+                        // Якщо прийшов лише один варіант — вибираємо його автоматично
+                        if (autoSelect && data.length === 1) {
+                            targetSelect.value = data[0].id;
+                        }
+                    });
+            }
+
+            // ЛОГІКА ПРИ ЗМІНІ БРЕНДУ
+            if (brandSelect) {
+                brandSelect.addEventListener('change', function () {
+                    const brandId = this.value;
+                    const url = brandId ? `/api/countries-by-brand?brandId=${brandId}` : `/api/all-countries`;
+
+                    // Оновлюємо країни. Якщо обрано бренд — підтягуємо країну автоматично
+                    updateDropdown(countrySelect, url, "Всі країни", !!brandId);
+                });
+            }
+
+            // ЛОГІКА ПРИ ЗМІНІ КРАЇНИ
+            if (countrySelect) {
+                countrySelect.addEventListener('change', function () {
+                    const countryId = this.value;
+                    const url = countryId ? `/api/brands-by-country?countryId=${countryId}` : `/api/all-brands`;
+
+                    // Оновлюємо бренди. Якщо обрано країну — підтягуємо бренд автоматично
+                    updateDropdown(brandSelect, url, "Всі бренди", !!countryId);
+                });
+            }
+        });
         function scrollBrands(direction) {
             const container = document.getElementById('brandsScroll');
             // Прокручуємо на ширину двох карток або на 300px

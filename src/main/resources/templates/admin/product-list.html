@@ -303,7 +303,7 @@
                                     onerror="this.src='/images/no-image.png';">
                             </td>
                             <td>
-                                <div class="font-weight-bold" th:text="${p.name}">Назва</div>
+                                <div class="font-weight-bold" th:text="${p.brand.name} + ' ' + ${p.name}">Назва</div>
                                 <small class="text-muted" th:text="${p.sku}">SKU</small>
                             </td>
                             <td class="gold-text" th:text="${p.price + ' грн'}"></td>

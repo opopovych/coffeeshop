@@ -31,4 +31,11 @@ public class BrandServiceImpl implements BrandService {
     public void delete(Long id) {
         brandRepository.deleteById(id);
     }
+    @Override
+    public List<Brand> getBrandsByCountry(Long countryId) {
+        if (countryId == null) {
+            return brandRepository.findAll();
+        }
+        return brandRepository.findBrandsByCountryId(countryId);
+    }
 }

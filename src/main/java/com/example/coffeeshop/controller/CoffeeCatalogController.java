@@ -1,6 +1,7 @@
 package com.example.coffeeshop.controller;
 
 import com.example.coffeeshop.model.*;
+import com.example.coffeeshop.repository.BrandRepository;
 import com.example.coffeeshop.service.BrandService;
 import com.example.coffeeshop.service.CoffeeBeanService;
 import java.util.List;
@@ -29,11 +30,14 @@ public class CoffeeCatalogController {
     private OriginCountryService originCountryService;
     @Autowired
     private DiscountService discountService;
+    @Autowired
+    private BrandRepository brandRepository;
 
     // SRP: Використовуємо @ModelAttribute, щоб фільтри були доступні всюди автоматично
     @ModelAttribute
     public void addFilterAttributes(Model model) {
-        model.addAttribute("brands", brandService.findAll());
+        List<Brand>brands = brandRepository.findAllWithActiveProducts();
+        model.addAttribute("brands", brands);
         model.addAttribute("countries", originCountryService.findAll());
         model.addAttribute("intensities", Intensity.values());
         model.addAttribute("roastLevels", RoastLevel.values());
@@ -101,6 +105,31 @@ public class CoffeeCatalogController {
                 clean(composition), clean(acidity), pageable
         );
 
+        List<Brand> availableBrands = (countryId != null)
+                ? brandService.getBrandsByCountry(countryId)
+                : brandService.findAll();
+
+        // Якщо вибрано бренд, показуємо тільки його країни. Інакше — всі.
+        List<OriginCountry> countries;
+        if (brandId != null) {
+            countries = originCountryService.getCountriesByBrand(brandId);
+        } else {
+            countries = originCountryService.findAll(); // Повертаємо всі, якщо бренд не обрано
+        }
+
+      //  model.addAttribute("filter_brands", availableBrands);
+       // model.addAttribute("countries", countries);
+
+        if (brandId != null) {
+            Brand b = brandService.findById(brandId);
+            if (b != null) model.addAttribute("selectedBrandName", b.getName());
+        }
+        if (countryId != null) {
+            OriginCountry c = originCountryService.findById(countryId);
+            if (c != null) model.addAttribute("selectedCountryName", c.getName());
+        }
+
+
         // Зберігаємо вибрані фільтри, щоб вони не скидалися в UI
         model.addAttribute("brandId", brandId);
         model.addAttribute("countryId", countryId);
@@ -151,6 +180,29 @@ public class CoffeeCatalogController {
     @GetMapping("/history")
     public String showHistory() {
         return "history"; //
+    }
+
+    @GetMapping("/api/countries-by-brand")
+    @ResponseBody
+    public List<OriginCountry> getCountriesByBrand(@RequestParam Long brandId) {
+        // Використовуємо метод сервісу, який ми раніше обговорили
+        return originCountryService.getCountriesByBrand(brandId);
+    }
+    @GetMapping("/api/all-countries")
+    @ResponseBody
+    public List<OriginCountry> getAllCountries() {
+        return originCountryService.findAll();
+    }
+    @GetMapping("/api/brands-by-country")
+    @ResponseBody
+    public List<Brand> getBrandsByCountry(@RequestParam Long countryId) {
+        return brandService.getBrandsByCountry(countryId);
+    }
+
+    @GetMapping("/api/all-brands")
+    @ResponseBody
+    public List<Brand> getAllBrands() {
+        return brandService.findAll();
     }
 
     private String populateCatalogModel(Model model, Page<CoffeeBean> pageData, int page) {

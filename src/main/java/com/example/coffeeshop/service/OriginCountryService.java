@@ -11,4 +11,5 @@ public interface OriginCountryService {
     List<OriginCountry> findAll();                    // всі Країни
 
     void delete(Long id);                          // видалити Країну
+    List<OriginCountry> getCountriesByBrand(Long brandId);
 }

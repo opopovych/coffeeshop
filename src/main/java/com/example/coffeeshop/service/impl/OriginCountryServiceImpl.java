@@ -31,4 +31,11 @@ public class OriginCountryServiceImpl implements OriginCountryService {
     public void delete(Long id) {
         originCountryRepository.deleteById(id);
     }
+    @Override
+    public List<OriginCountry> getCountriesByBrand(Long brandId) {
+        if (brandId == null) {
+            return originCountryRepository.findAll();
+        }
+        return originCountryRepository.findCountriesByBrandId(brandId);
+    }
 }

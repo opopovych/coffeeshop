@@ -11,7 +11,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface CoffeeBeanRepository extends JpaRepository<CoffeeBean, Long> {
-    List<CoffeeBean> findByNameContainingIgnoreCaseAndActiveTrue(String name);
+    @Query("SELECT c FROM CoffeeBean c WHERE " +
+            "(LOWER(c.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "LOWER(c.brand.name) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
+            "AND c.active = true")
+    List<CoffeeBean> findByNameContainingIgnoreCaseAndActiveTrue(@Param("keyword") String name);
     List<CoffeeBean> findByBrandIdAndActiveTrue(Long brandId);
     @Query("""
     SELECT c FROM CoffeeBean c
