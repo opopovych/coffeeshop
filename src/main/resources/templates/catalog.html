@@ -2,13 +2,29 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8"/>
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IJO Coffee | Каталог</title>
+    <meta name="google-site-verification" content="3xvRJnYs9gk01fhN674Dl1s-Xwhtw1E4lq5O3QvrGKo" />
+    <title th:text="${seoTitle != null ? seoTitle : 'IJO Coffee — Ексклюзивна кава від легендарних домів Європи'}">
+    </title>
+    <meta name="description"
+        th:content="${seoDescription != null ? seoDescription : 'IJO Coffee — ваш провідник у світ преміальної кави. Колекційні купажі, свіже обсмаження та історія кожного зерна.'}">
 
+    <meta property="og:title"
+        th:content="${seoTitle != null ? seoTitle : 'IJO Coffee — Мистецтво кави у кожній чашці'}">
+    <meta property="og:image"
+        th:content="${coffee != null ? 'https://ijocoffee.com.ua' + coffee.photoPath : 'https://ijocoffee.com.ua/images/coffee.webp'}">
+
+    <meta property="og:description" th:content="${seoDescription}">
+    <meta property="og:type" content="website">
+
+    <link rel="icon" type="image/png" th:href="@{/images/favicon.png}">
+    <link rel="shortcut icon" th:href="@{/images/favicon.png}">
+
+    <link rel="apple-touch-icon" th:href="@{/images/favicon.png}">
     <link
-            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400;500;600&display=swap"
-            rel="stylesheet">
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 
@@ -92,6 +108,96 @@
             color: var(--gold);
             font-size: 1.3rem;
         }
+
+
+
+
+        /* Головний контейнер на всю ширину з чорним фоном */
+        .brands-full-width-bg {
+            background-color: #1a1716;
+            /* Твій фірмовий чорний */
+            width: 100vw;
+            position: relative;
+            left: 50%;
+            right: 50%;
+            margin-left: -50vw;
+            margin-right: -50vw;
+            padding: 5px 0;
+            margin-bottom: 50px;
+            border-top: 1px solid #c5a059;
+            border-bottom: 1px solid #c5a059;
+        }
+
+        .brands-scroll-container {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            gap: 20px;
+            padding: 10px 0;
+            scrollbar-width: none;
+            cursor: grab;
+        }
+
+        .brands-scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .brand-card {
+            flex: 0 0 calc(100% / 6 - 17px);
+            min-width: 150px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        /* Прямокутник лого залишається білим для контрасту */
+        .brand-logo-rect {
+            width: 100%;
+            height: 100px;
+            background: #ffffff;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            transition: 0.3s;
+        }
+
+        .brand-logo-rect img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: 0.3s;
+        }
+
+        .brand-card:hover {
+            transform: translateY(-5px);
+        }
+
+
+
+        .brand-name {
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Мобільна адаптація */
+        @media (max-width: 768px) {
+            .brand-card {
+                flex: 0 0 calc(100% / 2.8);
+                min-width: 110px;
+            }
+
+            .brand-logo-rect {
+                height: 75px;
+            }
+        }
+
+
+
 
 
 
@@ -938,300 +1044,792 @@
                 text-shadow: 0 0 5px #c5a059;
             }
         }
+
         /* Контейнер картинки робимо відносним, щоб бейджі позиціонувалися всередині нього */
-.card-img-container {
-    position: relative;
-    overflow: hidden;
-}
+        .card-img-container {
+            position: relative;
+            overflow: hidden;
+        }
 
-/* Загальний стиль бейджів */
-.badge-label {
-    position: absolute;
-    top: 10px;
-    padding: 5px 12px;
-    font-size: 0.65rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    z-index: 5;
-    border-radius: 4px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    pointer-events: none; /* Щоб не заважали клікати на фото */
-}
+        /* Базовий контейнер бейджа */
+        .badge-label {
+            position: absolute;
+            top: 12px;
+            z-index: 10;
+            padding: 2px;
+            /* Рамка */
+            border-radius: 6px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
 
-/* Хіт продаж - Зліва (Синій або Темний преміальний) */
-.badge-hit {
-    left: 10px;
-    background: var(--espresso); /* Твій фірмовий колір */
-    color: var(--gold);
-    border: 1px solid var(--gold);
-}
+        .badge-label:hover {
+            transform: scale(1.1);
+        }
 
-/* Акція - Справа (Червоний або Золотий) */
-.badge-promo {
-    right: 10px;
-    background: #d9534f; /* Стриманий червоний */
-    color: white;
-    animation: simple-pulse 2s infinite;
-}
+        /* Внутрішній контент */
+        .badge-inner {
+            padding: 4px 10px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            position: relative;
+            overflow: hidden;
+        }
 
-@keyframes simple-pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-}
+        /* --- СТИЛЬ ХІТ (Золотий акцент) --- */
+        .badge-ijo-hit {
+            left: 12px;
+            background: linear-gradient(135deg, #c5a059 0%, #f9ebaf 50%, #c5a059 100%);
+            box-shadow: 0 4px 15px rgba(197, 160, 89, 0.4);
+        }
 
+        .badge-ijo-hit .badge-inner {
+            background: var(--espresso);
+            /* Глибокий темний фон */
+            color: #f9ebaf;
+            /* Світле золото */
+        }
+
+        /* --- СТИЛЬ АКЦІЯ (Енергійний, але преміальний) --- */
+        .badge-ijo-promo {
+            right: 12px;
+            /* Градієнт, що розтягнутий для анімації */
+            background: linear-gradient(270deg, #d9534f, #ff4d4d, #800000, #d9534f);
+            background-size: 400% 400%;
+            animation: ijo-gradient-move 3s ease infinite, ijo-pulse 2s infinite ease-in-out;
+            box-shadow: 0 0 15px rgba(217, 83, 79, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .badge-ijo-promo .badge-inner {
+            background: transparent;
+            /* Тепер фон градієнта прозорий через рамку */
+            color: white;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Ефект "Скляного відблиску" */
+        .badge-glare {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 50%);
+            pointer-events: none;
+        }
+
+        /* --- АНІМАЦІЯ БЛИСКУ (Ефект Shine) --- */
+        .badge-inner::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -150%;
+            width: 50%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(30deg);
+            animation: ijo-shine 4s infinite;
+        }
+
+        @keyframes ijo-shine {
+            0% {
+                left: -150%;
+            }
+
+            20% {
+                left: 150%;
+            }
+
+            100% {
+                left: 150%;
+            }
+        }
+
+        /* --- ПУЛЬСАЦІЯ ДЛЯ АКЦІЇ --- */
+        .badge-ijo-promo {
+            animation: ijo-pulse 2s infinite ease-in-out;
+        }
+
+        /* Рух градієнта по колу */
+        @keyframes ijo-gradient-move {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* М'яке "дихання" бейджа */
+        @keyframes ijo-pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.08);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Додамо іконці блискавки легке тремтіння */
+        .badge-ijo-promo i {
+            animation: ijo-bolt-flicker 1.5s infinite;
+        }
+
+        @keyframes ijo-bolt-flicker {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.8;
+                transform: scale(1.2);
+            }
+        }
+
+
+        @keyframes simple-pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .announcement-bar {
+            background-color: #1a1716;
+            color: #c5a059;
+            padding: 10px 0;
+            min-height: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-align: center;
+            border-bottom: 1px solid rgba(197, 160, 89, 0.3);
+        }
+
+        #display-message {
+            /* Збільшуємо час анімації до 1 секунди для плавності */
+            transition: opacity 1.2s ease-in-out, transform 1.2s ease-in-out;
+            display: inline-block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .fade-out {
+            opacity: 0 !important;
+            transform: translateY(10px);
+        }
+
+        .fade-in {
+            opacity: 1 !important;
+            transform: translateY(0);
+        }
+
+        /* Мобільна адаптація */
+        @media (max-width: 768px) {
+            .announcement-bar {
+                font-size: 0.75rem;
+                padding: 10px 15px;
+            }
+        }
+
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 45px;
+            height: 45px;
+            background: rgba(26, 23, 22, 0.8);
+            /* Фон у колір блоку */
+            border: 1px solid #c5a059;
+            color: #c5a059;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .nav-arrow:hover {
+            background: #c5a059;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(197, 160, 89, 0.4);
+        }
+
+        .nav-arrow.prev {
+            left: 0;
+        }
+
+        .nav-arrow.next {
+            right: 0;
+        }
+
+        /* Щоб стрілки не заважали на мобільних */
+        @media (max-width: 768px) {
+            .nav-arrow {
+                display: none;
+            }
+
+            .px-md-5 {
+                padding-left: 15px !important;
+                padding-right: 15px !important;
+            }
+        }
+
+        /* Додатково для плавності скролу */
+        .brands-scroll-container {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            gap: 20px;
+            scroll-behavior: smooth;
+            /* Важливо для кнопок */
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            cursor: grab;
+        }
+
+        .brands-scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Базова кнопка IJO */
+        .btn-ijo-cart {
+            position: relative;
+            background: var(--espresso);
+            border: 1px solid rgba(197, 160, 89, 0.3);
+            color: var(--gold);
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            z-index: 1;
+        }
+
+        /* Стан успіху - Магія починається тут */
+        .btn-success-animated {
+            border-color: var(--gold) !important;
+            color: #000 !important;
+            /* Чорний текст на золотому фоні виглядає люксово */
+            box-shadow: 0 0 25px rgba(197, 160, 89, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.5);
+            font-weight: 900;
+            transform: translateY(-2px);
+        }
+
+        /* Рідке золото, що заливає кнопку */
+        .btn-success-animated::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #c5a059, #f9ebaf, #c5a059);
+            background-size: 200% 200%;
+            z-index: -1;
+            animation: liquid-gold 1.5s infinite linear;
+        }
+
+        /* Сяюча "електрична" рамка */
+        .btn-success-animated::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(90deg, transparent, #fff, transparent);
+            width: 50%;
+            height: 110%;
+            transform: skewX(-45deg);
+            animation: bolt-strike 0.6s ease-out;
+            filter: blur(5px);
+            opacity: 0.8;
+        }
+
+        /* Анімації */
+        @keyframes liquid-gold {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes bolt-strike {
+            0% {
+                left: -100%;
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                left: 200%;
+                opacity: 0;
+            }
+        }
+
+        /* Ефект появи іконки */
+        .btn-success-animated i {
+            filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
+            animation: icon-pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes icon-pop {
+            0% {
+                transform: scale(0) rotate(-45deg);
+            }
+
+            100% {
+                transform: scale(1) rotate(0);
+            }
+        }
     </style>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "itemListElement": [
+    <th:block th:each="coffee, iterStat : ${coffees}">
+    {
+      "@type": "ListItem",
+      "position": [[${iterStat.index + 1}]],
+      "name": "[[${coffee.name}]]"
+    } [[${!iterStat.last ? ',' : ''}]]
+    </th:block>
+  ]
+}
+
+
+
+</script>
 </head>
 
 <body>
+    <div th:if="${infoBarSettings?.active}" class="announcement-bar">
+        <div class="container">
+            <div id="raw-messages" style="display: none;" th:text="${infoBarSettings?.message}"></div>
 
-<div th:replace="~{fragments/clientnavbar :: navbar}"></div>
+            <div class="announcement-slider">
+                <span id="display-message"></span>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/clientnavbar :: navbar}"></div>
 
 
-<div th:if="${discountSettings != null and discountSettings.active}" class="promo-info-bar">
-    <div class="container text-center">
-        <div class="promo-content justify-content-center">
-            <i class="fas fa-percentage promo-icon-blink"></i>
-            <span>
+    <div th:if="${discountSettings != null and discountSettings.active}" class="promo-info-bar">
+        <div class="container text-center">
+            <div class="promo-content justify-content-center">
+                <i class="fas fa-percentage promo-icon-blink"></i>
+                <span>
                     Знижка <b th:text="${discountSettings.discountPercent + '%'}">10%</b>
                     від <b
-                    th:text="${#numbers.formatDecimal(discountSettings.threshold, 0, 'POINT', 0, 'COMMA') + ' грн'}">800
+                        th:text="${#numbers.formatDecimal(discountSettings.threshold, 0, 'POINT', 0, 'COMMA') + ' грн'}">800
                         грн</b>!
                     <span class="d-none d-md-inline ml-1">Замовляй більше — плати менше.</span>
                 </span>
+            </div>
         </div>
     </div>
-</div>
 
-<div class="container mt-5">
-    <div class="container mb-4"
-         th:if="${brandId != null or countryId != null or (intensity != null and !intensity.isEmpty()) or (roast != null and !roast.isEmpty()) or (bitterness != null and !bitterness.isEmpty()) or (composition != null and !composition.isEmpty()) or (acidity != null and !acidity.isEmpty())}">
-        <div class="d-flex align-items-center flex-wrap">
+    <div class="brands-full-width-bg">
+        <div class="container position-relative px-md-5">
+
+            <button class="nav-arrow prev" onclick="scrollBrands(-1)" aria-label="Назад">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="nav-arrow next" onclick="scrollBrands(1)" aria-label="Вперед">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+
+            <div class="brands-scroll-container" id="brandsScroll">
+                <div th:each="brand : ${brands}" class="brand-card">
+                    <a th:href="@{/coffee/filter(brandId=${brand.id})}" style="text-decoration: none;">
+                        <div class="brand-logo-rect">
+                            <img th:src="@{'/images/' + ${brand.photoPath}}" th:alt="${brand.name}">
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <div class="container mb-4"
+            th:if="${brandId != null or countryId != null or (intensity != null and !intensity.isEmpty()) or (roast != null and !roast.isEmpty()) or (bitterness != null and !bitterness.isEmpty()) or (composition != null and !composition.isEmpty()) or (acidity != null and !acidity.isEmpty())}">
+            <div class="d-flex align-items-center flex-wrap">
                 <span class="mr-3 text-uppercase"
-                      style="letter-spacing: 2px; font-size: 0.7rem; color: var(--gold); font-weight: 600;">
+                    style="letter-spacing: 2px; font-size: 0.7rem; color: var(--gold); font-weight: 600;">
                     Ваш вибір:
                 </span>
 
-            <div class="filter-chip" th:if="${brandId != null}">
-                Бренд: <span class="ml-1" th:each="b : ${brands}" th:if="${b.id == brandId}"
-                             th:text="${b.name}"></span>
-                <a
+                <div class="filter-chip" th:if="${brandId != null}">
+                    Бренд: <span class="ml-1" th:each="b : ${brands}" th:if="${b.id == brandId}"
+                        th:text="${b.name}"></span>
+                    <a
                         th:href="@{/coffee/filter(countryId=${countryId}, intensity=${intensity}, roast=${roast}, bitterness=${bitterness}, composition=${composition}, acidity=${acidity}, sort=${sort})}">
-                    <i class="fas fa-times"></i>
-                </a>
-            </div>
+                        <i class="fas fa-times"></i>
+                    </a>
+                </div>
 
-            <div class="filter-chip" th:if="${countryId != null}">
-                Країна: <span class="ml-1" th:each="c : ${countries}" th:if="${c.id == countryId}"
-                              th:text="${c.name}"></span>
-                <a
+                <div class="filter-chip" th:if="${countryId != null}">
+                    Країна: <span class="ml-1" th:each="c : ${countries}" th:if="${c.id == countryId}"
+                        th:text="${c.name}"></span>
+                    <a
                         th:href="@{/coffee/filter(brandId=${brandId}, intensity=${intensity}, roast=${roast}, bitterness=${bitterness}, composition=${composition}, acidity=${acidity}, sort=${sort})}">
-                    <i class="fas fa-times"></i>
-                </a>
-            </div>
+                        <i class="fas fa-times"></i>
+                    </a>
+                </div>
 
-            <th:block th:if="${intensity != null}">
-                <div class="filter-chip" th:each="i : ${intensity}">
-                    <i class="fas fa-bolt mr-1 text-primary"></i>
-                    <span th:text="${i.getDisplayName()}"></span>
-                    <a
+                <th:block th:if="${intensity != null}">
+                    <div class="filter-chip" th:each="i : ${intensity}">
+                        <i class="fas fa-bolt mr-1 text-primary"></i>
+                        <span th:text="${i.getDisplayName()}"></span>
+                        <a
                             th:href="@{/coffee/filter(brandId=${brandId}, countryId=${countryId}, sort=${sort}, roast=${roast}, bitterness=${bitterness}, composition=${composition}, acidity=${acidity}, intensity=${#lists.toList(intensity).?[#this != __${i}__]})}">
-                        <i class="fas fa-times"></i>
-                    </a>
-                </div>
-            </th:block>
-
-            <th:block th:if="${roast != null}">
-                <div class="filter-chip" th:each="r : ${roast}">
-                    <i class="fas fa-fire-alt mr-1 text-warning"></i>
-                    <span th:text="${r.getDisplayName()}"></span>
-                    <a
-                            th:href="@{/coffee/filter(brandId=${brandId}, countryId=${countryId}, sort=${sort}, intensity=${intensity}, bitterness=${bitterness}, composition=${composition}, acidity=${acidity}, roast=${#lists.toList(roast).?[#this != __${r}__]})}">
-                        <i class="fas fa-times"></i>
-                    </a>
-                </div>
-            </th:block>
-
-            <th:block th:if="${composition != null}">
-                <div class="filter-chip" th:each="c : ${composition}">
-                    <i class="fas fa-seedling mr-1 text-success"></i>
-                    <span th:text="${c.getDisplayName()}"></span>
-                    <a
-                            th:href="@{/coffee/filter(brandId=${brandId}, countryId=${countryId}, sort=${sort}, intensity=${intensity}, roast=${roast}, bitterness=${bitterness}, acidity=${acidity}, composition=${#lists.toList(composition).?[#this != __${c}__]})}">
-                        <i class="fas fa-times"></i>
-                    </a>
-                </div>
-            </th:block>
-
-            <th:block th:if="${acidity != null}">
-                <div class="filter-chip" th:each="a : ${acidity}">
-                    <i class="fas fa-lemon mr-1 text-warning"></i>
-                    <span th:text="${a.getDisplayName()}"></span>
-                    <a
-                            th:href="@{/coffee/filter(brandId=${brandId}, countryId=${countryId}, sort=${sort}, intensity=${intensity}, roast=${roast}, bitterness=${bitterness}, composition=${composition}, acidity=${#lists.toList(acidity).?[#this != __${a}__]})}">
-                        <i class="fas fa-times"></i>
-                    </a>
-                </div>
-            </th:block>
-
-            <a th:href="@{/coffee}" class="btn-clear-all ml-3">Скинути все</a>
-        </div>
-    </div>
-
-    <div class="container text-center py-5 my-5" th:if="${#lists.isEmpty(coffeeList)}">
-        <div style="opacity: 0.5;">
-            <i class="fas fa-mug-hot mb-3" style="font-size: 3rem; color: var(--gold);"></i>
-        </div>
-        <h2 style="font-family: 'Playfair Display', serif;">Вишуканий вибір!</h2>
-        <p class="text-muted">
-            Саме такої комбінації зараз немає, але оскільки ви полюбляєте
-            <b th:text="${composition == 'ARABICA_100' ? '100% Арабіку' : 'насичені Купажі'}"></b>,
-            ми підібрали для вас найкращі альтернативи:
-        </p>
-
-        <a th:href="@{/coffee/filter(composition=${composition})}" class="btn-nav-catalog mt-3">
-            Показати схожу каву
-        </a>
-    </div>
-    <div class="row">
-        <div class="col-lg-4 col-md-6 mb-5 coffee-card-animated" th:each="coffee, iterStat : ${coffeeList}"
-             th:style="'animation-delay: ' + ${iterStat.index * 0.2} + 's'">
-            <a th:href="@{/coffee/{id}(id=${coffee.id}, page=${currentPage})}" class="coffee-card-link">
-                <div class="card h-100 text-center">
-                    <div class="card-img-container">
-                        <div th:if="${coffee.isHit}" class="badge-label badge-hit">
-                            <i class="fas fa-fire-alt mr-1"></i> Хіт
-                        </div>
-
-                        <div th:if="${coffee.isPromo}" class="badge-label badge-promo">
-                            Акція
-                        </div>
-
-                        <img th:src="@{'/images/' + ${coffee.photoPath}}" class="card-img-top" alt="Coffee">
+                            <i class="fas fa-times"></i>
+                        </a>
                     </div>
+                </th:block>
 
-                    <div class="card-body d-flex flex-column">
-                        <h6 class="text-muted small text-uppercase mb-1" th:text="${coffee.brand?.name}">BRAND
-                        </h6>
-                        <h5 class="card-title-main mb-3">
-                            <span th:text="${coffee.name}">Coffee Name</span>
-                            <span class="weight-badge" th:text="${coffee.weight?.displayName}">250г</span>
-                        </h5>
-                        <span class="composition-tag" th:text="${coffee.composition?.displayName}">100%
+                <th:block th:if="${roast != null}">
+                    <div class="filter-chip" th:each="r : ${roast}">
+                        <i class="fas fa-fire-alt mr-1 text-warning"></i>
+                        <span th:text="${r.getDisplayName()}"></span>
+                        <a
+                            th:href="@{/coffee/filter(brandId=${brandId}, countryId=${countryId}, sort=${sort}, intensity=${intensity}, bitterness=${bitterness}, composition=${composition}, acidity=${acidity}, roast=${#lists.toList(roast).?[#this != __${r}__]})}">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </div>
+                </th:block>
+
+                <th:block th:if="${composition != null}">
+                    <div class="filter-chip" th:each="c : ${composition}">
+                        <i class="fas fa-seedling mr-1 text-success"></i>
+                        <span th:text="${c.getDisplayName()}"></span>
+                        <a
+                            th:href="@{/coffee/filter(brandId=${brandId}, countryId=${countryId}, sort=${sort}, intensity=${intensity}, roast=${roast}, bitterness=${bitterness}, acidity=${acidity}, composition=${#lists.toList(composition).?[#this != __${c}__]})}">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </div>
+                </th:block>
+
+                <th:block th:if="${acidity != null}">
+                    <div class="filter-chip" th:each="a : ${acidity}">
+                        <i class="fas fa-lemon mr-1 text-warning"></i>
+                        <span th:text="${a.getDisplayName()}"></span>
+                        <a
+                            th:href="@{/coffee/filter(brandId=${brandId}, countryId=${countryId}, sort=${sort}, intensity=${intensity}, roast=${roast}, bitterness=${bitterness}, composition=${composition}, acidity=${#lists.toList(acidity).?[#this != __${a}__]})}">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </div>
+                </th:block>
+
+                <a th:href="@{/coffee}" class="btn-clear-all ml-3">Скинути все</a>
+            </div>
+        </div>
+
+        <div class="container text-center py-5 my-5" th:if="${#lists.isEmpty(coffeeList)}">
+            <div style="opacity: 0.5;">
+                <i class="fas fa-mug-hot mb-3" style="font-size: 3rem; color: var(--gold);"></i>
+            </div>
+            <h2 style="font-family: 'Playfair Display', serif;">Вишуканий вибір!</h2>
+            <p class="text-muted">
+                Саме такої комбінації зараз немає, але оскільки ви полюбляєте
+                <b th:text="${composition == 'ARABICA_100' ? '100% Арабіку' : 'насичені Купажі'}"></b>,
+                ми підібрали для вас найкращі альтернативи:
+            </p>
+
+            <a th:href="@{/coffee/filter(composition=${composition})}" class="btn-nav-catalog mt-3">
+                Показати схожу каву
+            </a>
+        </div>
+        <div class="row">
+            <div class=" col-lg-4 col-md-6 mb-5 coffee-card-animated" th:each="coffee, iterStat : ${coffeeList}"
+                th:style="'animation-delay: ' + ${iterStat.index * 0.2} + 's'">
+                <div class="card h-100 text-center position-relative">
+                    <a th:href="@{/coffee/{id}(id=${coffee.id}, page=${currentPage})}"
+                        class="coffee-card-link text-decoration-none color-inherit">
+                        <div class="card-img-container">
+                            <div th:if="${coffee.isHit}" class="badge-label badge-ijo-hit">
+                                <div class="badge-inner">
+                                    <i class="fas fa-crown"></i>
+                                    <span>TOP</span>
+                                </div>
+                            </div>
+
+                            <div th:if="${coffee.isPromo}" class="badge-label badge-ijo-promo">
+                                <div class="badge-inner">
+                                    <div class="badge-glare"></div>
+                                    <i class="fas fa-bolt"></i>
+                                    <span>Акція</span>
+                                </div>
+                            </div>
+
+                            <img th:src="@{'/images/' + ${coffee.photoPath}}" class="card-img-top" alt="Coffee">
+                        </div>
+
+                        <div class="card-body d-flex flex-column">
+                            <h6 class="text-muted small text-uppercase mb-1" th:text="${coffee.brand?.name}">BRAND
+                            </h6>
+                            <h5 class="card-title-main mb-3">
+                                <span th:text="${coffee.name}">Coffee Name</span>
+                                <span class="weight-badge" th:text="${coffee.weight?.displayName}">250г</span>
+                            </h5>
+                            <span class="composition-tag" th:text="${coffee.composition?.displayName}">100%
                                 Arabica</span>
 
-                        <div class="mb-4">
+                            <div class="mb-4">
 
-                            <div class="bean-rating">
-                                <span class="bean-label">Інтенсивність</span>
-                                <th:block th:each="i : ${#numbers.sequence(1, 4)}">
-                                    <i class="fas fa-seedling bean-icon"
-                                       th:classappend="${i <= (coffee.intensity?.ordinal() + 1)} ? '' : 'inactive'"></i>
-                                </th:block>
+                                <div class="bean-rating">
+                                    <span class="bean-label">Інтенсивність</span>
+                                    <th:block th:each="i : ${#numbers.sequence(1, 4)}">
+                                        <i class="fas fa-seedling bean-icon"
+                                            th:classappend="${i <= (coffee.intensity?.ordinal() + 1)} ? '' : 'inactive'"></i>
+                                    </th:block>
+                                </div>
+
+                                <div class="bean-rating">
+                                    <span class="bean-label">Кислотність</span>
+                                    <th:block th:each="i : ${#numbers.sequence(1, 4)}">
+                                        <i class="fas fa-seedling bean-icon"
+                                            th:classappend="${i <= (coffee.acidity?.ordinal() + 1)} ? '' : 'inactive'"></i>
+                                    </th:block>
+                                </div>
+
+                                <div class="bean-rating">
+                                    <span class="bean-label">Обжарка</span>
+                                    <th:block th:each="i : ${#numbers.sequence(1, 4)}">
+                                        <i class="fas fa-seedling bean-icon"
+                                            th:classappend="${i <= (coffee.roastLevel?.ordinal() + 1)} ? '' : 'inactive'"></i>
+                                    </th:block>
+                                </div>
+
+                                <div class="bean-rating">
+                                    <span class="bean-label">Гіркота</span>
+                                    <th:block th:each="i : ${#numbers.sequence(1, 4)}">
+                                        <i class="fas fa-seedling bean-icon"
+                                            th:classappend="${i <= (coffee.bitterness?.ordinal() + 1)} ? '' : 'inactive'"></i>
+                                    </th:block>
+                                </div>
                             </div>
 
-                            <div class="bean-rating">
-                                <span class="bean-label">Кислотність</span>
-                                <th:block th:each="i : ${#numbers.sequence(1, 4)}">
-                                    <i class="fas fa-seedling bean-icon"
-                                       th:classappend="${i <= (coffee.acidity?.ordinal() + 1)} ? '' : 'inactive'"></i>
-                                </th:block>
+                            <div class="mt-auto">
+                                <h4 class="font-weight-bold mb-3">
+                                    ₴ <span
+                                        th:text="${#numbers.formatDecimal(coffee.price, 0, 'POINT', 0, 'COMMA')}">450</span>
+                                </h4>
                             </div>
 
-                            <div class="bean-rating">
-                                <span class="bean-label">Обжарка</span>
-                                <th:block th:each="i : ${#numbers.sequence(1, 4)}">
-                                    <i class="fas fa-seedling bean-icon"
-                                       th:classappend="${i <= (coffee.roastLevel?.ordinal() + 1)} ? '' : 'inactive'"></i>
-                                </th:block>
-                            </div>
-
-                            <div class="bean-rating">
-                                <span class="bean-label">Гіркота</span>
-                                <th:block th:each="i : ${#numbers.sequence(1, 4)}">
-                                    <i class="fas fa-seedling bean-icon"
-                                       th:classappend="${i <= (coffee.bitterness?.ordinal() + 1)} ? '' : 'inactive'"></i>
-                                </th:block>
-                            </div>
                         </div>
-
-                        <div class="mt-auto">
-                            <h4 class="font-weight-bold mb-3">
-                                ₴ <span
-                                    th:text="${#numbers.formatDecimal(coffee.price, 0, 'POINT', 0, 'COMMA')}">450</span>
-                            </h4>
-                        </div>
+                    </a>
+                    <div class="px-3 pb-3">
+                        <button class="btn-ijo-cart w-100" th:onclick="'addToCart(this, ' + ${coffee.id} + ')'">
+                            <i class="fas fa-shopping-basket"></i> У кошик
+                        </button>
                     </div>
                 </div>
+
+
+            </div>
+        </div>
+
+        <div class="pagination justify-content-center mt-5">
+            <a th:if="${currentPage > 0}"
+                th:href="@{/coffee/filter(page=${currentPage - 1}, brandId=${brandId}, countryId=${countryId}, intensity=${intensity}, roast=${roast}, composition=${composition}, acidity=${acidity}, bitterness=${bitterness})}">
+                &laquo;
+            </a>
+
+            <th:block th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                <a th:if="${i >= currentPage - 2 and i <= currentPage + 2}" th:text="${i + 1}"
+                    th:classappend="${i == currentPage} ? 'active'"
+                    th:href="@{/coffee/filter(page=${i}, brandId=${brandId}, countryId=${countryId}, intensity=${intensity}, roast=${roast}, composition=${composition}, acidity=${acidity}, bitterness=${bitterness})}">
+                </a>
+            </th:block>
+
+            <a th:if="${currentPage < totalPages - 1}"
+                th:href="@{/coffee/filter(page=${currentPage + 1}, brandId=${brandId}, countryId=${countryId}, intensity=${intensity}, roast=${roast}, composition=${composition}, acidity=${acidity}, bitterness=${bitterness})}">
+                &raquo;
             </a>
         </div>
     </div>
 
-    <div class="pagination justify-content-center mt-5">
-        <a th:if="${currentPage > 0}"
-           th:href="@{/coffee/filter(page=${currentPage - 1}, brandId=${brandId}, countryId=${countryId}, intensity=${intensity}, roast=${roast}, composition=${composition}, acidity=${acidity}, bitterness=${bitterness})}">
-            &laquo;
-        </a>
-
-        <th:block th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-            <a th:if="${i >= currentPage - 2 and i <= currentPage + 2}" th:text="${i + 1}"
-               th:classappend="${i == currentPage} ? 'active'"
-               th:href="@{/coffee/filter(page=${i}, brandId=${brandId}, countryId=${countryId}, intensity=${intensity}, roast=${roast}, composition=${composition}, acidity=${acidity}, bitterness=${bitterness})}">
-            </a>
-        </th:block>
-
-        <a th:if="${currentPage < totalPages - 1}"
-           th:href="@{/coffee/filter(page=${currentPage + 1}, brandId=${brandId}, countryId=${countryId}, intensity=${intensity}, roast=${roast}, composition=${composition}, acidity=${acidity}, bitterness=${bitterness})}">
-            &raquo;
-        </a>
-    </div>
-</div>
-
-<button class="ai-assistant-btn" data-toggle="modal" data-target="#sommelierModal" onclick="showStep('start')">
-    <i class="fas fa-magic"></i>
-    <span class="btn-text-full">AI Сомельє</span>
-    <span class="btn-text-mobile" style="display:none;">AI</span>
-</button>
-<div class="modal fade" id="sommelierModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content ai-modal-content p-4">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <small id="stepCounter" class="text-uppercase"
-                       style="color: var(--dark-gold); letter-spacing: 1px;">Крок 1</small>
-                <button type="button" class="close" data-dismiss="modal"
+    <button class="ai-assistant-btn" data-toggle="modal" data-target="#sommelierModal" onclick="showStep('start')">
+        <i class="fas fa-magic"></i>
+        <span class="btn-text-full">AI Сомельє</span>
+        <span class="btn-text-mobile" style="display:none;">AI</span>
+    </button>
+    <div class="modal fade" id="sommelierModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content ai-modal-content p-4">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <small id="stepCounter" class="text-uppercase"
+                        style="color: var(--dark-gold); letter-spacing: 1px;">Крок 1</small>
+                    <button type="button" class="close" data-dismiss="modal"
                         style="color: var(--espresso); opacity: 1;">&times;
-                </button>
-            </div>
-            <div class="ai-progress-container">
-                <div id="ai-progress" class="ai-progress-bar"></div>
-            </div>
+                    </button>
+                </div>
+                <div class="ai-progress-container">
+                    <div id="ai-progress" class="ai-progress-bar"></div>
+                </div>
 
-            <div id="sommelier-content">
-            </div>
+                <div id="sommelier-content">
+                </div>
 
-            <div class="mt-4 d-flex justify-content-between">
-                <button id="prevStep" class="btn btn-link p-0" onclick="changeStep(-1)"
+                <div class="mt-4 d-flex justify-content-between">
+                    <button id="prevStep" class="btn btn-link p-0" onclick="changeStep(-1)"
                         style="display:none; color: var(--espresso); text-decoration: none;">
-                    <i class="fas fa-chevron-left mr-1"></i> Назад
-                </button>
+                        <i class="fas fa-chevron-left mr-1"></i> Назад
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
-<footer>
-    <div class="container-fluid text-center">
-        <small>© 2026 IJO Coffee — Тільки преміальні сорти</small>
-    </div>
-</footer>
+    <footer>
+        <div class="container-fluid text-center">
+            <small>© 2026 IJO Coffee — Тільки преміальні сорти</small>
+        </div>
+    </footer>
 
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
-<script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+    <script>
+        function scrollBrands(direction) {
+            const container = document.getElementById('brandsScroll');
+            // Прокручуємо на ширину двох карток або на 300px
+            const scrollStep = 300;
+
+            container.scrollBy({
+                left: direction * scrollStep,
+                behavior: 'smooth'
+            });
+        }
+
+        // Опціонально: зупиняємо "drag" скрол при кліку на стрілку
+        document.querySelectorAll('.nav-arrow').forEach(arrow => {
+            arrow.addEventListener('mousedown', (e) => e.stopPropagation());
+        });
+    </script>
+    <script>
+        function refreshCartCount() {
+            fetch('/cart/api/count')
+                .then(response => response.json())
+                .then(count => {
+                    console.log("Отримано кількість товару:", count); // Для перевірки в консолі
+                    const badges = document.querySelectorAll('.js-cart-count, #cart-count-badge');
+                    badges.forEach(badge => {
+                        if (count > 0) {
+                            badge.textContent = count;
+                            badge.style.setProperty('display', 'flex', 'important');
+                        } else {
+                            badge.style.display = 'none';
+                        }
+                    });
+                })
+                .catch(err => console.error("Помилка кошика:", err));
+        }
+        function addToCart(btn, coffeeId) {
+            const originalContent = btn.innerHTML;
+            if (btn.disabled) return;
+            btn.disabled = true;
+
+            // Використовуємо FormData, щоб Spring правильно зчитав @RequestParam(defaultValue = "1")
+            const formData = new FormData();
+            formData.append('quantity', 1);
+
+            fetch('/cart/add/' + coffeeId, {
+                method: 'POST',
+                body: formData,
+                // redirect: 'manual' дозволяє нам перехопити редирект, не завантажуючи сторінку
+                redirect: 'manual'
+            })
+                .then(response => {
+                    // Оскільки метод повертає redirect, статус буде 0 (якщо manual) або response.redirected
+                    // В будь-якому випадку, якщо товар додався — ми запускаємо анімацію
+
+                    refreshCartCount(); // Оновлюємо цифру в хедері
+
+                    // ЗОЛОТА АНІМАЦІЯ
+                    btn.innerHTML = '<i class="fas fa-check-circle"></i> ДОДАНО!';
+                    btn.classList.add('btn-success-animated');
+
+                    setTimeout(() => {
+                        btn.style.opacity = '0';
+                        setTimeout(() => {
+                            btn.classList.remove('btn-success-animated');
+                            btn.innerHTML = originalContent;
+                            btn.style.opacity = '1';
+                            btn.disabled = false;
+                        }, 300);
+                    }, 2200);
+                })
+                .catch(err => {
+                    console.error("Помилка:", err);
+                    btn.disabled = false;
+                });
+        }
+        // Якщо повідомлень кілька, вони будуть змінюватися кожні 4 секунди
+        const messages = [
+            "Безкоштовна доставка від 1500 грн",
+            "Знижка 10% на перше замовлення",
+            "Тільки свіже обсмажування щопонеділка"
+        ];
+        let currentIndex = 0;
+
+        function rotateMessage() {
+            const content = document.querySelector('.announcement-content span');
+            if (content) {
+                currentIndex = (currentIndex + 1) % messages.length;
+                content.style.opacity = 0;
+                setTimeout(() => {
+                    content.textContent = messages[currentIndex];
+                    content.style.opacity = 1;
+                }, 500);
+            }
+        }
+        // setInterval(rotateMessage, 4000); // Розкоментуй, якщо хочеш ротацію
         const sommelierSteps = {
             "start": {
                 title: "З чого почнемо наповнення нашої чашки смаком?",
@@ -1370,26 +1968,62 @@
         }
 
 
-</script>
-<script>
+    </script>
+    <script>
+
+
+        const slider = document.querySelector('#brandsScroll');
+        let isDown = false; let startX; let scrollLeft;
+
+        slider.addEventListener('mousedown', (e) => {
+            isDown = true;
+            startX = e.pageX - slider.offsetLeft;
+            scrollLeft = slider.scrollLeft;
+        });
+        slider.addEventListener('mouseleave', () => isDown = false);
+        slider.addEventListener('mouseup', () => isDown = false);
+        slider.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - slider.offsetLeft;
+            const walk = (x - startX) * 2;
+            slider.scrollLeft = scrollLeft - walk;
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            const rawData = document.getElementById('raw-messages').textContent;
+            // Розбиваємо текст на масив за символом нового рядка
+            const messages = rawData.split('\n').map(m => m.trim()).filter(m => m.length > 0);
+
+            if (messages.length === 0) return;
+
+            let currentIndex = 0;
+            const displayElement = document.getElementById('display-message');
+
+            // Ініціалізація першим повідомленням
+            displayElement.textContent = messages[0];
+
+            function rotate() {
+                if (messages.length <= 1) return;
+
+                // Починаємо анімацію зникнення
+                displayElement.classList.add('fade-out');
+
+                setTimeout(() => {
+                    currentIndex = (currentIndex + 1) % messages.length;
+                    displayElement.textContent = messages[currentIndex];
+
+                    // Повертаємо видимість
+                    displayElement.classList.remove('fade-out');
+                    displayElement.classList.add('fade-in');
+                }, 120); // Час має збігатися з CSS transition
+            }
+
+            // Зміна кожні 4 секунди (як у Next)
+            setInterval(rotate, 6000);
+        });
         document.addEventListener('DOMContentLoaded', function () {
             // 1. Оновлення кошика
-            function refreshCartCount() {
-                fetch('/cart/api/count')
-                    .then(response => response.json())
-                    .then(count => {
-                        const badges = document.querySelectorAll('.js-cart-count, #cart-count-badge');
-                        badges.forEach(badge => {
-                            if (count > 0) {
-                                badge.textContent = count;
-                                badge.style.setProperty('display', 'flex', 'important');
-                            } else {
-                                badge.style.display = 'none';
-                            }
-                        });
-                    })
-                    .catch(err => console.error("Помилка кошика:", err));
-            }
+
             refreshCartCount();
 
             // 2. Логіка пагінації та чистка URL
@@ -1437,7 +2071,7 @@
             }
         });
 
-</script>
+    </script>
 
 </body>
 

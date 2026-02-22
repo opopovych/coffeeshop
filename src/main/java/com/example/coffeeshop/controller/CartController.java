@@ -5,28 +5,25 @@ import com.example.coffeeshop.model.DiscountSettings;
 import com.example.coffeeshop.model.dto.Cart;
 import com.example.coffeeshop.model.dto.CartItem;
 import com.example.coffeeshop.service.CoffeeBeanService;
-import com.example.coffeeshop.service.impl.CartService;
-import com.example.coffeeshop.service.impl.DiscountService;
-import jakarta.servlet.http.HttpSession;
+import com.example.coffeeshop.service.DiscountService;
+
+import com.example.coffeeshop.service.impl.CartServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
 
 @Controller
 @RequestMapping("/cart")
 public class CartController {
 
-    private final CoffeeBeanService coffeeBeanService;
-    private final CartService cartService;
-    private final DiscountService discountService;
-
-    public CartController(CoffeeBeanService coffeeBeanService, CartService cartService, DiscountService discountService) {
-        this.coffeeBeanService = coffeeBeanService;
-        this.cartService = cartService;
-        this.discountService = discountService;
-    }
+    @Autowired
+    private  CoffeeBeanService coffeeBeanService;
+    @Autowired
+    private CartServiceImpl cartService;
+    @Autowired
+    private  DiscountService discountService;
 
     @PostMapping("/add/{coffeeId}")
     public String addToCart(@PathVariable Long coffeeId,
@@ -58,30 +55,26 @@ public class CartController {
 
     @GetMapping("/view")
     public String viewCart(Model model) {
+        // 1. Отримуємо дані з сервісів
         Cart cart = cartService.getCart();
-        double subtotal = cartService.getTotal();
-
         DiscountSettings settings = discountService.getSettings();
 
-        double total = subtotal;
-        double discountPercent = 0;
+        // 2. Викликаємо розрахунки, які вже лежать у CartService
+        double subtotal = cartService.getTotal();
+        double total = cartService.getTotalWithDiscount();
 
-        // Додаємо settings.isActive() в перевірку
-        if (settings != null && settings.getThreshold() != null && settings.isActive()) {
-            if (subtotal >= settings.getThreshold()) {
-                discountPercent = settings.getDiscountPercent();
-                total = subtotal * (1 - (discountPercent / 100));
-            }
-            model.addAttribute("discountSettings", settings);
-        } else {
-            model.addAttribute("discountSettings", null);
+        // 3. Визначаємо, чи була застосована знижка (для відображення в UI)
+        double discountPercent = 0;
+        if (settings != null && settings.isActive() && subtotal >= settings.getThreshold()) {
+            discountPercent = settings.getDiscountPercent();
         }
 
+        // 4. Передаємо все в модель
         model.addAttribute("cart", cart);
         model.addAttribute("subtotal", subtotal);
-        // Використовуємо Math.round для відображення цілого числа
-        model.addAttribute("total", Math.round(total));
+        model.addAttribute("total", Math.round(total)); // Округлюємо для краси
         model.addAttribute("discountPercent", discountPercent);
+        model.addAttribute("discountSettings", settings);
 
         return "cart-view";
     }

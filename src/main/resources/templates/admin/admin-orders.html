@@ -1,181 +1,318 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <title>IJO Coffee - Адмін Панель</title>
+    <title>Замовлення IJO - Адмін Панель</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f8f9fa; }
-        .container { width: 98%; max-width: 1400px; margin: 30px auto; }
-        .section { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        
-        /* Екранна таблиця */
-        .screen-table thead th { border-top: none; text-transform: uppercase; font-size: 0.7rem; color: #888; letter-spacing: 1px; }
-        .btn-view { background: #3e2723; color: white !important; }
-        
-        .print-area { display: none; } /* Сховано на екрані */
+        /* Єдиний стиль IJO */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f4;
+            overflow-x: hidden;
+        }
+
+        .navbar-dark.bg-dark {
+            background-color: #2e2a28 !important;
+            z-index: 1050;
+        }
+
+        /* LAYOUT */
+        #wrapper {
+            display: flex;
+            width: 100vw;
+            min-height: calc(100vh - 56px);
+        }
+
+        /* SIDEBAR STYLE */
+        #sidebar-wrapper {
+            min-width: 250px;
+            max-width: 250px;
+            background: #2e2a28;
+            border-right: 1px solid rgba(197, 160, 89, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        #wrapper.toggled #sidebar-wrapper {
+            margin-left: -250px;
+        }
+
+        .nav-sidebar-link {
+            padding: 15px 20px;
+            display: block;
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: 0.3s;
+        }
+
+        .nav-sidebar-link:hover,
+        .nav-sidebar-link.active {
+            background: #3e2723;
+            color: #c5a059;
+            text-decoration: none;
+        }
+
+        .nav-sidebar-link i {
+            margin-right: 10px;
+            color: #c5a059;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* CONTENT AREA */
+        #page-content-wrapper {
+            flex: 1;
+            transition: all 0.3s ease;
+            padding: 25px;
+        }
+
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .gold-text {
+            color: #c5a059;
+        }
+
+        /* Кнопка Burger */
+        #menu-toggle {
+            background: transparent;
+            border: 1px solid rgba(197, 160, 89, 0.5);
+            color: #c5a059;
+            border-radius: 4px;
+            padding: 5px 12px;
+            margin-right: 15px;
+        }
+
+        /* Стилі таблиці замовлень */
+        .screen-table thead th {
+            border-top: none;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            color: #888;
+            letter-spacing: 1px;
+        }
+
+        .btn-view {
+            background: #3e2723;
+            color: white !important;
+        }
+
+        .btn-view:hover {
+            background: #5d4037;
+            color: #c5a059 !important;
+        }
+
+        /* Стилі для друку */
+        .print-area {
+            display: none;
+        }
 
         @media print {
-            nav, .navbar, .no-print, .btn, .status-select, .modal, .screen-table {
+
+            nav,
+            #sidebar-wrapper,
+            .no-print,
+            .btn,
+            .modal {
                 display: none !important;
             }
-            body { background: white !important; padding: 0; margin: 0; color: black; }
-            .container { width: 100% !important; max-width: none !important; margin: 0 !important; }
-            .section { box-shadow: none !important; border: none !important; padding: 0 !important; }
 
-            .print-area { display: block !important; }
+            #page-content-wrapper {
+                padding: 0;
+            }
+
+            .print-area {
+                display: block !important;
+                color: black;
+            }
+
             .print-order-block {
                 border-bottom: 2px solid #eee;
                 padding: 15px 0;
                 page-break-inside: avoid;
             }
-            .print-header {
-                display: flex;
-                justify-content: space-between;
-                font-weight: bold;
-                font-size: 12pt;
-            }
-            .print-details { font-size: 10pt; margin-top: 5px; }
-            .print-items { margin-top: 10px; padding-left: 15px; font-size: 10pt; }
-            .print-comment { 
-                margin-top: 8px; 
-                padding: 5px 10px; 
-                background: #f9f9f9; 
-                border-left: 3px solid #ccc; 
-                font-style: italic; 
-                font-size: 9pt;
-            }
         }
     </style>
 </head>
+
 <body>
 
-<div th:replace="~{fragments/adminnavbar :: navbar}"></div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <button id="menu-toggle"><i class="fas fa-bars"></i></button>
+        <a class="navbar-brand" th:href="@{/admin}">☕ IJO Coffee | Адмін</a>
+        <div class="collapse navbar-collapse" id="adminNavbar">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item"><a class="nav-link" th:href="@{/coffee}">Каталог</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/}">Головна</a></li>
 
-<div class="container">
-    <div class="section">
-        <h2 class="mb-4 no-print text-center" style="font-family: 'Playfair Display', serif;">Управління замовленнями IJO</h2>
-
-        <div class="d-flex justify-content-between align-items-center mb-4 no-print">
-            <div class="btn-group">
-                <a th:href="@{/admin/orders}" class="btn btn-sm" th:classappend="${param.status == null} ? 'btn-dark' : 'btn-outline-dark'">Всі</a>
-                <a th:each="s : ${T(com.example.coffeeshop.model.Status).values()}"
-                   th:href="@{/admin/orders(status=${s})}"
-                   th:text="${s.displayName}"
-                   class="btn btn-sm"
-                   th:classappend="${param.status != null and param.status[0] == s.name()} ? 'btn-dark' : 'btn-outline-dark'">
-                </a>
-            </div>
-            <button onclick="window.print()" class="btn btn-sm btn-outline-secondary">
-                <i class="fas fa-print mr-1"></i> Друкувати список
-            </button>
+            </ul>
         </div>
-        
-        <table class="table table-hover screen-table no-print">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Клієнт / Тел</th>
-                    <th>Адреса / Оплата</th>
-                    <th style="width: 160px;">Статус</th>
-                    <th>Сума</th>
-                    <th>Товари / Коментар</th>
-                    <th>Дії</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="o : ${orders}">
-                    <td th:text="${o.id}"></td>
-                    <td>
-                        <div th:text="${o.customerName} + ' ' + ${o.surName}" style="font-weight: 600;"></div>
-                        <small class="text-muted" th:text="${o.phone}"></small>
-                    </td>
-                    <td>
-                        <div style="font-size: 0.85rem;" th:text="${o.deliveryAddress}"></div>
-                        <small class="text-secondary" th:text="${o.paymentMethod}"></small>
-                    </td>
-                    <td>
-                        <form th:action="@{'/admin/edit-order/' + ${o.id}}" method="post">
-                            <select name="status" class="form-control form-control-sm" onchange="this.form.submit()">
-                                <option th:each="s : ${T(com.example.coffeeshop.model.Status).values()}"
-                                        th:value="${s}" th:text="${s.displayName}" th:selected="${o.status == s}">
-                                </option>
-                            </select>
-                        </form>
-                    </td>
-                    <td><b th:text="${o.totalPrice}"></b> грн</td>
-                    <td>
-                        <button class="btn btn-view btn-sm mb-1" data-toggle="modal" th:data-target="'#orderModal-' + ${o.id}">
-                            Склад (<span th:text="${#lists.size(o.items)}"></span>)
-                        </button>
-                        <div th:if="${o.comment != null and !o.comment.isEmpty()}" class="small text-muted">
-                            <i class="fas fa-comment-dots text-warning"></i> Є коментар
-                        </div>
-                    </td>
-                    <td>
-                        <a th:href="@{'/admin/delete-order/' + ${o.id}}" class="text-danger" onclick="return confirm('Видалити?');">
-                            <i class="fas fa-trash"></i>
+    </nav>
+
+    <div id="wrapper">
+        <div id="sidebar-wrapper" class="no-print">
+            <nav class="mt-3">
+                <a th:href="@{/admin/orders}" class="nav-sidebar-link active"><i class="fas fa-shopping-cart"></i>
+                    Замовлення</a>
+                <a th:href="@{/admin/coffee/list}" class="nav-sidebar-link"><i class="fas fa-coffee"></i> Склад
+                    товарів</a>
+                <a th:href="@{/admin/marketing}" class="nav-sidebar-link"><i class="fas fa-percent"></i> Маркетинг</a>
+                <a th:href="@{/admin/sync}" class="nav-sidebar-link"><i class="fas fa-sync"></i> Синхронізація</a>
+                <a th:href="@{/admin/coffee/brands}" class="nav-sidebar-link"><i class="fas fa-award"></i> Бренди</a>
+                <a th:href="@{/admin/coffee/countries}" class="nav-sidebar-link"><i class="fas fa-globe-americas"></i>
+                    Країни</a>
+                <a th:href="@{/admin/warehouse/pick-list}" class="nav-sidebar-link"><i class="fas fa-list-check"></i>
+                    Список на склад</a>
+            </nav>
+        </div>
+
+        <div id="page-content-wrapper">
+            <div class="section">
+                <div class="d-flex justify-content-between align-items-center mb-4 no-print">
+                    <h2 style="font-family: 'Playfair Display', serif; color: #2e2a28;">📦 Управління замовленнями</h2>
+                    <button onclick="window.print()" class="btn btn-outline-secondary">
+                        <i class="fas fa-print mr-1"></i> Друк списку
+                    </button>
+                </div>
+
+                <div class="mb-4 no-print text-center">
+                    <div class="btn-group shadow-sm">
+                        <a th:href="@{/admin/orders}" class="btn btn-sm"
+                            th:classappend="${param.status == null} ? 'btn-dark' : 'btn-outline-dark'">Всі</a>
+                        <a th:each="s : ${T(com.example.coffeeshop.model.Status).values()}"
+                            th:href="@{/admin/orders(status=${s})}" th:text="${s.displayName}" class="btn btn-sm"
+                            th:classappend="${param.status != null and param.status[0] == s.name()} ? 'btn-dark' : 'btn-outline-dark'">
                         </a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                    </div>
+                </div>
 
-        <div class="print-area">
-            <div class="text-center mb-4">
-                <h3 class="mt-2">IJO COFFEE - СПИСОК ЗАМОВЛЕНЬ</h3>
-                <hr>
-            </div>
-            
-            <div th:each="o : ${orders}" class="print-order-block">
-                <div class="print-header">
-                    <span>#<span th:text="${o.id}"></span> | <span th:text="${o.customerName} + ' ' + ${o.surName}"></span></span>
-                    <span><span th:text="${o.totalPrice}"></span> грн</span>
-                </div>
-                <div class="print-details">
-                    <b>Телефон:</b> <span th:text="${o.phone}"></span> | 
-                    <b>Адреса:</b> <span th:text="${o.deliveryAddress}"></span> | 
-                    <b>Оплата:</b> <span th:text="${o.paymentMethod}"></span>
-                </div>
-                <div class="print-items">
-                    <b>Товари:</b>
-                    <span th:each="item, iter : ${o.items}">
-                        <span th:text="${item.quantity} + 'x ' + ${item.coffeeBrand} + ' ' + ${item.name}"></span><span th:if="${!iter.last}">, </span>
-                    </span>
-                </div>
-                <div th:if="${o.comment != null and !o.comment.isEmpty()}" class="print-comment">
-                    <b>Коментар:</b> <span th:text="${o.comment}"></span>
+                <table class="table table-hover screen-table no-print">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Клієнт</th>
+                            <th>Адреса / Оплата</th>
+                            <th style="width: 160px;">Статус</th>
+                            <th>Сума</th>
+                            <th>Деталі</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="o : ${orders}">
+                            <td th:text="${o.id}"></td>
+                            <td>
+                                <div th:text="${o.customerName} + ' ' + ${o.surName}" class="font-weight-bold"></div>
+                                <small class="text-muted" th:text="${o.phone}"></small>
+                            </td>
+                            <td>
+                                <div style="font-size: 0.85rem;" th:text="${o.deliveryAddress}"></div>
+                                <small class="gold-text" th:text="${o.paymentMethod}"></small>
+                            </td>
+                            <td>
+                                <form th:action="@{'/admin/edit-order/' + ${o.id}}" method="post">
+                                    <select name="status" class="form-control form-control-sm"
+                                        onchange="this.form.submit()">
+                                        <option th:each="s : ${T(com.example.coffeeshop.model.Status).values()}"
+                                            th:value="${s}" th:text="${s.displayName}" th:selected="${o.status == s}">
+                                        </option>
+                                    </select>
+                                </form>
+                            </td>
+                            <td class="font-weight-bold" th:text="${o.totalPrice + ' грн'}"></td>
+                            <td>
+                                <button class="btn btn-view btn-sm" data-toggle="modal"
+                                    th:data-target="'#orderModal-' + ${o.id}">
+                                    Склад (<span th:text="${#lists.size(o.items)}"></span>)
+                                </button>
+                                <i th:if="${o.comment != null and !o.comment.isEmpty()}"
+                                    class="fas fa-comment-dots gold-text ml-1" title="Є коментар"></i>
+                            </td>
+                           <td>
+    <a th:if="${o != null}" 
+       th:href="@{/admin/orders/{id}/print(id=${o.id})}" 
+       target="_blank"
+       class="btn btn-sm btn-outline-secondary">
+        <i class="fas fa-print"></i> Накладна
+    </a>
+</td>
+                            <td>
+                                <a th:href="@{'/admin/delete-order/' + ${o.id}}" class="text-danger"
+                                    onclick="return confirm('Видалити?');">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="print-area">
+                    <div class="text-center mb-4">
+                        <h2>IJO COFFEE - СПИСОК ЗАМОВЛЕНЬ</h2>
+                        <hr>
+                    </div>
+                    <div th:each="o : ${orders}" class="print-order-block">
+                        <div class="d-flex justify-content-between font-weight-bold">
+                            <span th:text="'#' + ${o.id} + ' ' + ${o.customerName} + ' ' + ${o.surName}"></span>
+                            <span th:text="${o.totalPrice} + ' грн'"></span>
+                        </div>
+                        <div class="small mt-1">
+                            <span th:text="'Тел: ' + ${o.phone} + ' | Адреса: ' + ${o.deliveryAddress}"></span>
+                        </div>
+                        <div class="mt-2 pl-3 border-left">
+                            <span th:each="item, iter : ${o.items}">
+                                <span
+                                    th:text="${item.quantity} + 'x ' + ${item.coffeeBrand} + ' ' + ${item.name}"></span><span
+                                    th:if="${!iter.last}">, </span>
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
     </div>
-</div>
 
-<div th:each="o : ${orders}" class="modal fade" th:id="'orderModal-' + ${o.id}" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-dark text-white rounded-0">
-                <h5 class="modal-title" th:text="'Склад замовлення #' + ${o.id}"></h5>
-                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div th:each="item : ${o.items}" class="d-flex justify-content-between border-bottom py-2">
-                    <span th:text="${item.coffeeBrand} + ' ' + ${item.name}"></span>
-                    <span class="badge badge-dark" th:text="${item.quantity} + ' шт.'"></span>
+    <div th:each="o : ${orders}" class="modal fade" th:id="'orderModal-' + ${o.id}" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white rounded-0">
+                    <h5 class="modal-title" th:text="'Склад замовлення #' + ${o.id}"></h5>
+                    <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
                 </div>
-                <div th:if="${o.comment != null and !o.comment.isEmpty()}" class="mt-3 p-2 bg-light border">
-                    <b>Коментар клієнта:</b><br>
-                    <span th:text="${o.comment}"></span>
+                <div class="modal-body">
+                    <div th:each="item : ${o.items}" class="d-flex justify-content-between border-bottom py-2">
+                        <span th:text="${item.coffeeBrand} + ' ' + ${item.name} + ' ' + ${item.weight}"></span>
+                        <span class="badge badge-dark" th:text="${item.quantity} + ' шт.'"></span>
+                    </div>
+                    <div th:if="${o.comment != null and !o.comment.isEmpty()}" class="mt-3 p-2 bg-light border">
+                        <b class="gold-text">Коментар клієнта:</b><br>
+                        <span th:text="${o.comment}"></span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
-
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#menu-toggle").click(function (e) {
+                e.preventDefault();
+                $("#wrapper").toggleClass("toggled");
+            });
+        });
+    </script>
 </body>
+
 </html>

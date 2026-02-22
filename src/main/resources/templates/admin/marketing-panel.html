@@ -1,96 +1,251 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Маркетинг - IJO Coffee</title>
     <style>
-        body { background: #f4f4f4; font-family: 'Montserrat', sans-serif; }
-        #wrapper { display: flex; }
-        #sidebar-wrapper { width: 250px; min-height: 100vh; background: #3e2723; color: white; transition: 0.3s; }
-        #wrapper.toggled #sidebar-wrapper { margin-left: -250px; }
-        #page-content-wrapper { width: 100%; padding: 30px; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f8f9fa;
+        }
 
-        .admin-card { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border-left: 4px solid #28a745; }
-        .nav-sidebar-link { color: #d7ccc8; padding: 15px 20px; display: block; text-decoration: none; }
-        .nav-sidebar-link:hover, .nav-sidebar-link.active { background: rgba(255,255,255,0.1); color: white; }
-        .section-title { font-size: 0.8rem; text-transform: uppercase; color: #5a5c69; font-weight: bold; }
+        .navbar-dark.bg-dark {
+            background-color: #2e2a28 !important;
+        }
+
+        #wrapper {
+            display: flex;
+            width: 100vw;
+            min-height: calc(100vh - 56px);
+        }
+
+        #sidebar-wrapper {
+            min-width: 250px;
+            max-width: 250px;
+            /* Додай фіксовану максимальну ширину */
+            background: #2e2a28;
+            border-right: 1px solid rgba(197, 160, 89, 0.2);
+            transition: all 0.3s ease;
+            /* Плавність анімації */
+        }
+
+        #wrapper.toggled #sidebar-wrapper {
+            margin-left: -250px;
+        }
+
+        .nav-sidebar-link {
+            padding: 15px 20px;
+            display: block;
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-sidebar-link:hover,
+        .nav-sidebar-link.active {
+            background: #3e2723;
+            color: #c5a059;
+            text-decoration: none;
+        }
+
+        .nav-sidebar-link i {
+            margin-right: 10px;
+            color: #c5a059;
+            width: 20px;
+            text-align: center;
+        }
+
+        #page-content-wrapper {
+            flex: 1;
+            padding: 30px;
+            transition: all 0.3s ease;
+            /* Плавність для контенту */
+        }
+
+        /* СТИЛІ КАРТОК */
+        .admin-card {
+            background: white;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-top: 4px solid #c5a059;
+            margin-bottom: 25px;
+            transition: 0.3s ease;
+        }
+
+        .admin-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header-custom {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .gold-text {
+            color: #c5a059;
+        }
+
+        .btn-ijo {
+            background: #3e2723;
+            color: white;
+            border: none;
+            font-weight: 600;
+        }
+
+        .btn-ijo:hover {
+            background: #5d4037;
+            color: #c5a059;
+        }
+
+        /* Небезпечна зона */
+        .danger-zone {
+            border-top: 4px solid #dc3545;
+        }
+
+        .section-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #888;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        /* Стиль кнопки Burger (щоб вона виглядала як у другому файлі) */
+        #menu-toggle {
+            background: transparent;
+            border: 1px solid rgba(197, 160, 89, 0.5);
+            color: #c5a059;
+            border-radius: 4px;
+            padding: 5px 12px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
     </style>
 </head>
+
 <body>
-    <div th:replace="~{fragments/adminnavbar :: navbar}"></div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <button id="menu-toggle"><i class="fas fa-bars"></i></button>
+        <a class="navbar-brand" th:href="@{/admin}">☕ IJO Coffee | Адмін</a>
+        <div class="collapse navbar-collapse" id="adminNavbar">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item"><a class="nav-link" th:href="@{/coffee}">Каталог</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/}">Головна</a></li>
+            </ul>
+        </div>
+    </nav>
 
     <div id="wrapper">
         <div id="sidebar-wrapper">
-            <div class="p-4 text-center border-bottom border-secondary mb-3">
-                <h5 class="text-white m-0">Адмін-панель</h5>
-            </div>
-            <nav>
-                <a th:href="@{/admin/coffee/list}" class="nav-sidebar-link"><i class="fas fa-list mr-2"></i> Товари</a>
-                <a th:href="@{/admin/sync}" class="nav-sidebar-link"><i class="fas fa-sync mr-2"></i> Синхронізація</a>
-                <a th:href="@{/admin/marketing}" class="nav-sidebar-link active"><i class="fas fa-bullhorn mr-2"></i> Маркетинг</a>
+            <nav class="mt-3">
+                <a th:href="@{/admin/orders}" class="nav-sidebar-link"><i class="fas fa-shopping-cart"></i>
+                    Замовлення</a>
+                <a th:href="@{/admin/coffee/list}" class="nav-sidebar-link"><i class="fas fa-coffee"></i> Склад
+                    товарів</a>
+                <a th:href="@{/admin/marketing}" class="nav-sidebar-link active"><i class="fas fa-percent"></i>
+                    Маркетинг</a>
+                <a th:href="@{/admin/sync}" class="nav-sidebar-link"><i class="fas fa-sync"></i> Синхронізація</a>
+                <a th:href="@{/admin/coffee/brands}" class="nav-sidebar-link"><i class="fas fa-award"></i> Бренди</a>
+                <a th:href="@{/admin/coffee/countries}" class="nav-sidebar-link"><i class="fas fa-globe-americas"></i>
+                    Країни</a>
             </nav>
         </div>
 
         <div id="page-content-wrapper">
-            <button id="menu-toggle" class="btn btn-outline-dark mb-4"><i class="fas fa-bars"></i></button>
+            <h2 class="mb-4" style="font-family: 'Playfair Display', serif;">📣 Управління маркетингом</h2>
 
-            <div class="container-fluid">
-                <h2 class="font-weight-bold mb-4">Ціноутворення та Акції</h2>
+            <div th:if="${success}" class="alert alert-success border-0 shadow-sm mb-4" th:text="${success}"></div>
 
-                <div th:if="${success}" class="alert alert-success shadow-sm" th:text="${success}"></div>
-
-                <div class="row">
-                    <div class="col-md-6 mb-4">
-                        <div class="card admin-card p-4 h-100">
-                            <div class="d-flex align-items-center mb-3">
-                                <i class="fas fa-chart-line fa-2x text-success mr-3"></i>
-                                <h5 class="m-0 font-weight-bold">Масова зміна цін</h5>
+            <div class="row">
+                <div class="col-12 mb-4">
+                    <div class="card admin-card p-4">
+                        <div class="card-header-custom d-flex justify-content-between align-items-center">
+                            <h5 class="m-0 font-weight-bold"><i class="fas fa-bullhorn gold-text mr-2"></i> Головна
+                                інфо-стрічка (Header)</h5>
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" form="infoBarForm" name="active" class="custom-control-input"
+                                    id="infoActive" th:checked="${infoBarSettings?.active}">
+                                <label class="custom-control-label" for="infoActive">Статус стрічки</label>
                             </div>
-                            <p class="text-muted small">Введіть відсоток, щоб змінити ціни для <strong>всіх</strong> товарів у базі даних.</p>
-
-                            <form th:action="@{/admin/marketing/adjust-prices}" method="post">
-                                <div class="input-group mb-3">
-                                    <input type="number" step="any" name="percent" class="form-control form-control-lg" placeholder="Напр: 10 або -5" required>
-                                    <div class="input-group-append">
-                                        <button class="btn btn-success px-4" type="submit">Оновити базу</button>
-                                    </div>
-                                </div>
-                                <span class="badge badge-warning-light text-warning p-2">
-                                    <i class="fas fa-exclamation-triangle mr-1"></i> Цю дію неможливо скасувати в один клік
-                                </span>
-                            </form>
                         </div>
+                        <form th:action="@{/admin/marketing/settings/infobar}" method="post" id="infoBarForm">
+    <div class="form-group">
+        <label class="section-title">Тексти для ротації (кожен з нового рядка)</label>
+        <textarea name="message" class="form-control" rows="5" 
+                  th:text="${infoBarSettings?.message}"
+                  placeholder="Безкоштовна доставка від 1500 грн&#10;Знижка 10% на перше замовлення&#10;Працюємо без вихідних!"></textarea>
+        <div class="mt-3">
+            <button type="submit" class="btn btn-ijo">Оновити стрічку</button>
+        </div>
+    </div>
+</form>
                     </div>
+                </div>
 
-                    <div class="col-md-6 mb-4">
-                        <div class="card admin-card p-4 h-100" style="border-left-color: #f6c23e;">
-                            <div class="d-flex align-items-center mb-3">
-                                <i class="fas fa-percentage fa-2x text-warning mr-3"></i>
-                                <h5 class="m-0 font-weight-bold">Знижка від суми</h5>
+                <div class="col-md-7">
+                    <div class="card admin-card p-4 h-100">
+                        <div class="card-header-custom">
+                            <h5 class="m-0 font-weight-bold"><i class="fas fa-percentage gold-text mr-2"></i> Програма
+                                лояльності</h5>
+                        </div>
+                        <form th:action="@{/admin/marketing/settings/discount}" method="post">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="section-title">Поріг активації (грн)</label>
+                                    <div class="input-group">
+                                        <input type="number" name="threshold" th:value="${discountSettings?.threshold}"
+                                            class="form-control" required>
+                                        <div class="input-group-append"><span class="input-group-text">₴</span></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="section-title">Розмір знижки (%)</label>
+                                    <div class="input-group">
+                                        <input type="number" step="any" name="discountPercent"
+                                            th:value="${discountSettings?.discountPercent}" class="form-control"
+                                            required>
+                                        <div class="input-group-append"><span class="input-group-text">%</span></div>
+                                    </div>
+                                </div>
                             </div>
+                            <div class="custom-control custom-switch my-3">
+                                <input type="checkbox" class="custom-control-input" id="promoActive" name="active"
+                                    th:checked="${discountSettings?.active}">
+                                <label class="custom-control-label font-weight-bold" for="promoActive">Показувати банер
+                                    знижки на сайті</label>
+                            </div>
+                            <button class="btn btn-ijo btn-block py-2" type="submit"><i class="fas fa-save mr-2"></i>
+                                Оновити параметри знижки</button>
+                        </form>
+                    </div>
+                </div>
 
-                            <form th:action="@{/admin/marketing/settings/discount}" method="post">
-                                <div class="form-row mt-4">
-                                    <div class="col-7">
-                                        <label class="section-title">Поріг активації (грн)</label>
-                                        <input type="number" name="threshold" th:value="${discountSettings?.threshold}" class="form-control" required>
-                                    </div>
-                                    <div class="col-5">
-                                        <label class="section-title">Знижка (%)</label>
-                                        <input type="number" step="any" name="discountPercent" th:value="${discountSettings?.discountPercent}" class="form-control" required>
-                                    </div>
-                                </div>
+                <div class="col-md-5">
+                    <div class="card admin-card danger-zone p-4 h-100">
+                        <div class="card-header-custom">
+                            <h5 class="m-0 font-weight-bold text-danger"><i
+                                    class="fas fa-exclamation-triangle mr-2"></i> Зміна цін (Mass Update)</h5>
+                        </div>
+                        <p class="text-muted small">Швидке коригування цін для <b>всіх</b> товарів у базі даних.</p>
 
-                                <div class="custom-control custom-switch mt-4 mb-3">
-                                    <input type="checkbox" class="custom-control-input" id="promoActive" name="active" th:checked="${discountSettings?.active}">
-                                    <label class="custom-control-label font-weight-bold" for="promoActive">Показувати рекламний банер</label>
-                                </div>
-
-                                <button class="btn btn-outline-dark btn-block mt-3" type="submit">
-                                    <i class="fas fa-save mr-2"></i> Зберегти налаштування
-                                </button>
-                            </form>
+                        <form th:action="@{/admin/marketing/adjust-prices}" method="post"
+                            onsubmit="return confirm('УВАГА! Ви збираєтеся змінити ціни для ВСЬОГО асортименту. Продовжити?')">
+                            <div class="form-group">
+                                <label class="section-title">Відсоток зміни (+/-)</label>
+                                <input type="number" step="any" name="percent" class="form-control form-control-lg mb-3"
+                                    placeholder="Напр: 10 або -5" required>
+                            </div>
+                            <button class="btn btn-danger btn-block" type="submit">Застосувати до всіх товарів</button>
+                        </form>
+                        <div class="alert alert-warning mt-3 py-2 px-3 mb-0" style="font-size: 0.8rem;">
+                            <i class="fas fa-info-circle mr-1"></i> Відкотити цю дію автоматично неможливо.
                         </div>
                     </div>
                 </div>
@@ -99,8 +254,15 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        $("#menu-toggle").click(e => { e.preventDefault(); $("#wrapper").toggleClass("toggled"); });
+        $(document).ready(function () {
+            $("#menu-toggle").click(function (e) {
+                e.preventDefault();
+                $("#wrapper").toggleClass("toggled");
+            });
+        });
     </script>
 </body>
+
 </html>

@@ -2,21 +2,28 @@ package com.example.coffeeshop.controller;
 
 import com.example.coffeeshop.model.Brand;
 import com.example.coffeeshop.service.BrandService;
+import com.example.coffeeshop.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 @Controller
 @RequestMapping("/admin/coffee")
-public class BrandAdminController {
+public class AdminBrandController {
     @Autowired
     private BrandService brandService;
+    @Autowired
+    private FileService fileService;
+
+    // -------------------- LIST ALL BRANDS --------------------
+    @GetMapping("/brands")
+    public String listBrands(Model model) {
+        model.addAttribute("brands", brandService.findAll());
+        return "admin/brand-list";
+    }
 
     // -------------------- ADD BRAND --------------------
     @GetMapping("/add-brand")
@@ -30,24 +37,10 @@ public class BrandAdminController {
             @ModelAttribute Brand brand,
             @RequestParam("logo") MultipartFile logo
     ) throws IOException {
-        String uploadDir = "uploads/";
-        File dir = new File(uploadDir);
-        if (!dir.exists()) dir.mkdir();
-
-        String filename = System.currentTimeMillis() + "_" + logo.getOriginalFilename();
-        FileOutputStream fos = new FileOutputStream(uploadDir + filename);
-        fos.write(logo.getBytes());
-        fos.close();
-        brand.setPhotoPath(filename);
+        // SRP: Контролер не знає, ЯК зберігається файл, він просто просить це зробити
+        brand.setPhotoPath(fileService.saveFile(logo));
         brandService.save(brand);
         return "redirect:/admin/coffee/brands";
-    }
-
-    // -------------------- LIST ALL BRANDS --------------------
-    @GetMapping("/brands")
-    public String listBrands(Model model) {
-        model.addAttribute("brands", brandService.findAll());
-        return "admin/brand-list";
     }
 
     // -------------------- EDIT BRAND --------------------
@@ -70,22 +63,10 @@ public class BrandAdminController {
         if (logo != null && !logo.isEmpty()) {
 
             // 1) видаляємо старе фото
-            if (existing.getPhotoPath() != null) {
-                File oldFile = new File("uploads/" + existing.getPhotoPath());
-                if (oldFile.exists()) oldFile.delete();
-            }
+            fileService.deleteFile(existing.getPhotoPath());
 
             // 2) зберігаємо нове фото
-            String uploadDir = "uploads/";
-            File dir = new File(uploadDir);
-            if (!dir.exists()) dir.mkdir();
-
-            String newFilename = System.currentTimeMillis() + "_" + logo.getOriginalFilename();
-            FileOutputStream fos = new FileOutputStream(uploadDir + newFilename);
-            fos.write(logo.getBytes());
-            fos.close();
-
-            existing.setPhotoPath(newFilename);
+            existing.setPhotoPath(fileService.saveFile(logo));
         }
         brandService.save(existing);
         return "redirect:/admin/coffee/brands";

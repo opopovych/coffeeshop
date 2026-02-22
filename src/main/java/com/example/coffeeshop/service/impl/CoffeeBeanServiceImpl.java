@@ -111,9 +111,9 @@ coffeeBeanRepository.deleteAllById(productIds);
     @Override
     @Transactional
     public void updateSingleField(Long id, String field, boolean value) {
-        if ("available".equals(field)) coffeeBeanRepository.updateAvailable(id, value);
+        if ("active".equals(field)) coffeeBeanRepository.updateAvailable(id, value);
         else if ("isHit".equals(field)) coffeeBeanRepository.updateHit(id, value);
-        else if ("isPromotion".equals(field)) coffeeBeanRepository.updatePromotion(id, value);
+        else if ("promo".equals(field)) coffeeBeanRepository.updatePromotion(id, value);
 
     }
 

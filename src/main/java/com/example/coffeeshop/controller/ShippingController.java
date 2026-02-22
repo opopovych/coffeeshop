@@ -1,6 +1,7 @@
 package com.example.coffeeshop.controller;
 
-import com.example.coffeeshop.service.impl.NovaPoshtaService;
+import com.example.coffeeshop.service.NovaPoshtaService;
+import com.example.coffeeshop.service.impl.NovaPoshtaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

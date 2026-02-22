@@ -2,20 +2,23 @@ package com.example.coffeeshop.service.impl;
 
 import com.example.coffeeshop.model.Order;
 import com.example.coffeeshop.model.OrderItem;
+import com.example.coffeeshop.model.ProductWeight;
 import com.example.coffeeshop.model.Status;
+import com.example.coffeeshop.model.dto.ProductReportDto;
 import com.example.coffeeshop.repository.OrderRepository;
 import com.example.coffeeshop.service.OrderService;
-import java.security.PublicKey;
-import java.util.List;
+
+import java.util.*;
+
 import org.springframework.stereotype.Service;
 
 @Service
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
-    private final CartService cartService;
+    private final CartServiceImpl cartService;
 
-    public OrderServiceImpl(OrderRepository orderRepository, CartService cartService) {
+    public OrderServiceImpl(OrderRepository orderRepository, CartServiceImpl cartService) {
         this.orderRepository = orderRepository;
         this.cartService = cartService;
     }
@@ -26,7 +29,7 @@ public class OrderServiceImpl implements OrderService {
         order.setSurName(surName);
         order.setPhone(phone);
         order.setDeliveryAddress(address);
-        order.setTotalPrice(cartService.getTotal());
+        order.setTotalPrice(cartService.getTotalWithDiscount());
         order.setPaymentMethod(payment);
         order.setComment(comment);
 
@@ -37,6 +40,7 @@ public class OrderServiceImpl implements OrderService {
             oi.setName(item.getName());
             oi.setPrice(item.getPrice());
             oi.setQuantity(item.getQuantity());
+            oi.setWeight(item.getWeight());
             oi.setOrder(order);
             order.getItems().add(oi);
         });
@@ -60,7 +64,7 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.save(order);
     }
 
-    // У вашому OrderService (або його імплементації OrderServiceImpl)
+    @Override
     public void updateStatus(Long orderId, String action) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Замовлення не знайдено: " + orderId));
@@ -80,5 +84,40 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void deleteOrder(Long id) {
         orderRepository.deleteById(id);
+    }
+    public List<ProductReportDto> getWarehousePickList() {
+        // 1. Беремо всі замовлення
+        List<Order> allOrders = orderRepository.findAll();
+
+        // 2. Map для групування (Ключ = Бренд + Назва + Вага)
+        Map<String, ProductReportDto> pickListMap = new HashMap<>();
+
+        for (Order order : allOrders) {
+            // 3. Фільтруємо за статусами: тільки "В роботі" та "Очікує"
+            if (order.getStatus() == Status.AT_WORK || order.getStatus() == Status.WAITING) {
+
+                for (OrderItem item : order.getItems()) {
+                    String key = item.getCoffeeBrand() + "|" + item.getName() + "|" + item.getWeight();
+
+                    if (pickListMap.containsKey(key)) {
+                        ProductReportDto existing = pickListMap.get(key);
+                        existing.setTotalQuantity(existing.getTotalQuantity() + item.getQuantity());
+                    } else {
+                        pickListMap.put(key, new ProductReportDto(
+                                item.getCoffeeBrand(),
+                                item.getName(),
+                                item.getWeight(),
+                                (long) item.getQuantity()
+                        ));
+                    }
+                }
+            }
+        }
+
+        // 4. Сортуємо за брендом, щоб на складі було зручніше шукати
+        List<ProductReportDto> result = new ArrayList<>(pickListMap.values());
+        result.sort(Comparator.comparing(ProductReportDto::getBrand));
+
+        return result;
     }
 }

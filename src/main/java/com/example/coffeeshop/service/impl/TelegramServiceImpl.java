@@ -1,17 +1,16 @@
 package com.example.coffeeshop.service.impl;
 
 import com.example.coffeeshop.model.Order;
+import com.example.coffeeshop.service.TelegramService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URLEncoder;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
-public class TelegramService {
+public class TelegramServiceImpl implements TelegramService {
 
     @Value("${telegram.bot.token}")
     private String BOT_TOKEN;
@@ -46,8 +45,8 @@ public class TelegramService {
 
         sendRawMessage(message.toString());
     }
-
-    private void sendRawMessage(String text) {
+    @Override
+    public void sendRawMessage(String text) {
         try {
             // 1. Базовий URL без параметрів
             String url = "https://api.telegram.org/bot" + BOT_TOKEN + "/sendMessage";

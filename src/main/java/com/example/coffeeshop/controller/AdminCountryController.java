@@ -9,16 +9,16 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/admin/coffee")
-public class CountryAdminController {
+public class AdminCountryController {
 
     @Autowired
     private OriginCountryService originCountryService;
 
     // -------------------- LIST ALL COUNTRIES --------------------
-    @GetMapping("/country")
+    @GetMapping("/countries")
     public String listCountries(Model model) {
         model.addAttribute("countries", originCountryService.findAll());
-        return "admin/country-list";
+        return "admin/admin-countries";
     }
 
     // -------------------- ADD COUNTRY --------------------
@@ -31,7 +31,7 @@ public class CountryAdminController {
     @PostMapping("/add-country")
     public String addCountry(@ModelAttribute OriginCountry country) {
         originCountryService.save(country);
-        return "redirect:/admin/coffee/country";
+        return "redirect:/admin/coffee/countries";
     }
 
     // -------------------- EDIT COUNTRY --------------------
@@ -48,13 +48,13 @@ public class CountryAdminController {
     ) {
         country.setId(id);
         originCountryService.save(country);
-        return "redirect:/admin/countries";
+        return "redirect:/admin/coffee/countries";
     }
 
     // -------------------- DELETE COUNTRY --------------------
     @GetMapping("/delete-country/{id}")
     public String deleteCountry(@PathVariable Long id) {
         originCountryService.delete(id);
-        return "redirect:/admin/coffee/country";
+        return "redirect:/admin/coffee/countries";
     }
 }

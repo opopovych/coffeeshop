@@ -4,8 +4,23 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${coffee.brand.name} + ' ' + ${coffee.name}">Coffee Details</title>
+    <meta charset="UTF-8">
+    <title th:text="${seoTitle != null ? seoTitle : 'IJO Coffee — Ексклюзивна кава від легендарних домів Європи'}">
+    </title>
+    <meta name="description"
+        th:content="${seoDescription != null ? seoDescription : 'IJO Coffee — ваш провідник у світ преміальної кави. Колекційні купажі, свіже обсмаження та історія кожного зерна.'}">
 
+    <meta property="og:title"
+        th:content="${seoTitle != null ? seoTitle : 'IJO Coffee — Мистецтво кави у кожній чашці'}">
+    <meta property="og:image"
+        th:content="${coffee != null ? 'https://ijocoffee.com.ua' + coffee.photoPath : 'https://ijocoffee.com.ua/images/coffee.webp'}">
+
+    <meta property="og:description" th:content="${seoDescription}">
+    <meta property="og:type" content="product">
+    <link rel="icon" type="image/png" th:href="@{/images/favicon.png}">
+    <link rel="shortcut icon" th:href="@{/images/favicon.png}">
+
+    <link rel="apple-touch-icon" th:href="@{/images/favicon.png}">
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap"
         rel="stylesheet">
@@ -399,6 +414,24 @@
             margin-bottom: 5px;
         }
     </style>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "[[${coffee.name}]]",
+  "description": "[[${seoDescription}]]",
+  "brand": {
+    "@type": "Brand",
+    "name": "[[${coffee.brand.name}]]"
+  },
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "UAH",
+    "price": "[[${coffee.price}]]",
+    "availability": "https://schema.org/InStock",
+  }
+}
+</script>
 </head>
 
 <body>
@@ -406,7 +439,8 @@
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container-fluid">
             <div class="nav-side-zone">
-                <a th:href="@{/coffee(page=${param.page != null ? param.page : 0})}" class="text-white small text-uppercase">
+                <a th:href="@{/coffee(page=${param.page != null ? param.page : 0})}"
+                    class="text-white small text-uppercase">
                     <i class="fas fa-chevron-left mr-1"></i>
                     <span class="d-none d-sm-inline">Назад</span> </a>
             </div>

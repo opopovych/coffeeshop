@@ -1,5 +1,6 @@
 package com.example.coffeeshop.service.impl;
 
+import com.example.coffeeshop.service.NovaPoshtaService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class NovaPoshtaService {
+public class NovaPoshtaServiceImpl implements NovaPoshtaService {
 
     @Value("${novaposhta.api.key}")
     private String apiKey;

@@ -5,7 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IJO Coffee | Оформлення замовлення</title>
+    <link rel="icon" type="image/png" th:href="@{/images/favicon.png}">
+    <link rel="shortcut icon" th:href="@{/images/favicon.png}">
 
+    <link rel="apple-touch-icon" th:href="@{/images/favicon.png}">
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400;500;600&display=swap"
         rel="stylesheet">
@@ -228,8 +231,10 @@
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container d-flex justify-content-between align-items-center">
             <div style="width: 150px;">
-                <a th:href="@{/cart/view}" class="text-white small text-uppercase" style="letter-spacing: 1px;">
-                    <i class="fas fa-chevron-left mr-1"></i> До кошика
+                <a th:href="@{/cart/view}" class="text-white small text-uppercase p-2"
+                    style="letter-spacing: 1px; margin-left: -0.5rem;">
+                    <i class="fas fa-chevron-left mr-1" style="font-size: 1.1rem;"></i>
+                    <span class="d-none d-md-inline">До кошика</span>
                 </a>
             </div>
 
@@ -339,26 +344,27 @@
             </div>
 
             <div class="col-lg-4">
-                 <div class="summary-box">
-                <h6 class="text-uppercase mb-3" style="letter-spacing: 2px; opacity: 0.8;">До сплати</h6>
-                <div class="total-price">
-                    <span th:text="${total}">0</span> <small style="font-size: 1.2rem;">грн</small>
+                <div class="summary-box">
+                    <h6 class="text-uppercase mb-3" style="letter-spacing: 2px; opacity: 0.8;">До сплати</h6>
+                    <div class="total-price">
+                        <span th:text="${total}">0</span> <small style="font-size: 1.2rem;">грн</small>
+                    </div>
+
+                    <hr style="border-top: 1px solid rgba(209, 184, 148, 0.2);">
+
+                    <ul class="list-unstyled small mb-4" style="opacity: 0.8; line-height: 2;">
+                        <li><i class="fas fa-truck mr-2"></i> Відправка протягом 48 годин</li>
+                    </ul>
+
+                    <button type="submit" form="checkoutForm" id="submitBtn" class="btn btn-confirm">
+                        Оформити замовлення
+                    </button>
+
+                    <p class="text-center mt-3 mb-0"
+                        style="font-size: 0.7rem; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px;">
+                        Натискаючи кнопку, ви погоджуєтесь з умовами сервісу
+                    </p>
                 </div>
-
-                <hr style="border-top: 1px solid rgba(209, 184, 148, 0.2);">
-
-                <ul class="list-unstyled small mb-4" style="opacity: 0.8; line-height: 2;">
-                    <li><i class="fas fa-truck mr-2"></i> Відправка протягом 48 годин</li>
-                </ul>
-
-                <button type="submit" form="checkoutForm" id="submitBtn" class="btn btn-confirm">
-                    Оформити замовлення
-                </button>
-
-                <p class="text-center mt-3 mb-0" style="font-size: 0.7rem; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px;">
-                    Натискаючи кнопку, ви погоджуєтесь з умовами сервісу
-                </p>
-            </div>
             </div>
         </div>
     </div>
@@ -420,19 +426,19 @@
         });
     </script>
     <script>
-    function updateNavbarCart() {
-        fetch('/cart/api/count')
-            .then(res => res.json())
-            .then(count => {
-                const badge = document.getElementById('cart-count-badge');
-                if(count > 0) {
-                    badge.innerText = count;
-                    badge.style.display = 'flex';
-                }
-            });
-    }
-    document.addEventListener('DOMContentLoaded', updateNavbarCart);
-</script>
+        function updateNavbarCart() {
+            fetch('/cart/api/count')
+                .then(res => res.json())
+                .then(count => {
+                    const badge = document.getElementById('cart-count-badge');
+                    if (count > 0) {
+                        badge.innerText = count;
+                        badge.style.display = 'flex';
+                    }
+                });
+        }
+        document.addEventListener('DOMContentLoaded', updateNavbarCart);
+    </script>
 
 </body>
 
