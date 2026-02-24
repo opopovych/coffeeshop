@@ -6,6 +6,7 @@ target/
 
 # Ігноруємо локальні налаштування з паролями
 src/main/resources/application-local.properties
+deploy.sh
 
 # Ігноруємо налаштування вашої IDE
 .idea/

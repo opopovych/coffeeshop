@@ -41,9 +41,10 @@
         <tr>
             <td width="15%"><strong>Постачальник:</strong></td>
             <td>
-                <strong>ФОП [Попович О.І.]</strong><br>
-                ІПН: [ІПН], Група 2<br>
-                Тел: [Твій телефон]
+                <strong th:text="${settings.vendorName}">ФОП Назва</strong><br>
+                ІПН: <span th:text="${settings.taxNumber}">0000000000</span>,
+                <span th:text="${settings.shopAddress}">Група</span><br>
+                Тел: <span th:text="${settings.phoneNumber}">+380...</span>
             </td>
         </tr>
         <tr>
@@ -70,7 +71,7 @@
     <tbody>
         <tr th:each="item, stat : ${order.items}">
             <td th:text="${stat.count}">1</td>
-            <td th:text="${item.name}">Кава Lucaffé</td>
+            <td th:text="${item.coffeeBrand} + ' ' + ${item.name} + ' ' + ${item.weight}">Кава Lucaffé</td>
             <td th:text="${item.quantity}">1</td>
             <td th:text="${item.price}">500.00</td>
             <td th:text="${item.price * item.quantity}">500.00</td>

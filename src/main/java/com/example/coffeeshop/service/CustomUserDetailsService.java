@@ -31,4 +31,25 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .authorities("USER")
                 .build();
     }
+    // У файл CustomUserDetailsService.java додай ці методи:
+
+    public com.example.coffeeshop.model.User findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    public void updatePassword(String username, String newPassword) {
+        com.example.coffeeshop.model.User user = userRepository.findByUsername(username);
+        if (user != null) {
+            // Хешуємо новий пароль за допомогою BCrypt
+            user.setPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(user);
+        }
+    }
+
+    public boolean checkOldPassword(String username, String oldPassword) {
+        com.example.coffeeshop.model.User user = userRepository.findByUsername(username);
+        if (user == null) return false;
+        // Порівнюємо введений "сирий" пароль із хешованим у базі
+        return passwordEncoder.matches(oldPassword, user.getPassword());
+    }
 }

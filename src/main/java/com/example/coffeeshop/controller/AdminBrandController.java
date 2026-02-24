@@ -29,7 +29,7 @@ public class AdminBrandController {
     @GetMapping("/add-brand")
     public String addBrandForm(Model model) {
         model.addAttribute("brand", new Brand());
-        return "/admin/brand-add";
+        return "admin/brand-add";
     }
 
     @PostMapping("/add-brand")

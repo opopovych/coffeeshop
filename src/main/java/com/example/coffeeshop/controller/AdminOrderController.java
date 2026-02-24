@@ -1,9 +1,11 @@
 package com.example.coffeeshop.controller;
 
 import com.example.coffeeshop.model.Order;
+import com.example.coffeeshop.model.ShopSettings;
 import com.example.coffeeshop.model.Status;
 import com.example.coffeeshop.repository.OrderRepository;
 import com.example.coffeeshop.service.OrderService;
+import com.example.coffeeshop.service.ShopSettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,8 @@ public class AdminOrderController {
     private OrderService orderService;
     @Autowired
     private OrderRepository orderRepository; // Краще теж замінити на сервіс у майбутньому
+    @Autowired
+    private ShopSettingsService settingsService;
 
     @GetMapping("/orders")
     public String viewOrders(@RequestParam(value = "status", required = false) Status status, Model model) {
@@ -55,7 +59,9 @@ public class AdminOrderController {
     @GetMapping("/orders/{id}/print")
     public String printOrder(@PathVariable Long id, Model model) {
         Order order = orderService.findById(id);
+        // Отримуємо налаштування (якщо немає - створюємо дефолтні)
         model.addAttribute("order", order);
+        model.addAttribute("settings", settingsService.getSettings());
         return "admin/invoice-print";
     }
 }
