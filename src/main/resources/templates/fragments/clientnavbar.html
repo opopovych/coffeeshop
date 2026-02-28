@@ -106,8 +106,13 @@
             </div>
 
             <div class="nav-right-zone d-flex align-items-center justify-content-end">
-                <form class="form-inline d-none d-lg-flex" th:action="@{/coffee/search}" method="get">
-                    <input class="form-control search-input" type="text" name="query" placeholder="Пошук...">
+                <form class="form-inline d-none d-lg-flex" onsubmit="return false;">
+                    <input id="dynamic-search"
+                           class="form-control search-input"
+                           type="text"
+                           name="query"
+                           placeholder="Пошук кави..."
+                           autocomplete="off">
                 </form>
                 <a th:href="@{/cart/view}" class="cart-wrapper">
                     <i class="fas fa-shopping-basket text-white" style="font-size: 1.2rem;"></i>

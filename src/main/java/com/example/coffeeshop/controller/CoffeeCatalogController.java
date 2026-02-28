@@ -9,6 +9,7 @@ import java.util.List;
 import com.example.coffeeshop.service.DiscountService;
 import com.example.coffeeshop.service.OriginCountryService;
 import com.example.coffeeshop.service.impl.DiscountServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -58,22 +59,28 @@ public class CoffeeCatalogController {
     @GetMapping("/coffee")
     public String list(@RequestParam(defaultValue = "0") int page,
                        @RequestParam(defaultValue = "9") int size,
-                       Model model) {
+                       @RequestParam(required = false) String query,
+                       Model model,
+                       HttpServletRequest request) {
+
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
-        Page<CoffeeBean> coffeePage = coffeeBeanService.findAllActiveRandom(pageable);
-        // --- ДОДАЄМО SEO ДАНІ ---
-        // Формуємо динамічний заголовок, наприклад: "Каталог свіжої кави — Сторінка 1 | IJO Coffee"
-        String title = "Каталог брендованої кави в зернах";
-        if (page > 0) {
-            title += " — Сторінка " + (page + 1);
+        Page<CoffeeBean> coffeePage;
+
+        if (query != null && !query.trim().isEmpty()) {
+            coffeePage = coffeeBeanService.search(query, pageable);
+        } else {
+            coffeePage = coffeeBeanService.findAllActiveRandom(pageable);
         }
-        title += " | IJO Coffee";
 
-        model.addAttribute("seoTitle", title);
-        model.addAttribute("seoDescription", "Обирайте найкращу каву свіжого обсмажування в каталозі IJO Coffee. Арабіка, робуста та авторські бленди з доставкою по всій Україні.");
+        // ВАЖЛИВО: Назва має бути coffeeList, як у вашому th:each
+        model.addAttribute("coffeeList", coffeePage.getContent());
+        model.addAttribute("coffeePage", coffeePage); // для пагінації
 
-        // Передаємо також дані для Open Graph (соцмережі)
-        model.addAttribute("ogUrl", "https://ijocoffee.com.ua/coffee?page=" + page);
+        // ... ваші SEO дані ...
+
+        if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
+            return "catalog :: #coffee-container";
+        }
 
         return populateCatalogModel(model, coffeePage, page);
     }

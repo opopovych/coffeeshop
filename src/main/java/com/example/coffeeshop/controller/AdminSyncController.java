@@ -1,8 +1,11 @@
 package com.example.coffeeshop.controller;
 
+import com.example.coffeeshop.model.CoffeeBean;
 import com.example.coffeeshop.model.ProductData;
 import com.example.coffeeshop.model.SyncReport;
 import com.example.coffeeshop.service.SyncService;
+
+import java.util.List;
 import java.util.Map;
 
 import jakarta.servlet.http.HttpSession;
@@ -108,5 +111,37 @@ public class AdminSyncController {
 
         model.addAttribute("missingProducts", missing);
         return "admin/missing-products-page";
+    }
+    // Обробка пошуку відсутніх у файлі товарів
+    @PostMapping("/missing-in-file")
+    public String handleMissingInFile(@RequestParam("file") MultipartFile file,
+                                      HttpSession session,
+                                      RedirectAttributes ra) {
+        if (file.isEmpty()) {
+            ra.addFlashAttribute("error", "Файл не обрано!");
+            return "redirect:/admin/sync";
+        }
+
+        try {
+            List<CoffeeBean> missingInFile = syncService.lookProductsMissingInFile(file);
+            session.setAttribute("missingInFileList", missingInFile);
+            return "redirect:/admin/sync/missing-in-file-view";
+        } catch (Exception e) {
+            ra.addFlashAttribute("error", "Помилка аналізу: " + e.getMessage());
+            return "redirect:/admin/sync";
+        }
+    }
+
+    // Сторінка відображення
+    @GetMapping("/missing-in-file-view")
+    public String showMissingInFile(HttpSession session, Model model) {
+        List<CoffeeBean> missing = (List<CoffeeBean>) session.getAttribute("missingInFileList");
+
+        if (missing == null || missing.isEmpty()) {
+            model.addAttribute("message", "Всі товари з бази присутні у прайсі постачальника.");
+        }
+
+        model.addAttribute("products", missing);
+        return "admin/missing-in-file-page";
     }
 }

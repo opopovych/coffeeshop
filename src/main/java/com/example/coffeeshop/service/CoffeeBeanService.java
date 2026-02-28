@@ -42,5 +42,6 @@ public interface CoffeeBeanService {
     Page<CoffeeBean> findAllActiveRandom(Pageable pageable);
     void adjustAllPrices(Double percent);
     void updateSingleField(Long id, String field, boolean value);
+    Page<CoffeeBean> search(String query, Pageable pageable);
 
 }

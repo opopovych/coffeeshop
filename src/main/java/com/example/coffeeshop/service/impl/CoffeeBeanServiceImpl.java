@@ -116,5 +116,14 @@ coffeeBeanRepository.deleteAllById(productIds);
         else if ("promo".equals(field)) coffeeBeanRepository.updatePromotion(id, value);
 
     }
+    @Override
+    public Page<CoffeeBean> search(String query, Pageable pageable) {
+        if (query == null || query.trim().isEmpty()) {
+            // Якщо запит порожній, повертаємо просто всі активні товари
+            return coffeeBeanRepository.findAllActive(pageable);
+        }
+        // Викликаємо наш новий метод з репозиторію
+        return coffeeBeanRepository.searchActive(query.trim(), pageable);
+    }
 
 }

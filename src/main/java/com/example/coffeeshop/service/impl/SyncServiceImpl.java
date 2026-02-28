@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class SyncServiceImpl implements SyncService {
@@ -201,6 +202,32 @@ public class SyncServiceImpl implements SyncService {
         return listFromFile;
     }
 
+    @Transactional
+    @Override
+    public List<CoffeeBean> lookProductsMissingInFile(MultipartFile file) throws IOException {
+        Set<String> skusInFile = new HashSet<>();
+
+        // 1. Збираємо всі SKU з файлу у Set для швидкого пошуку
+        try (InputStream is = file.getInputStream();
+             Workbook workbook = WorkbookFactory.create(is)) {
+            Sheet sheet = workbook.getSheetAt(0);
+            for (Row row : sheet) {
+                if (row.getRowNum() == 0) continue;
+                Cell skuCell = row.getCell(0);
+                if (skuCell != null) {
+                    skusInFile.add(skuCell.toString().trim());
+                }
+            }
+        }
+
+        // 2. Отримуємо всі активні товари з бази
+        List<CoffeeBean> allDbProducts = coffeeBeanRepository.findAll();
+
+        // 3. Фільтруємо: залишаємо тільки ті, SKU яких НЕМАЄ у Set-і з файлу
+        return allDbProducts.stream()
+                .filter(dbProduct -> dbProduct.getSku() != null && !skusInFile.contains(dbProduct.getSku()))
+                .collect(Collectors.toList());
+    }
 
 
 //    @Transactional

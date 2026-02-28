@@ -247,6 +247,20 @@
                                     </div>
                                 </form>
                             </div>
+                            <div class="border-top pt-4 mt-4">
+                                <label class="section-title text-danger">Аналіз відсутніх у прайсі</label>
+                                <form th:action="@{/admin/sync/missing-in-file}" method="post" enctype="multipart/form-data" class="mt-2">
+                                    <div class="d-flex align-items-center">
+                                        <div class="custom-file flex-grow-1">
+                                            <input type="file" name="file" class="custom-file-input" id="f4" required>
+                                            <label class="custom-file-label" for="f4">Завантажити прайс для звіту</label>
+                                        </div>
+                                        <button class="btn btn-link text-danger font-weight-bold ml-3" type="submit" style="text-decoration: none;">
+                                            <i class="fas fa-file-invoice mr-1"></i> Знайти "зниклі" товари
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
 

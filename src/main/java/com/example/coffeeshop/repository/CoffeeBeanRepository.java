@@ -61,6 +61,12 @@ public interface CoffeeBeanRepository extends JpaRepository<CoffeeBean, Long> {
     @Query("UPDATE CoffeeBean c SET c.isPromo = :value WHERE c.id = :id")
     void updatePromotion(@Param("id") Long id, @Param("value") boolean value);
 
+    @Query("SELECT c FROM CoffeeBean c WHERE " +
+            "(LOWER(c.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "LOWER(c.brand.name) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
+            "AND c.active = true")
+    Page<CoffeeBean> searchActive(@Param("keyword") String keyword, Pageable pageable);
+
 
 
 
