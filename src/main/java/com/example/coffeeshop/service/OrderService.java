@@ -13,4 +13,6 @@ public interface OrderService {
     void deleteOrder(Long id);
     void updateStatus(Long orderId, String action);
     List<ProductReportDto> getWarehousePickList();
+    void updateItemQuantity(Long orderId, Long itemId, int newQuantity);
+    void addItemToOrder(Long orderId, Long productId, int quantity);
     }

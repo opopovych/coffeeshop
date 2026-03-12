@@ -22,6 +22,8 @@ public class ShopSettingsServiceImpl implements ShopSettingsService {
             defaultSettings.setTaxNumber("0000000000");
             defaultSettings.setPhoneNumber("+380 00 000 00 00");
             defaultSettings.setShopAddress("Група 2");
+            defaultSettings.setIban("UA123456789012345678901234567");
+            defaultSettings.setBank("Privat Bank");
             return repository.save(defaultSettings);
         });
     }

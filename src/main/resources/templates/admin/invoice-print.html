@@ -2,55 +2,81 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Видаткова накладна</title>
+    <title>Видаткова накладна - IJO Coffee</title>
     <style>
         body { font-family: 'DejaVu Sans', sans-serif; font-size: 12px; color: #333; line-height: 1.5; padding: 20px; }
-        .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px; }
-        .details { margin-bottom: 20px; }
+        
+        /* Логотип та заголовок */
+        .invoice-header-container { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; }
+        .logo-block img { width: 120px; height: auto; }
+        .document-title-block { text-align: right; }
+        .document-title-block h1 { margin: 0; font-size: 22px; color: #2e2a28; text-transform: uppercase; }
+        .document-title-block p { margin: 5px 0 0; font-size: 14px; font-weight: bold; }
+
+        .details { margin-bottom: 30px; border-top: 2px solid #c5a059; padding-top: 15px; }
         .details table { width: 100%; border-collapse: collapse; }
-        .details td { padding: 5px; vertical-align: top; }
+        .details td { padding: 5px 0; vertical-align: top; }
+        
         .items { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        .items th, .items td { border: 1px solid #000; padding: 8px; text-align: left; }
-        .items th { background-color: #f2f2f2; }
-        .total { text-align: right; font-weight: bold; font-size: 14px; }
-        .footer { margin-top: 50px; }
-        .signature-line { border-bottom: 1px solid #000; width: 200px; display: inline-block; margin: 0 10px; }
-        @media print { .no-print { display: none; } }
+        .items th, .items td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        .items th { background-color: #f9f9f9; color: #2e2a28; border-bottom: 2px solid #c5a059; }
+        
+        .total-block { text-align: right; margin-top: 20px; padding: 15px; background: #fefcf9; border: 1px solid #c5a059; border-radius: 5px; }
+        .total-amount { font-size: 18px; color: #2e2a28; font-weight: bold; }
+        
+        .footer { margin-top: 60px; }
+        .signature-section { display: flex; justify-content: space-between; margin-top: 40px; }
+        .signature-item { border-top: 1px solid #000; width: 45%; text-align: center; padding-top: 5px; }
+        
+        .no-print { margin-bottom: 20px; text-align: right; }
+        .btn-print { padding: 10px 25px; cursor: pointer; background: #c5a059; color: white; border: none; border-radius: 5px; font-weight: bold; transition: 0.3s; }
+        .btn-print:hover { background: #a6854a; }
+
+        @media print { 
+            .no-print { display: none; } 
+            body { padding: 0; }
+            .details { border-top-color: #000; } /* Чорний для принтера */
+            .total-block { border-color: #000; }
+        }
     </style>
 </head>
 <body>
 
-<div class="no-print" style="margin-bottom: 20px;">
-    <button onclick="window.print()" style="padding: 10px 20px; cursor: pointer; background: #c5a059; color: white; border: none; border-radius: 5px;">
+<div class="no-print">
+    <button class="btn-print" onclick="window.print()">
         🖨️ Друкувати накладну
     </button>
 </div>
 
-<div class="header">
-    <h1>Видаткова накладна № <span th:text="${order.id}">123</span></h1>
-<p>від 
-    <span th:if="${order.createdAt != null}" 
-          th:text="${#temporals.format(order.createdAt, 'dd.MM.yyyy')}">01.01.2026</span>
-    <span th:if="${order.createdAt == null}" 
-          th:text="${#calendars.format(#calendars.createNow(), 'dd.MM.yyyy')}">18.02.2026</span>
-    р.
-</p></div>
+<div class="invoice-header-container">
+    <div class="logo-block">
+        <img src="/images/favicon.png" alt="IJO Coffee Logo">
+    </div>
+    <div class="document-title-block">
+        <h1>Видаткова накладна</h1>
+        <p>№ <span th:text="${order.id}">123</span> від 
+            <span th:text="${order.createdAt != null ? #temporals.format(order.createdAt, 'dd.MM.yyyy') : #calendars.format(#calendars.createNow(), 'dd.MM.yyyy')}">01.01.2026</span> р.
+        </p>
+    </div>
+</div>
 
 <div class="details">
     <table>
         <tr>
             <td width="15%"><strong>Постачальник:</strong></td>
             <td>
-                <strong th:text="${settings.vendorName}">ФОП Назва</strong><br>
-                ІПН: <span th:text="${settings.taxNumber}">0000000000</span>,
-                <span th:text="${settings.shopAddress}">Група</span><br>
+                <strong style="font-size: 14px;" th:text="${settings.vendorName}">ФОП Назва</strong><br>
+                Р/Р (IBAN): <span th:text="${settings.iban}">UA123456...</span>, <span th:text="${settings.bank}">Банк</span><br>
+                ІПН: <span th:text="${settings.taxNumber}">0000000000</span><br>
+                Адреса: <span th:text="${settings.shopAddress}">Адреса магазину</span><br>
                 Тел: <span th:text="${settings.phoneNumber}">+380...</span>
             </td>
         </tr>
+        <tr style="height: 15px;"><td></td><td></td></tr>
         <tr>
             <td><strong>Одержувач:</strong></td>
             <td>
-                <span th:text="${order.customerName} + ' ' + ${order.surName}">Клієнт</span><br>
+                <strong th:text="${order.customerName} + ' ' + ${order.surName}">Клієнт</strong><br>
                 Тел: <span th:text="${order.phone}">+380...</span><br>
                 Доставка: <span th:text="${order.deliveryAddress}">Нова Пошта...</span>
             </td>
@@ -61,17 +87,17 @@
 <table class="items">
     <thead>
         <tr>
-            <th>№</th>
-            <th>Товар</th>
-            <th>К-сть</th>
-            <th>Ціна (грн)</th>
-            <th>Сума (грн)</th>
+            <th width="5%">№</th>
+            <th width="55%">Найменування товару</th>
+            <th width="10%">К-сть</th>
+            <th width="15%">Ціна (грн)</th>
+            <th width="15%">Сума (грн)</th>
         </tr>
     </thead>
     <tbody>
         <tr th:each="item, stat : ${order.items}">
             <td th:text="${stat.count}">1</td>
-            <td th:text="${item.coffeeBrand} + ' ' + ${item.name} + ' ' + ${item.weight}">Кава Lucaffé</td>
+            <td th:text="${item.coffeeBrand} + ' ' + ${item.name} + ' ' + ${item.weight}">Кава IJO Espresso</td>
             <td th:text="${item.quantity}">1</td>
             <td th:text="${item.price}">500.00</td>
             <td th:text="${item.price * item.quantity}">500.00</td>
@@ -79,13 +105,37 @@
     </tbody>
 </table>
 
-<div class="total">
-    Разом до сплати: <span th:text="${order.totalPrice}">500.00</span> грн.
+<div th:with="calculatedSubtotal=${#aggregates.sum(order.items.![price * quantity])}" class="total-block">
+
+    <div th:if="${calculatedSubtotal > order.totalPrice}"
+         style="font-size: 11px; color: #28a745; margin-bottom: 5px; font-style: italic;">
+        🎉 Враховано вашу персональну знижку: <span th:text="${discount.discountPercent}">0</span>%
+        (Економія: <span th:text="${calculatedSubtotal - order.totalPrice}">0</span> грн)
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; align-items: baseline; gap: 10px;">
+        <span th:if="${calculatedSubtotal > order.totalPrice}"
+              style="text-decoration: line-through; color: #888; font-size: 13px;">
+            <span th:text="${calculatedSubtotal}">0</span> грн
+        </span>
+
+        <span style="font-size: 14px;">Усього до сплати:</span>
+        <span class="total-amount" th:text="${order.totalPrice} + ' грн.'">500.00 грн.</span>
+    </div>
 </div>
 
 <div class="footer">
-    <p>Відпустив: <span class="signature-line"></span> Отримав: <span class="signature-line"></span></p>
-    <p style="font-size: 10px; margin-top: 30px;">Дякуємо за замовлення в IJO Coffee! Смачної кави!</p>
+    <div class="signature-section">
+        <div class="signature-item">
+            <strong>Відпустив (постачальник)</strong>
+        </div>
+        <div class="signature-item">
+            <strong>Отримав (покупець)</strong>
+        </div>
+    </div>
+    <p style="font-size: 11px; margin-top: 40px; text-align: center; font-style: italic; color: #777;">
+        Дякуємо за вибір IJO Coffee! Ваша підтримка надихає нас підбирати Вам найкращі зерна.
+    </p>
 </div>
 
 </body>

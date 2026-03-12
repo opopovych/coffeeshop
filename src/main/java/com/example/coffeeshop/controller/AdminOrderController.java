@@ -1,11 +1,11 @@
 package com.example.coffeeshop.controller;
 
 import com.example.coffeeshop.model.Order;
+import com.example.coffeeshop.model.OrderItem;
 import com.example.coffeeshop.model.ShopSettings;
 import com.example.coffeeshop.model.Status;
 import com.example.coffeeshop.repository.OrderRepository;
-import com.example.coffeeshop.service.OrderService;
-import com.example.coffeeshop.service.ShopSettingsService;
+import com.example.coffeeshop.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
@@ -23,6 +23,10 @@ public class AdminOrderController {
     private OrderRepository orderRepository; // Краще теж замінити на сервіс у майбутньому
     @Autowired
     private ShopSettingsService settingsService;
+    @Autowired
+    private DiscountService discountService;
+    @Autowired
+    private CoffeeBeanService coffeeBeanService;
 
     @GetMapping("/orders")
     public String viewOrders(@RequestParam(value = "status", required = false) Status status, Model model) {
@@ -31,6 +35,7 @@ public class AdminOrderController {
                 : orderRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
 
         model.addAttribute("orders", orders);
+        model.addAttribute("allProducts", coffeeBeanService.findAll());
         return "admin/admin-orders";
     }
 
@@ -62,6 +67,35 @@ public class AdminOrderController {
         // Отримуємо налаштування (якщо немає - створюємо дефолтні)
         model.addAttribute("order", order);
         model.addAttribute("settings", settingsService.getSettings());
+        model.addAttribute("discount", discountService.getSettings());
         return "admin/invoice-print";
+    }
+    // Оновлення кількості через AJAX
+    @PostMapping("/orders/update-item-ajax")
+    @ResponseBody
+    public Double updateItemAjax(@RequestParam Long orderId, @RequestParam Long itemId, @RequestParam int quantity) {
+        orderService.updateItemQuantity(orderId, itemId, quantity);
+        return orderService.findById(orderId).getTotalPrice();
+    }
+
+    // Додавання товару через AJAX
+    @PostMapping("/orders/add-item-ajax")
+    @ResponseBody
+    public OrderItem addItemAjax(@RequestParam Long orderId, @RequestParam Long productId, @RequestParam int quantity) {
+        orderService.addItemToOrder(orderId, productId, quantity);
+        // Отримуємо останній доданий елемент, щоб відправити його в JS
+        Order order = orderService.findById(orderId);
+        return order.getItems().get(order.getItems().size() - 1);
+    }
+    @GetMapping("/products")
+    public String listProducts(@RequestParam(value = "orderId", required = false) Long orderId, Model model) {
+        model.addAttribute("products", coffeeBeanService.findAll());
+        model.addAttribute("orderId", orderId); // Передаємо ID замовлення в HTML
+        return "admin/products-list";
+    }
+    @GetMapping("/orders/get-total/{id}")
+    @ResponseBody
+    public Double getTotal(@PathVariable Long id) {
+        return orderService.findById(id).getTotalPrice();
     }
 }

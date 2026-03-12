@@ -3,6 +3,7 @@ package com.example.coffeeshop.repository;
 import com.example.coffeeshop.model.Order;
 import com.example.coffeeshop.model.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -14,4 +15,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     // Якщо фільтруємо за статусом, теж додаємо сортування
     List<Order> findByStatusOrderByIdDesc(Status status);
+    // Використовуємо JOIN FETCH для завантаження замовлень разом з товарами одним запитом
 }

@@ -1,21 +1,24 @@
 package com.example.coffeeshop.service.impl;
 
-import com.example.coffeeshop.model.Order;
-import com.example.coffeeshop.model.OrderItem;
-import com.example.coffeeshop.model.ProductWeight;
-import com.example.coffeeshop.model.Status;
+import com.example.coffeeshop.model.*;
 import com.example.coffeeshop.model.dto.ProductReportDto;
+import com.example.coffeeshop.repository.CoffeeBeanRepository;
 import com.example.coffeeshop.repository.OrderRepository;
 import com.example.coffeeshop.service.OrderService;
 
 import java.util.*;
 
+import org.apache.commons.math3.stat.descriptive.summary.Product;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
+    @Autowired
+    private CoffeeBeanRepository coffeeBeanRepository;
     private final CartServiceImpl cartService;
 
     public OrderServiceImpl(OrderRepository orderRepository, CartServiceImpl cartService) {
@@ -119,5 +122,63 @@ public class OrderServiceImpl implements OrderService {
         result.sort(Comparator.comparing(ProductReportDto::getBrand));
 
         return result;
+    }
+    @Override
+    @Transactional
+    public void updateItemQuantity(Long orderId, Long itemId, int newQuantity) {
+        Order order = findById(orderId);
+
+        if (newQuantity <= 0) {
+            // Знаходимо товар, який треба видалити
+            order.getItems().removeIf(item -> {
+                if (item.getId().equals(itemId)) {
+                    item.setOrder(null); // Розірвати зв'язок
+                    return true;
+                }
+                return false;
+            });
+            // ВАЖЛИВО: Якщо у тебе є orderItemRepository, краще видалити через нього:
+            // orderItemRepository.deleteById(itemId);
+        } else {
+            order.getItems().stream()
+                    .filter(item -> item.getId().equals(itemId))
+                    .findFirst()
+                    .ifPresent(item -> item.setQuantity(newQuantity));
+        }
+
+        // Зберігаємо зміни перед перерахунком
+        orderRepository.saveAndFlush(order);
+
+        // Тепер перераховуємо
+        recalculateAndSave(order);
+    }
+
+    @Override
+    @Transactional
+    public void addItemToOrder(Long orderId, Long productId, int quantity) {
+        Order order = findById(orderId);
+        CoffeeBean product = coffeeBeanRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Товар не знайдено"));
+
+        OrderItem oi = new OrderItem();
+        oi.setCoffeeId(product.getId());
+        oi.setCoffeeBrand(product.getBrand().getName());
+        oi.setName(product.getName());
+        oi.setPrice(product.getPrice());
+        oi.setQuantity(quantity);
+        // ОБОВ'ЯЗКОВО ДОДАЄМО ВАГУ, щоб вона відображалась у замовленні
+        oi.setWeight(product.getWeight().getDisplayName()); // або .name(), залежно від твого Enum
+        oi.setOrder(order);
+
+        order.getItems().add(oi);
+        recalculateAndSave(order);
+    }
+
+    private void recalculateAndSave(Order order) {
+        double newTotal = order.getItems().stream()
+                .mapToDouble(item -> item.getPrice() * item.getQuantity())
+                .sum();
+        order.setTotalPrice(newTotal);
+        orderRepository.save(order);
     }
 }

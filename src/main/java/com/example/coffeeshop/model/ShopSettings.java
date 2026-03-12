@@ -13,4 +13,6 @@ public class ShopSettings {
     private String taxNumber;  // ІПН
     private String phoneNumber; // Телефон
     private String shopAddress; // Адреса або опис (Група 2)
+    private String iban; // Розрахунковий рахунок IBAN
+    private  String bank;
 }

@@ -461,8 +461,8 @@
                     </div>
                 </div>
 
-                <div th:if="${total == subtotal and discountSettings != null}" class="mt-3 small w-100 text-right"
-                    style="color: var(--gold); opacity: 0.9; font-style: italic;">
+                <div th:if="${total == subtotal and discountSettings != null and discountSettings.active and discountSettings.threshold > total}"
+                    class="mt-3 small w-100 text-right" style="color: var(--gold); opacity: 0.9; font-style: italic;">
                     <i class="fas fa-gift mr-1"></i>
                     До знижки ще <span th:text="${discountSettings.threshold - total}">0</span> грн
                 </div>

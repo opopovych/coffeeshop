@@ -1420,24 +1420,6 @@
         }
     </style>
 
-    <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "ItemList",
-  "itemListElement": [
-    <th:block th:each="coffee, iterStat : ${coffees}">
-    {
-      "@type": "ListItem",
-      "position": [[${iterStat.index + 1}]],
-      "name": "[[${coffee.name}]]"
-    } [[${!iterStat.last ? ',' : ''}]]
-    </th:block>
-  ]
-}
-
-
-
-</script>
 </head>
 
 <body>
