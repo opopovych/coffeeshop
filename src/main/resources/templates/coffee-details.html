@@ -17,6 +17,8 @@
 
     <meta property="og:description" th:content="${seoDescription}">
     <meta property="og:type" content="product">
+    <link rel="canonical"
+          th:href="@{|https://ijocoffee.com.ua/coffee/${coffee.id}|}">
     <link rel="icon" type="image/png" th:href="@{/images/favicon.png}">
     <link rel="shortcut icon" th:href="@{/images/favicon.png}">
 
@@ -428,7 +430,7 @@
     "@type": "Offer",
     "priceCurrency": "UAH",
     "price": "[[${coffee.price}]]",
-    "availability": "https://schema.org/InStock",
+    "availability": "https://schema.org/InStock"
   }
 }
 </script>
@@ -439,8 +441,8 @@
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container-fluid">
             <div class="nav-side-zone">
-                <a th:href="@{/coffee(page=${param.page != null ? param.page : 0})}"
-                    class="text-white small text-uppercase">
+                <a href="javascript:history.back()"
+                   class="text-white small text-uppercase">
                     <i class="fas fa-chevron-left mr-1"></i>
                     <span class="d-none d-sm-inline">Назад</span> </a>
             </div>

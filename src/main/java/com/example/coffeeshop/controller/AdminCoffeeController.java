@@ -41,6 +41,7 @@ public class AdminCoffeeController {
         model.addAttribute("acidityLevels", Acidity.values());
         model.addAttribute("compositions", Composition.values());
         model.addAttribute("intensityLevels", Intensity.values());
+        model.addAttribute("productFormats", ProductFormat.values());
     }
 
 
@@ -76,6 +77,7 @@ public class AdminCoffeeController {
         res.put("weight", p.getWeight() != null ? p.getWeight().getDisplayName() : "-");
         res.put("bitterness", p.getBitterness() != null ? p.getBitterness().getDisplayName() : "-");
         res.put("acidity", p.getAcidity() != null ? p.getAcidity().getDisplayName() : "-");
+        res.put("productformat", p.getProductFormat() != null ? p.getProductFormat().getDisplayName() : "-");
         res.put("intensity", p.getIntensity() != null ? p.getIntensity().getDisplayName() : "-");
 
         return ResponseEntity.ok(res);
@@ -151,6 +153,7 @@ public class AdminCoffeeController {
         existing.setSku(coffeeBean.getSku());
         existing.setDescription(coffeeBean.getDescription());
         existing.setPrice(coffeeBean.getPrice());
+        existing.setProductFormat(coffeeBean.getProductFormat());
         existing.setBrand(coffeeBean.getBrand());
         existing.setWeight(coffeeBean.getWeight());
         existing.setOriginCountry(coffeeBean.getOriginCountry());

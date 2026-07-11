@@ -43,6 +43,15 @@
             <label for="sku">Код :</label>
             <input type="number"  id="sku" th:field="*{sku}" >
         </div>
+        <div class="form-group">
+            <label for="productFormat">Тип кави:</label>
+            <select id="productFormat" th:field="*{productFormat}" class="price-select">
+                <option value="GRAIN" th:selected="*{productFormat == null}">Зерно</option>
+                <option value="GROUND">Мелена</option>
+                <option value="CAPSULE">Капсули</option>
+            </select>
+            <small>Виберіть фізичний стан продукту для коректного відображення в прайсі</small>
+        </div>
 
         <hr>
 

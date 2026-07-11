@@ -21,6 +21,7 @@ public interface CoffeeBeanService {
     List<CoffeeBean> search (String query);
     List<CoffeeBean> findByBrandId(Long brandId);
     Page<CoffeeBean> filter(
+            ProductFormat format, // Було String, стало ProductFormat
             Long brandId,
             Long countryId,
             List<Intensity> intensity,

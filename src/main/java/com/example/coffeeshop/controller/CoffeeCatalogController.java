@@ -45,6 +45,7 @@ public class CoffeeCatalogController {
         model.addAttribute("bitternessLevels", Bitterness.values());
         model.addAttribute("compositions", Composition.values());
         model.addAttribute("acidityLevels", Acidity.values());
+        model.addAttribute("productFormats", ProductFormat.values());
 
         // Додаємо налаштування знижки для всього контролера
         DiscountSettings settings = discountService.getSettings();
@@ -87,6 +88,7 @@ public class CoffeeCatalogController {
     @GetMapping("/coffee/filter")
     public String filter(
             @RequestParam(required = false) Long brandId,
+            @RequestParam(required = false) ProductFormat format, // Змінено на Enum
             @RequestParam(required = false) Long countryId,
             @RequestParam(required = false) List<Intensity> intensity,
             @RequestParam(required = false) List<RoastLevel> roast,
@@ -98,35 +100,30 @@ public class CoffeeCatalogController {
             @RequestParam(required = false) String sort,
             Model model
     ) {
-        // Логіка визначення сортування
+        // Налаштування сортування
         Sort sorting = "priceAsc".equals(sort) ? Sort.by("price").ascending() :
                 "priceDesc".equals(sort) ? Sort.by("price").descending() :
-                        "nameAsc".equals(sort) ? Sort.by("name").ascending() : Sort.unsorted();
+                "nameAsc".equals(sort) ? Sort.by("name").ascending() : Sort.unsorted();
 
         Pageable pageable = PageRequest.of(page, size, sorting);
 
-        // Викликаємо фільтрацію (сервіс сам має обробляти порожні списки)
+        // Виклик сервісу з оновленим типом ProductFormat
         Page<CoffeeBean> coffeePage = coffeeBeanService.filter(
-                brandId, countryId,
+                format, brandId, countryId,
                 clean(intensity), clean(roast), clean(bitterness),
                 clean(composition), clean(acidity), pageable
         );
 
+        // Логіка підбору доступних брендів та країн (для каскадних фільтрів)
         List<Brand> availableBrands = (countryId != null)
                 ? brandService.getBrandsByCountry(countryId)
                 : brandService.findAll();
 
-        // Якщо вибрано бренд, показуємо тільки його країни. Інакше — всі.
-        List<OriginCountry> countries;
-        if (brandId != null) {
-            countries = originCountryService.getCountriesByBrand(brandId);
-        } else {
-            countries = originCountryService.findAll(); // Повертаємо всі, якщо бренд не обрано
-        }
+        List<OriginCountry> countries = (brandId != null)
+                ? originCountryService.getCountriesByBrand(brandId)
+                : originCountryService.findAll();
 
-      //  model.addAttribute("filter_brands", availableBrands);
-       // model.addAttribute("countries", countries);
-
+        // Додавання назв для відображення вибраних фільтрів в UI
         if (brandId != null) {
             Brand b = brandService.findById(brandId);
             if (b != null) model.addAttribute("selectedBrandName", b.getName());
@@ -136,8 +133,8 @@ public class CoffeeCatalogController {
             if (c != null) model.addAttribute("selectedCountryName", c.getName());
         }
 
-
-        // Зберігаємо вибрані фільтри, щоб вони не скидалися в UI
+        // Передаємо значення назад у модель, щоб зберегти стан фільтрів у UI
+        model.addAttribute("format", format); // Використовуємо в селекті
         model.addAttribute("brandId", brandId);
         model.addAttribute("countryId", countryId);
         model.addAttribute("selectedIntensity", intensity);
@@ -148,23 +145,33 @@ public class CoffeeCatalogController {
     }
 
     @GetMapping("/coffee/{id}")
-    public String details(@PathVariable Long id, Model model) {
+    public String details(
+            @PathVariable Long id,
+            @RequestParam(required = false) Integer page,
+            Model model) {
+
+        if (page != null) {
+            return "redirect:/coffee/" + id;
+        }
+
         CoffeeBean coffee = coffeeBeanService.findById(id);
         model.addAttribute("coffee", coffee);
 
-        // --- АВТОМАТИЧНЕ SEO ---
+        String seoTitle =
+                "Кава " + coffee.getName() + " "
+                        + coffee.getBrand().getName()
+                        + " | IJO Coffee";
 
-        // Формуємо Title: Назва + Бренд + Магазин
-        // Результат: "Кава Ethiopia Sidamo Carousel | IJO Coffee"
-        String seoTitle = "Кава " + coffee.getName() + " " + coffee.getBrand().getName() + " | IJO Coffee";
         model.addAttribute("seoTitle", seoTitle);
 
-        // Формуємо Description: беремо перші 155 символів опису кави
         String description = coffee.getDescription();
+
         if (description != null && description.length() > 155) {
             description = description.substring(0, 152) + "...";
         }
+
         model.addAttribute("seoDescription", description);
+
         return "coffee-details";
     }
 

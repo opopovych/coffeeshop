@@ -53,6 +53,9 @@ public class CoffeeBean {
 
     private String photoPath;
     // photoPath — шлях до фото (uploads/filename.jpg)
+    @Enumerated(EnumType.STRING)
+    private ProductFormat productFormat = ProductFormat.GRAIN;
+// productFormat — GRAIN (зерно) або GROUND (мелена)
 
     @ManyToOne
     @JoinColumn(name = "origin_country_id") // Зовнішній ключ для країни походження

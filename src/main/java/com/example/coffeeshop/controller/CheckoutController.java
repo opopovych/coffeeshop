@@ -41,15 +41,19 @@ public class CheckoutController {
                              @RequestParam String phone,
                              @RequestParam String cityName,
                              @RequestParam String wareHouse,
+                             @RequestParam(required = false) String deliveryProvider, // Додано
                              @RequestParam("paymentMethod") String paymentMethod,
                              @RequestParam(required = false) String comment,
                              Model model) {
-        String address = "Місто - " + cityName+ ", Нова пошта, " + wareHouse;
-        // 1. Створюємо замовлення в БД
-        Order order = orderService.createOrder(name,surName, phone, address,paymentMethod, comment);
 
-        // 2. ВІДПРАВЛЯЄМО СПОВІЩЕННЯ В ТЕЛЕГРАМ
-        // Передаємо об'єкт замовлення, щоб дістати з нього склад та ціну
+        // Визначаємо назву служби для красивого запису в адресу
+        String providerName = (deliveryProvider != null && deliveryProvider.equals("UP")) ? "Укрпошта" : "Нова пошта";
+
+        // Формат залишається майже такий самий, як ти звик
+        String address = "Місто - " + cityName + ", " + providerName + ", " + wareHouse;
+
+        // Все інше без змін
+        Order order = orderService.createOrder(name, surName, phone, address, paymentMethod, comment);
         telegramService.sendOrderNotification(order);
 
         model.addAttribute("order", order);

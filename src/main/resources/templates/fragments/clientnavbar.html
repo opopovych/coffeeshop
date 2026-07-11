@@ -39,6 +39,18 @@
                                 Фільтри</a>
                             <form class="dropdown-menu p-4" th:action="@{/coffee/filter}" method="get">
 
+                                <div class="filter-group">
+                                    <label class="filter-label">Тип кави</label>
+                                    <select name="format" class="form-select-custom">
+                                        <option value="">Всі варіанти</option>
+                                        <option th:each="f : ${T(com.example.coffeeshop.model.ProductFormat).values()}"
+                                                th:value="${f.name()}"
+                                                th:text="${f.displayName}"
+                                                th:selected="${f == selectedFormat}">
+                                        </option>
+                                    </select>
+                                </div>
+
                                 <label class="filter-label">Бренд</label>
                                 <select name="brandId" class="form-select-custom">
                                     <option value="">Всі бренди</option>

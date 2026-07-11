@@ -22,6 +22,7 @@ public interface CoffeeBeanRepository extends JpaRepository<CoffeeBean, Long> {
     WHERE c.active = true
       AND (:brandId IS NULL OR c.brand.id = :brandId)
       AND (:countryId IS NULL OR c.originCountry.id = :countryId)
+      AND (:format IS NULL OR c.productFormat = :format OR (:format = 'GRAIN' AND c.productFormat IS NULL))
       AND (:intensity IS NULL OR c.intensity IN :intensity)
       AND (:roast IS NULL OR c.roastLevel IN :roast)
       AND (:bitterness IS NULL OR c.bitterness IN :bitterness)
@@ -31,10 +32,11 @@ public interface CoffeeBeanRepository extends JpaRepository<CoffeeBean, Long> {
     Page<CoffeeBean> filter(
             @Param("brandId") Long brandId,
             @Param("countryId") Long countryId,
-            @Param("intensity") List<Intensity> intensity, // Змінено на List
-            @Param("roast") List<RoastLevel> roast,         // Змінено на List
-            @Param("bitterness") List<Bitterness> bitterness, // Змінено на List
-            @Param("composition") List<Composition> composition, // Змінено на List
+            @Param("format") ProductFormat format, // Змінено тип на Enum
+            @Param("intensity") List<Intensity> intensity,
+            @Param("roast") List<RoastLevel> roast,
+            @Param("bitterness") List<Bitterness> bitterness,
+            @Param("composition") List<Composition> composition,
             @Param("acidity") List<Acidity> acidity,
             Pageable pageable
     );

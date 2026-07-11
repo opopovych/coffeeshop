@@ -395,6 +395,10 @@
                                     <span class="info-label">Обсмаження</span>
                                     <span id="mRoast" class="info-value">-</span>
                                 </div>
+                                <div class="col-4 info-group">
+                                    <span class="info-label">Тип кави</span>
+                                    <span id="mProductFormat" class="info-value" style="font-weight: 700; color: #d4a373;">-</span>
+                                </div>
                             </div>
                             <div class="info-group border-0">
                                 <span class="info-label">Опис товару</span>
@@ -474,10 +478,14 @@
                 $('#mPhoto').attr('src', '/images/' + p.photoPath);
                 $('#mDesc').text(p.description || 'Опис відсутній');
 
-                // Тепер ці поля будуть працювати, бо ключі в JSON збігаються
-                $('#mBrand').text(p.brand);   // p.brand тепер рядок "Назва бренду"
-                $('#mCountry').text(p.country); // p.country тепер рядок "Назва країни"
-                $('#mRoast').text(p.roast);     // p.roast тепер "Середнє обсмаження" тощо
+                // Бренд та країна
+                $('#mBrand').text(p.brand);
+                $('#mCountry').text(p.country);
+                $('#mRoast').text(p.roast);
+
+                // --- НОВИЙ БЛОК: ТИП КАВИ ---
+                $('#mProductFormat').text(p.productformat);
+                // ----------------------------
 
                 // Інші характеристики
                 $('#mWeight').text(p.weight);

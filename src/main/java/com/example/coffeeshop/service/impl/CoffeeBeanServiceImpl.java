@@ -64,6 +64,7 @@ public class CoffeeBeanServiceImpl implements CoffeeBeanService {
 
     @Override
     public Page<CoffeeBean> filter(
+            ProductFormat format, // Оновлено тип
             Long brandId,
             Long countryId,
             List<Intensity> intensity,
@@ -74,7 +75,7 @@ public class CoffeeBeanServiceImpl implements CoffeeBeanService {
             Pageable pageable
     ) {
         return coffeeBeanRepository.filter(
-                brandId,countryId, intensity, roast, bitterness, composition,acidity, pageable
+                brandId, countryId, format, intensity, roast, bitterness, composition, acidity, pageable
         );
     }
 
