@@ -1,0 +1,277 @@
+/* ==========================================================
+   IJO COFFEE
+   Product Cards
+========================================================== */
+
+.product-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    background: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+
+    transition: .25s ease;
+    box-shadow: 0 8px 25px rgba(0,0,0,.08);
+}
+
+.product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 40px rgba(0,0,0,.15);
+}
+
+/* ================= IMAGE ================= */
+
+.product-card__image-wrapper{
+    position:relative;
+    overflow:hidden;
+    background:#faf8f5;
+}
+
+.product-card__image{
+    width:100%;
+    aspect-ratio:1/1;
+    object-fit:contain;
+    padding:18px;
+
+    transition:.35s;
+}
+
+.product-card:hover .product-card__image{
+    transform:scale(1.04);
+}
+
+/* ================= BODY ================= */
+
+.product-card__body{
+    display:flex;
+    flex-direction:column;
+    flex:1;
+
+    padding:18px;
+}
+
+/* ================= TITLE ================= */
+
+.product-card__title{
+
+    font-size:18px;
+    font-weight:700;
+
+    color:#3c2b20;
+
+    line-height:1.35;
+
+    min-height:52px;
+
+    margin-bottom:12px;
+}
+
+/* ================= BADGES ================= */
+
+.product-badge{
+
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+
+    width:max-content;
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    font-size:12px;
+    font-weight:700;
+
+    letter-spacing:.5px;
+
+    margin-bottom:15px;
+}
+
+.product-badge i{
+    font-size:13px;
+}
+
+/* ===== grain ===== */
+
+.product-badge--grain{
+
+    background:#efe7dc;
+
+    color:#5b3a29;
+}
+
+/* ===== ground ===== */
+
+.product-badge--ground{
+
+    background:#f4ede4;
+
+    color:#72533d;
+}
+
+/* ================= INFO ================= */
+
+.product-info{
+
+    display:flex;
+    flex-direction:column;
+
+    gap:10px;
+
+    margin-bottom:18px;
+}
+
+.product-info__row{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+}
+
+.product-info__label{
+
+    color:#8b7b70;
+
+    font-size:13px;
+}
+
+.product-info__value{
+
+    font-weight:600;
+
+    color:#3d2f27;
+}
+
+/* ================= RATINGS ================= */
+
+.bean-rating{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:10px;
+}
+
+.bean-label{
+
+    color:#76655b;
+
+    font-size:13px;
+}
+
+.bean-icon{
+
+    color:#b08d57;
+
+    font-size:13px;
+
+    margin-left:2px;
+}
+
+.bean-icon.inactive{
+
+    color:#e2ddd8;
+}
+
+/* ================= PRICE ================= */
+
+.product-card__footer{
+
+    margin-top:auto;
+}
+
+.product-card__price{
+
+    font-size:28px;
+
+    font-weight:800;
+
+    color:#6d472c;
+
+    margin-bottom:14px;
+}
+
+/* ================= BUTTON ================= */
+
+.product-card__button{
+
+    width:100%;
+
+    border:none;
+
+    border-radius:12px;
+
+    padding:12px;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    background:#6f4e37;
+
+    color:#fff;
+
+    font-weight:700;
+}
+
+.product-card__button:hover{
+
+    background:#5b3d2b;
+}
+
+/* ================= SMALL BADGES ================= */
+
+.product-tag{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    padding:4px 10px;
+
+    border-radius:999px;
+
+    font-size:11px;
+
+    font-weight:700;
+}
+
+.product-tag--sale{
+
+    background:#d9534f;
+
+    color:white;
+}
+
+.product-tag--new{
+
+    background:#4caf50;
+
+    color:white;
+}
+
+/* ================= IMAGE LABELS ================= */
+
+.product-card__image-badges{
+
+    position:absolute;
+
+    top:14px;
+
+    left:14px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:8px;
+}

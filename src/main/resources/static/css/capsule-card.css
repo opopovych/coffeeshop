@@ -1,0 +1,213 @@
+/* ==========================================================
+   IJO COFFEE
+   Capsule Cards
+==========================================================*/
+
+/* Картка */
+
+.product-card--capsule {
+
+    border: 2px solid #efe5d7;
+
+    background: linear-gradient(180deg,#ffffff 0%,#fcfaf8 100%);
+}
+
+/* ----------------------------------------------------------
+   Бейдж системи
+----------------------------------------------------------*/
+
+.capsule-badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    width:max-content;
+
+    padding:7px 14px;
+
+    border-radius:999px;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    letter-spacing:.6px;
+
+    text-transform:uppercase;
+
+    margin-bottom:15px;
+
+    border:1px solid transparent;
+}
+
+/* ---------- NESPRESSO ---------- */
+
+.capsule-badge--nespresso{
+
+    background:#eef8ef;
+
+    color:#2e7d32;
+
+    border-color:#b8ddba;
+}
+
+/* ---------- DOLCE ---------- */
+
+.capsule-badge--dolce{
+
+    background:#fff1ef;
+
+    color:#b33939;
+
+    border-color:#efbcbc;
+}
+
+/* ---------- TASSIMO ---------- */
+
+.capsule-badge--tassimo{
+
+    background:#eef5ff;
+
+    color:#2962c9;
+
+    border-color:#b7cef8;
+}
+
+/* ---------- SENSEO ---------- */
+
+.capsule-badge--senseo{
+
+    background:#fff8ea;
+
+    color:#ba8b00;
+
+    border-color:#f3db95;
+}
+
+/* ---------- ESE ---------- */
+
+.capsule-badge--ese{
+
+    background:#f1f1f1;
+
+    color:#555;
+
+    border-color:#d6d6d6;
+}
+
+/* ---------- CAFISSIMO ---------- */
+
+.capsule-badge--cafissimo{
+
+    background:#f7f1ff;
+
+    color:#6b41aa;
+
+    border-color:#d5c4f2;
+}
+
+/* ----------------------------------------------------------
+   Інформація
+----------------------------------------------------------*/
+
+.capsule-info{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:12px;
+
+    margin-bottom:20px;
+}
+
+.capsule-row{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+}
+
+.capsule-label{
+
+    font-size:13px;
+
+    color:#8b7b70;
+}
+
+.capsule-value{
+
+    font-weight:700;
+
+    color:#46352b;
+}
+
+/* ----------------------------------------------------------
+   Кількість капсул
+----------------------------------------------------------*/
+
+.capsule-count{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    font-weight:700;
+
+    color:#6d472c;
+}
+
+.capsule-count-number{
+
+    width:34px;
+
+    height:34px;
+
+    border-radius:50%;
+
+    background:#6f4e37;
+
+    color:#fff;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:14px;
+}
+
+/* ----------------------------------------------------------
+   Hover
+----------------------------------------------------------*/
+
+.product-card--capsule:hover{
+
+    border-color:#d4b48a;
+}
+
+/* ----------------------------------------------------------
+   Фото
+----------------------------------------------------------*/
+
+.product-card--capsule .product-card__image{
+
+    padding:22px;
+}
+
+/* ----------------------------------------------------------
+   Ціна
+----------------------------------------------------------*/
+
+.product-card--capsule .product-card__price{
+
+    color:#5b3a29;
+}
