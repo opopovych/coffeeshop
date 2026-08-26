@@ -2,6 +2,8 @@ package com.example.coffeeshop.service;
 
 import com.example.coffeeshop.model.dto.CartItem;
 
+import java.math.BigDecimal;
+
 public interface CartService {
     void addToCart(CartItem item);
     void removeFromCart(Long coffeeId);
@@ -9,5 +11,5 @@ public interface CartService {
     void updateQuantity(Long coffeeId, Integer quantity);
     void clear();
     long getCartItemCount();
-    double getTotalWithDiscount();
+    BigDecimal getTotalWithDiscount();
 }

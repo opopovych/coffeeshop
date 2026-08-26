@@ -130,17 +130,59 @@
             </table>
 
             <div class="print-area">
-                <div class="text-center mb-4"><h2>IJO COFFEE - СПИСОК ЗАМОВЛЕНЬ</h2><hr></div>
-                <div th:each="o : ${orders}" class="print-order-block">
-                    <div class="d-flex justify-content-between font-weight-bold">
-                        <span th:text="'#' + ${o.id} + ' ' + ${o.customerName} + ' ' + ${o.surName}"></span>
+                <div class="text-center mb-4">
+                    <h2>IJO COFFEE - СПИСОК ЗАМОВЛЕНЬ</h2>
+                    <hr>
+                </div>
+
+                <div th:each="o : ${orders}" class="print-order-block mb-4 pb-3 border-bottom">
+                    <!-- Шапка замовлення -->
+                    <div class="d-flex justify-content-between font-weight-bold" style="font-size: 1.1rem;">
+                        <span th:text="'Замовлення #' + ${o.id} + ' — ' + ${o.customerName} + ' ' + ${o.surName}"></span>
                         <span th:text="${o.totalPrice} + ' грн'"></span>
                     </div>
-                    <div class="small mt-1"><span th:text="'Тел: ' + ${o.phone} + ' | Адреса: ' + ${o.deliveryAddress}"></span></div>
-                    <div class="mt-2 pl-3 border-left">
-                            <span th:each="item, iter : ${o.items}">
-                                <span th:text="${item.quantity} + 'x ' + ${item.coffeeBrand} + ' ' + ${item.name}"></span><span th:if="${!iter.last}">, </span>
-                            </span>
+
+                    <!-- Контакти та адреса -->
+                    <div class="small text-dark mt-1">
+                        <strong>Тел:</strong> <span th:text="${o.phone}"></span> |
+                        <strong>Адреса:</strong> <span th:text="${o.deliveryAddress}"></span> |
+                        <strong>Оплата:</strong> <span th:text="${o.paymentMethod}"></span>
+                    </div>
+
+                    <!-- Коментар, якщо є -->
+                    <div th:if="${o.comment != null and !o.comment.isEmpty()}" class="small text-danger mt-1">
+                        <strong>Коментар:</strong> <span th:text="${o.comment}"></span>
+                    </div>
+
+                    <!-- Детальний список товарів у замовленні -->
+                    <div class="mt-2 pl-3">
+                        <table class="table table-sm table-bordered mb-0" style="font-size: 0.9rem;">
+                            <thead>
+                            <tr class="bg-light">
+                                <th style="width: 40px;" class="text-center">#</th>
+                                <th>Товар / Бренд</th>
+                                <th style="width: 100px;">Формат / Вага</th>
+                                <th style="width: 70px;" class="text-center">Кількість</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="item, iter : ${o.items}">
+                                <td class="text-center" th:text="${iter.count}"></td>
+                                <td>
+                                    <strong th:text="${item.coffeeBrand}"></strong>
+                                    <span th:text="${item.name}"></span>
+                                </td>
+                                <td>
+                                    <!-- Формат та вага/капсули -->
+                                    <span th:text="${item.productFormat}"></span>
+                                    <span th:if="${item.weight != null and item.weight != 'Не вказано'}" th:text="' (' + ${item.weight} + ')'"></span>
+                                    <span th:if="${item.capsuleSystem != null}" th:text="' ' + ${item.capsuleSystem}"></span>
+                                    <span th:if="${item.capsuleCount != null}" th:text="' ' + ${item.capsuleCount} + ''"></span>
+                                </td>
+                                <td class="text-center font-weight-bold" th:text="${item.quantity} + ' шт.'"></td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -174,8 +216,11 @@
                             <label class="small">Додати каву:</label>
                             <select th:id="'sel-' + ${o.id}" class="form-control form-control-sm">
                                 <option value="" disabled selected>Виберіть...</option>
-                                <option th:each="p : ${allProducts}" th:value="${p.id}" th:text="${p.brand.name} + ' ' + ${p.name} + ' (' + ${p.price} + ')'"></option>
-                            </select>
+                                <option
+                                        th:each="p : ${allProducts}"
+                                        th:value="${p.id}"
+                                        th:text="${p.displayName}">
+                                </option>                          </select>
                         </div>
                         <div class="col-md-2">
                             <input type="number" th:id="'q-' + ${o.id}" value="1" min="1" class="form-control form-control-sm">

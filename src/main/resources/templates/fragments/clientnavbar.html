@@ -4,136 +4,418 @@
 <head></head>
 
 <body>
-    <nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark sticky-top">
-        <div class="container-fluid d-flex align-items-center">
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container-fluid d-flex align-items-center">
 
-            <div class="nav-left-zone">
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNavbar">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <a class="navbar-brand d-none d-lg-inline-block" th:href="@{/}">
-                    <i class="fas fa-seedling mr-2"></i> IJO COFFEE
-                </a>
-            </div>
+        <div class="nav-left-zone">
+            <button class="navbar-toggler" type="button" onclick="openMobileMenu()" aria-label="Відкрити меню">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand d-none d-lg-inline-block" th:href="@{/}">
+                <i class="fas fa-seedling mr-2"></i> IJO COFFEE
+            </a>
+        </div>
 
-            <div class="nav-center-zone">
-                <a class="navbar-brand d-lg-none" th:href="@{/}">
-                    <i class="fas fa-seedling mr-2"></i> IJO COFFEE
-                </a>
+        <div class="nav-center-zone">
+            <a class="navbar-brand d-lg-none" th:href="@{/}">
+                <i class="fas fa-seedling mr-2"></i> IJO COFFEE
+            </a>
 
-                <div class="collapse navbar-collapse" id="mainNavbar">
-                    <ul class="navbar-nav mx-auto">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="historyDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                📜 Історія
-                            </a>
-                            <div class="dropdown-menu shadow-lg" aria-labelledby="historyDropdown">
-                                <a class="dropdown-item" th:href="@{/history}">Шлях IJO</a>
-                                <a class="dropdown-item" th:href="@{/brandhistory}">Колекція Брендів</a>
-                                <a class="dropdown-item" th:href="@{/countries}">Походження Кави</a>
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="historyDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            📜 Історія
+                        </a>
+                        <div class="dropdown-menu shadow-lg" aria-labelledby="historyDropdown">
+                            <a class="dropdown-item" th:href="@{/history}">Про IJO</a>
+                            <a class="dropdown-item" th:href="@{/brandhistory}">Історія брендів</a>
+                            <a class="dropdown-item" th:href="@{/countries}">Плантації кави</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdownFilter" data-toggle="dropdown">
+                            Пошук кави
+                        </a>
+                        <form class="dropdown-menu p-4" th:action="@{/coffee}" method="get">
+
+                            <div class="filter-group">
+                                <label class="filter-label">Тип кави</label>
+                                <select name="format" id="formatSelect" class="form-select-custom">
+                                    <option value="">Всі формати</option>
+                                    <option th:each="f : ${T(com.example.coffeeshop.model.ProductFormat).values()}"
+                                            th:value="${f.name()}"
+                                            th:text="${f.displayName}"
+                                            th:selected="${format != null && (format == f.name() || format.toString() == f.name())}">
+                                    </option>
+                                </select>
                             </div>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="dropdownFilter" data-toggle="dropdown">⚙️
-                                Фільтри</a>
-                            <form class="dropdown-menu p-4" th:action="@{/coffee/filter}" method="get">
 
-                                <div class="filter-group">
-                                    <label class="filter-label">Тип кави</label>
-                                    <select name="format" class="form-select-custom">
-                                        <option value="">Всі варіанти</option>
-                                        <option th:each="f : ${T(com.example.coffeeshop.model.ProductFormat).values()}"
-                                                th:value="${f.name()}"
-                                                th:text="${f.displayName}"
-                                                th:selected="${f == selectedFormat}">
-                                        </option>
+                            <label class="filter-label">Бренд</label>
+                            <select name="brandId" id="desktopBrandSelect" class="form-select-custom">
+                                <option value="">Всі бренди</option>
+                                <option th:each="brand : ${brands}"
+                                        th:value="${brand.id}"
+                                        th:text="${brand.name}"
+                                        th:selected="${brandId != null && brand.id.toString() == brandId.toString()}"></option>
+                            </select>
+
+                            <label class="filter-label">Країна</label>
+                            <select name="countryId" id="desktopCountrySelect" class="form-select-custom">
+                                <option value="">Всі країни</option>
+                                <option th:each="c : ${countries}"
+                                        th:value="${c.id}"
+                                        th:text="${c.name}"
+                                        th:selected="${countryId != null && c.id.toString() == countryId.toString()}"></option>
+                            </select>
+
+                            <div id="coffee-only-filters" class="row" th:classappend="${format == 'CAPSULE'} ? 'd-none' : ''">
+                                <div class="col-6">
+                                    <label class="filter-label">Інтенсивність</label>
+                                    <select name="intensity" class="form-select-custom">
+                                        <option value="">Всі</option>
+                                        <option th:each="i : ${intensities}"
+                                                th:value="${i.name()}"
+                                                th:text="${i.displayName}"
+                                                th:selected="${intensity != null && intensity.toString() == i.name()}"></option>
                                     </select>
                                 </div>
-
-                                <label class="filter-label">Бренд</label>
-                                <select name="brandId" class="form-select-custom">
-                                    <option value="">Всі бренди</option>
-                                    <option th:each="brand : ${brands}" th:value="${brand.id}" th:text="${brand.name}"
-                                        th:selected="${brand.id == brandId}"></option>
-                                </select>
-
-                                <label class="filter-label">Країни</label>
-                                <select name="countryId" class="form-select-custom">
-                                    <option value="">Всі країни</option>
-                                    <option th:each="c : ${countries}" th:value="${c.id}" th:text="${c.name}"
-                                        th:selected="${c.id == countryId}"></option>
-                                </select>
-
-                                <div class="row">
-                                    <div class="col-6">
-                                        <label class="filter-label">Інтенсивність</label>
-                                        <select name="intensity" class="form-select-custom">
-                                            <option value="">Всі</option>
-                                            <option th:each="i : ${intensities}" th:value="${i}"
-                                                th:text="${i.displayName}"
-                                                th:selected="${intensity != null and intensity.contains(i)}"></option>
-                                        </select>
-                                    </div>
-                                    <div class="col-6">
-                                        <label class="filter-label">Обжарка</label>
-                                        <select name="roast" class="form-select-custom">
-                                            <option value="">Всі</option>
-                                            <option th:each="r : ${roastLevels}" th:value="${r}"
+                                <div class="col-6">
+                                    <label class="filter-label">Обсмаження</label>
+                                    <select name="roast" class="form-select-custom">
+                                        <option value="">Всі</option>
+                                        <option th:each="r : ${roastLevels}"
+                                                th:value="${r.name()}"
                                                 th:text="${r.displayName}"
-                                                th:selected="${roast != null and roast.contains(r)}"></option>
-                                        </select>
-                                    </div>
+                                                th:selected="${roast != null && roast.toString() == r.name()}"></option>
+                                    </select>
                                 </div>
+                            </div>
 
-                                <label class="filter-label">Склад</label>
-                                <select name="composition" class="form-select-custom">
-                                    <option value="">Всі варіанти</option>
-                                    <option th:each="c : ${compositions}" th:value="${c}" th:text="${c.displayName}"
-                                        th:selected="${composition != null and composition.contains(c)}"></option>
-                                </select>
+                            <div id="capsule-only-filters" class="row" th:classappend="${format != 'CAPSULE'} ? 'd-none' : ''">
+                                <div class="col-6">
+                                    <label class="filter-label">Система капсул</label>
+                                    <select name="capsuleSystem" class="form-select-custom">
+                                        <option value="">Всі системи</option>
+                                        <th:block th:if="${capsuleSystems != null}">
+                                            <option th:each="system : ${capsuleSystems}"
+                                                    th:value="${system.name()}"
+                                                    th:text="${system.displayName}"
+                                                    th:selected="${capsuleSystem != null && capsuleSystem.toString() == system.name()}"></option>
+                                        </th:block>
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <label class="filter-label">Кількість капсул</label>
+                                    <select name="capsuleCount" class="form-select-custom">
+                                        <option value="">Будь-яка</option>
+                                        <th:block th:if="${capsuleCounts != null}">
+                                            <option th:each="count : ${capsuleCounts}"
+                                                    th:value="${count.value != null ? count.value : count}"
+                                                    th:text="${count.value != null ? count.value : count}"
+                                                    th:selected="${capsuleCount != null && capsuleCount.toString() == (count.value != null ? count.value.toString() : count.toString())}"></option>
+                                        </th:block>
+                                        <th:block th:if="${capsuleCounts == null}">
+                                            <option value="10" th:selected="${capsuleCount != null && capsuleCount.toString() == '10'}">10</option>
+                                            <option value="20" th:selected="${capsuleCount != null && capsuleCount.toString() == '20'}">20</option>
+                                            <option value="40" th:selected="${capsuleCount != null && capsuleCount.toString() == '40'}">40</option>
+                                            <option value="50" th:selected="${capsuleCount != null && capsuleCount.toString() == '50'}">50</option>
+                                            <option value="100" th:selected="${capsuleCount != null && capsuleCount.toString() == '100'}">100</option>
+                                        </th:block>
+                                    </select>
+                                </div>
+                            </div>
 
-                                <label class="filter-label">Сортування</label>
-                                <select name="sort" class="form-select-custom">
-                                    <option value="">Стандартно</option>
-                                    <option value="priceAsc" th:selected="${sort == 'priceAsc'}">Дешевші спочатку
-                                    </option>
-                                    <option value="priceDesc" th:selected="${sort == 'priceDesc'}">Дорожчі спочатку
-                                    </option>
-                                    <option value="nameAsc" th:selected="${sort == 'nameAsc'}">Назва A-Z</option>
-                                </select>
+                            <label class="filter-label">Склад</label>
+                            <select name="composition" class="form-select-custom">
+                                <option value="">Всі склади</option>
+                                <option th:each="c : ${compositions}"
+                                        th:value="${c.name()}"
+                                        th:text="${c.displayName}"
+                                        th:selected="${composition != null && composition.toString() == c.name()}"></option>
+                            </select>
 
-                                <button type="submit" class="btn btn-coffee btn-block mt-2">Застосувати</button>
-                                <a th:href="@{/coffee}"
-                                    class="btn btn-link btn-sm btn-block text-muted mt-1">Скинути</a>
-                            </form>
-                        </li>
-                    </ul>
-                    <div class="d-lg-none mt-3">
-                        <form th:action="@{/coffee/search}" method="get" class="search-mobile-wrapper">
-                            <input type="text" name="query" class="form-control" placeholder="Пошук кави...">
+                            <label class="filter-label">Сортування</label>
+                            <select name="sort" class="form-select-custom">
+                                <option value="">За замовчуванням</option>
+                                <option value="priceAsc" th:selected="${sort == 'priceAsc'}">Від дешевших</option>
+                                <option value="priceDesc" th:selected="${sort == 'priceDesc'}">Від дорожчих</option>
+                                <option value="nameAsc" th:selected="${sort == 'nameAsc'}">Назва А-Я</option>
+                            </select>
+
+                            <button type="submit" class="btn btn-coffee btn-block mt-2">Застосувати</button>
+                            <a th:href="@{/coffee}" class="btn btn-link btn-sm btn-block text-muted mt-1">Очистити</a>
                         </form>
-                    </div>
-                </div>
+                    </li>
+                </ul>
             </div>
+        </div>
 
-            <div class="nav-right-zone d-flex align-items-center justify-content-end">
-                <form class="form-inline d-none d-lg-flex" onsubmit="return false;">
-                    <input id="dynamic-search"
-                           class="form-control search-input"
-                           type="text"
-                           name="query"
-                           placeholder="Пошук кави..."
-                           autocomplete="off">
-                </form>
-                <a th:href="@{/cart/view}" class="cart-wrapper">
-                    <i class="fas fa-shopping-basket text-white" style="font-size: 1.2rem;"></i>
-                    <span class="cart-badge js-cart-count">0</span>
+        <div class="nav-right-zone d-flex align-items-center justify-content-end">
+            <form class="form-inline d-none d-lg-flex" onsubmit="return false;">
+                <input id="dynamic-search"
+                       class="form-control search-input"
+                       type="text"
+                       name="query"
+                       placeholder="Пошук кави..."
+                       autocomplete="off">
+            </form>
+            <a th:href="@{/cart/view}" class="cart-wrapper">
+                <i class="fas fa-shopping-basket text-white" style="font-size: 1.2rem;"></i>
+                <span class="cart-badge js-cart-count">0</span>
+            </a>
+        </div>
+
+    </div>
+    <!-- Мобільне меню -->
+    <div id="mobileSideMenu" class="mobile-side-menu" aria-hidden="true">
+
+        <!-- Головний екран -->
+        <div id="mobileMainScreen" class="mobile-menu-screen active">
+
+            <div class="mobile-menu-header">
+                <button type="button" class="mobile-menu-close" onclick="closeMobileMenu()" aria-label="Закрити меню">
+                    <i class="fas fa-times"></i>
+                </button>
+
+                <a th:href="@{/}" class="mobile-menu-logo">
+                    <i class="fas fa-seedling mr-2"></i> IJO COFFEE
                 </a>
             </div>
 
+            <div class="mobile-menu-items">
+
+                <button type="button" class="mobile-menu-item" onclick="openMobileScreen('history')">
+                    <span class="mobile-menu-item-icon"><i class="fas fa-history"></i></span>
+                    <span>Історія</span>
+                    <i class="fas fa-chevron-right mobile-menu-arrow"></i>
+                </button>
+
+                <button type="button" class="mobile-menu-item" onclick="openMobileScreen('filters')">
+                    <span class="mobile-menu-item-icon"><i class="fas fa-sliders-h"></i></span>
+                    <span>Фільтри</span>
+                    <i class="fas fa-chevron-right mobile-menu-arrow"></i>
+                </button>
+
+                <button type="button" class="mobile-menu-item" onclick="openMobileScreen('search')">
+                    <span class="mobile-menu-item-icon"><i class="fas fa-search"></i></span>
+                    <span>Пошук кави</span>
+                    <i class="fas fa-chevron-right mobile-menu-arrow"></i>
+                </button>
+
+            </div>
         </div>
-    </nav>
+
+        <!-- Екран історії -->
+        <div id="mobileHistoryScreen" class="mobile-menu-screen">
+
+            <button type="button" class="mobile-menu-back" onclick="openMobileScreen('main')">
+                <i class="fas fa-arrow-left"></i>
+                <span>ІСТОРІЯ</span>
+            </button>
+
+            <div class="mobile-menu-subitems">
+
+                <a th:href="@{/history}" class="mobile-menu-link">
+                    <i class="fas fa-mug-hot"></i>
+                    <span>Про IJO</span>
+                </a>
+
+                <a th:href="@{/brandhistory}" class="mobile-menu-link">
+                    <i class="fas fa-book-open"></i>
+                    <span>Історія брендів</span>
+                </a>
+
+                <a th:href="@{/countries}" class="mobile-menu-link">
+                    <i class="fas fa-seedling"></i>
+                    <span>Плантації кави</span>
+                </a>
+
+            </div>
+        </div>
+
+        <!-- Екран фільтрів -->
+        <div id="mobileFiltersScreen" class="mobile-menu-screen">
+
+            <button type="button" class="mobile-menu-back" onclick="openMobileScreen('main')">
+                <i class="fas fa-arrow-left"></i>
+                <span>ФІЛЬТРИ</span>
+            </button>
+
+            <form class="mobile-filter-form" th:action="@{/coffee}" method="get">
+
+                <div class="mobile-filter-group">
+                    <label class="filter-label">Тип кави</label>
+
+                    <select name="format" id="mobileFormatSelect" class="form-select-custom">
+                        <option value="">Всі формати</option>
+                        <option th:each="f : ${T(com.example.coffeeshop.model.ProductFormat).values()}"
+                                th:value="${f.name()}"
+                                th:text="${f.displayName}"
+                                th:selected="${format != null && (format == f.name() || format.toString() == f.name())}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="mobile-filter-group">
+                    <label class="filter-label">Бренд</label>
+
+                    <select name="brandId" id="mobileBrandSelect" class="form-select-custom">
+                        <option value="">Всі бренди</option>
+                        <option th:each="brand : ${brands}"
+                                th:value="${brand.id}"
+                                th:text="${brand.name}"
+                                th:selected="${brandId != null && brand.id.toString() == brandId.toString()}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="mobile-filter-group">
+                    <label class="filter-label">Країна</label>
+
+                    <select name="countryId" id="mobileCountrySelect" class="form-select-custom">
+                        <option value="">Всі країни</option>
+                        <option th:each="c : ${countries}"
+                                th:value="${c.id}"
+                                th:text="${c.name}"
+                                th:selected="${countryId != null && c.id.toString() == countryId.toString()}">
+                        </option>
+                    </select>
+                </div>
+
+                <div id="mobileCoffeeOnlyFilters" class="mobile-filter-group" th:classappend="${format == 'CAPSULE'} ? 'd-none' : ''">
+
+                    <label class="filter-label">Інтенсивність</label>
+
+                    <select name="intensity" class="form-select-custom">
+                        <option value="">Всі</option>
+                        <option th:each="i : ${intensities}"
+                                th:value="${i.name()}"
+                                th:text="${i.displayName}"
+                                th:selected="${intensity != null && intensity.toString() == i.name()}">
+                        </option>
+                    </select>
+
+                    <label class="filter-label">Обсмаження</label>
+
+                    <select name="roast" class="form-select-custom">
+                        <option value="">Всі</option>
+                        <option th:each="r : ${roastLevels}"
+                                th:value="${r.name()}"
+                                th:text="${r.displayName}"
+                                th:selected="${roast != null && roast.toString() == r.name()}">
+                        </option>
+                    </select>
+
+                </div>
+
+                <div id="mobileCapsuleOnlyFilters" class="mobile-filter-group" th:classappend="${format != 'CAPSULE'} ? 'd-none' : ''">
+
+                    <label class="filter-label">Система капсул</label>
+
+                    <select name="capsuleSystem" class="form-select-custom">
+                        <option value="">Всі системи</option>
+
+                        <th:block th:if="${capsuleSystems != null}">
+                            <option th:each="system : ${capsuleSystems}"
+                                    th:value="${system.name()}"
+                                    th:text="${system.displayName}"
+                                    th:selected="${capsuleSystem != null && capsuleSystem.toString() == system.name()}">
+                            </option>
+                        </th:block>
+                    </select>
+
+                    <label class="filter-label">Кількість капсул</label>
+
+                    <select name="capsuleCount" class="form-select-custom">
+                        <option value="">Будь-яка</option>
+
+                        <th:block th:if="${capsuleCounts != null}">
+                            <option th:each="count : ${capsuleCounts}"
+                                    th:value="${count.value != null ? count.value : count}"
+                                    th:text="${count.value != null ? count.value : count}"
+                                    th:selected="${capsuleCount != null && capsuleCount.toString() == (count.value != null ? count.value.toString() : count.toString())}">
+                            </option>
+                        </th:block>
+
+                        <th:block th:if="${capsuleCounts == null}">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="40">40</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </th:block>
+                    </select>
+
+                </div>
+
+                <div class="mobile-filter-group">
+                    <label class="filter-label">Склад</label>
+
+                    <select name="composition" class="form-select-custom">
+                        <option value="">Всі склади</option>
+                        <option th:each="c : ${compositions}"
+                                th:value="${c.name()}"
+                                th:text="${c.displayName}"
+                                th:selected="${composition != null && composition.toString() == c.name()}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="mobile-filter-group">
+                    <label class="filter-label">Сортування</label>
+
+                    <select name="sort" class="form-select-custom">
+                        <option value="">За замовчуванням</option>
+                        <option value="priceAsc" th:selected="${sort == 'priceAsc'}">Від дешевших</option>
+                        <option value="priceDesc" th:selected="${sort == 'priceDesc'}">Від дорожчих</option>
+                        <option value="nameAsc" th:selected="${sort == 'nameAsc'}">Назва А-Я</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-coffee btn-block mobile-filter-submit">
+                    Застосувати
+                </button>
+
+                <a th:href="@{/coffee}" class="btn btn-link btn-sm btn-block text-muted mobile-filter-clear">
+                    Очистити
+                </a>
+
+            </form>
+        </div>
+
+        <!-- Екран пошуку -->
+        <div id="mobileSearchScreen" class="mobile-menu-screen">
+
+            <button type="button" class="mobile-menu-back" onclick="openMobileScreen('main')">
+                <i class="fas fa-arrow-left"></i>
+                <span>ПОШУК КАВИ</span>
+            </button>
+
+            <form th:action="@{/coffee}" method="get" class="mobile-search-form">
+
+                <div class="mobile-search-box">
+                    <i class="fas fa-search"></i>
+
+                    <input type="text"
+                           name="query"
+                           th:value="${query}"
+                           class="mobile-search-input"
+                           placeholder="Назва кави..."
+                           autocomplete="off">
+                </div>
+
+                <button type="submit" class="btn btn-coffee btn-block mobile-search-submit">
+                    Знайти
+                </button>
+
+            </form>
+        </div>
+
+    </div>
+
+</nav>
 </body>
 
 </html>

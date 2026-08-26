@@ -6,6 +6,7 @@ import com.example.coffeeshop.repository.CoffeeBeanRepository;
 import com.example.coffeeshop.repository.OrderRepository;
 import com.example.coffeeshop.service.OrderService;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import org.apache.commons.math3.stat.descriptive.summary.Product;
@@ -44,6 +45,19 @@ public class OrderServiceImpl implements OrderService {
             oi.setPrice(item.getPrice());
             oi.setQuantity(item.getQuantity());
             oi.setWeight(item.getWeight());
+            // Переводимо формат у рядок, якщо він не null
+            if (item.getFormat() != null) {
+                oi.setProductFormat(item.getFormat());
+            }
+
+            if (item.getCapsuleSystem() != null) {
+                oi.setCapsuleSystem(item.getCapsuleSystem().toString());
+            }
+
+            if (item.getCapsuleCount() != null) {
+                // Якщо хочеш зберігати цифру (наприклад, 10 замість C10) або текст
+                oi.setCapsuleCount(item.getCapsuleCount().toString());
+            }
             oi.setOrder(order);
             order.getItems().add(oi);
         });
@@ -162,12 +176,14 @@ public class OrderServiceImpl implements OrderService {
 
         OrderItem oi = new OrderItem();
         oi.setCoffeeId(product.getId());
-        oi.setCoffeeBrand(product.getBrand().getName());
+        oi.setCoffeeBrand(
+                product.getBrand() != null ? product.getBrand().getName() : null
+        );
         oi.setName(product.getName());
         oi.setPrice(product.getPrice());
         oi.setQuantity(quantity);
         // ОБОВ'ЯЗКОВО ДОДАЄМО ВАГУ, щоб вона відображалась у замовленні
-        oi.setWeight(product.getWeight().getDisplayName()); // або .name(), залежно від твого Enum
+        oi.setWeight(product.getWeight() != null ? product.getWeight().getDisplayName() : null); // або .name(), залежно від твого Enum
         oi.setOrder(order);
 
         order.getItems().add(oi);
@@ -175,9 +191,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private void recalculateAndSave(Order order) {
-        double newTotal = order.getItems().stream()
-                .mapToDouble(item -> item.getPrice() * item.getQuantity())
-                .sum();
+        BigDecimal newTotal = order.getItems().stream()
+                .map(item -> BigDecimal.valueOf(item.getPrice())
+                        .multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
         order.setTotalPrice(newTotal);
         orderRepository.save(order);
     }

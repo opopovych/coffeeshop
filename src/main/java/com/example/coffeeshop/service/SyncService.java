@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface SyncService {
+    public SyncReport importNewProducts(MultipartFile file) throws IOException;
     SyncReport syncWithPriceList(MultipartFile file, Double percent) throws IOException;
     SyncReport syncStatusOnly(MultipartFile file) throws IOException;
     //DetailedSyncReport syncWithDetailedReport(MultipartFile file) throws IOException;

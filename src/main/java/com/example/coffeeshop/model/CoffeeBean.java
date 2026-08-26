@@ -78,5 +78,9 @@ public class CoffeeBean {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
     }
+
+    @Enumerated(EnumType.STRING)
+    private CapsuleSystem capsuleSystem;
+    private Integer capsuleCount;
 }
 

@@ -473,47 +473,83 @@
                     <span class="brand-name" th:text="${coffee.brand.name}">BRAND</span>
                     <h1 th:text="${coffee.name}">Coffee Name</h1>
 
-                    <div class="composition-header" th:text="${coffee.composition.getDisplayName()}">
-                        100% Arabica
+                    <div class="bean-rating" style="margin-bottom: 12px;">
+                        <span class="bean-label" style="display: inline-block; width: 115px; font-weight: 600;">Тип кави:</span>
+
+                        <th:block th:if="${coffee.productFormat == null || coffee.productFormat.name() == 'GRAIN'}">
+                            <i class="fas fa-seedling bean-icon"></i>
+                            <span class="info-value">В зернах</span>
+                        </th:block>
+
+                        <th:block th:if="${coffee.productFormat != null && coffee.productFormat.name() == 'GROUND'}">
+                            <i class="fas fa-mortar-pestle bean-icon"></i>
+                            <span class="info-value" th:text="${coffee.productFormat.displayName}">Мелена</span>
+                        </th:block>
+
+                        <th:block th:if="${coffee.productFormat != null && coffee.productFormat.name() == 'CAPSULE'}">
+                            <i class="fas fa-cube bean-icon"></i>
+                            <span class="info-value">В капсулах</span>
+                        </th:block>
                     </div>
 
-                    <div class="bean-group">
-                        <div class="bean-rating">
-                            <span class="bean-label">Інтенсивність</span>
-                            <th:block th:each="i : ${#numbers.sequence(1, 3)}">
-                                <i class="fas fa-seedling bean-icon"
-                                    th:classappend="${i <= (coffee.intensity?.ordinal() + 1)} ? '' : 'inactive'"></i>
-                            </th:block>
-                        </div>
-                        <div class="bean-rating">
-                            <span class="bean-label">Обжарка</span>
-                            <th:block th:each="i : ${#numbers.sequence(1, 4)}">
-                                <i class="fas fa-seedling bean-icon"
-                                    th:classappend="${i <= (coffee.roastLevel?.ordinal() + 1)} ? '' : 'inactive'"></i>
-                            </th:block>
-                        </div>
-                        <div class="bean-rating">
-                            <span class="bean-label">Гіркота</span>
-                            <th:block th:each="i : ${#numbers.sequence(1, 3)}">
-                                <i class="fas fa-seedling bean-icon"
-                                    th:classappend="${i <= (coffee.bitterness?.ordinal() + 1)} ? '' : 'inactive'"></i>
-                            </th:block>
-                        </div>
-                        <div class="bean-rating">
-                            <span class="bean-label">Кислотність</span>
-                            <th:block th:each="i : ${#numbers.sequence(1, 3)}">
-                                <i class="fas fa-seedling bean-icon"
-                                    th:classappend="${i <= (coffee.acidity?.ordinal() + 1)} ? '' : 'inactive'"></i>
-                            </th:block>
-                        </div>
+                    <div class="bean-group" style="min-height: 115px; display: flex; flex-direction: column; justify-content: center;">
+
+                        <th:block th:if="${coffee.productFormat != null && coffee.productFormat.name() == 'CAPSULE'}">
+                            <div class="bean-rating" style="margin-bottom: 10px;">
+                                <span class="bean-label" style="display: inline-block; width: 115px;">Система:</span>
+                                <span class="weight-badge" style="border-color: var(--dark-gold); color: var(--espresso); font-weight: 600; padding: 2px 8px;"
+                                      th:text="${coffee.capsuleSystem != null ? coffee.capsuleSystem.displayName : 'Nespresso'}">Nespresso</span>
+                            </div>
+                            <div class="bean-rating" th:if="${coffee.capsuleCount != null}">
+                                <span class="bean-label" style="display: inline-block; width: 115px;">Кількість:</span>
+                                <span style="font-size: 0.9rem; font-weight: 600; color: var(--espresso);"
+                                      th:text="${coffee.capsuleCount + ' шт.'}">10 шт.</span>
+                            </div>
+                        </th:block>
+
+                        <th:block th:if="${coffee.productFormat == null || coffee.productFormat.name() != 'CAPSULE'}">
+
+                            <div class="bean-rating" th:if="${coffee.intensity != null}">
+                                <span class="bean-label" style="display: inline-block; width: 115px;">Інтенсивність</span>
+                                <th:block th:each="i : ${#numbers.sequence(1, 3)}">
+                                    <i class="fas fa-seedling bean-icon"
+                                       th:classappend="${i <= (coffee.intensity.ordinal() + 1)} ? '' : 'inactive'"></i>
+                                </th:block>
+                            </div>
+
+                            <div class="bean-rating" th:if="${coffee.roastLevel != null}">
+                                <span class="bean-label" style="display: inline-block; width: 115px;">Обсмаження</span>
+                                <th:block th:each="i : ${#numbers.sequence(1, 4)}">
+                                    <i class="fas fa-seedling bean-icon"
+                                       th:classappend="${i <= (coffee.roastLevel.ordinal() + 1)} ? '' : 'inactive'"></i>
+                                </th:block>
+                            </div>
+
+                            <div class="bean-rating" th:if="${coffee.bitterness != null}">
+                                <span class="bean-label" style="display: inline-block; width: 115px;">Гірчинка</span>
+                                <th:block th:each="i : ${#numbers.sequence(1, 3)}">
+                                    <i class="fas fa-seedling bean-icon"
+                                       th:classappend="${i <= (coffee.bitterness.ordinal() + 1)} ? '' : 'inactive'"></i>
+                                </th:block>
+                            </div>
+
+                            <div class="bean-rating" th:if="${coffee.acidity != null}">
+                                <span class="bean-label" style="display: inline-block; width: 115px;">Кислинка</span>
+                                <th:block th:each="i : ${#numbers.sequence(1, 3)}">
+                                    <i class="fas fa-seedling bean-icon"
+                                       th:classappend="${i <= (coffee.acidity.ordinal() + 1)} ? '' : 'inactive'"></i>
+                                </th:block>
+                            </div>
+
+                        </th:block>
                     </div>
 
                     <div class="info-row">
                         <span class="info-label">Країна:</span>
                         <span th:text="${coffee.originCountry.name}">Країна</span>
                     </div>
-                    <div class="info-row">
-                        <span class="info-label">Вага:</span>
+                    <div class="info-row" th:if="${coffee.weight != null}">
+                        <span class="info-label" style="display: inline-block; width: 115px;">Вага:</span>
                         <span th:text="${coffee.weight.getDisplayName()}">250г</span>
                     </div>
 

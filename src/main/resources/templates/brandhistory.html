@@ -241,7 +241,7 @@
             <div class="col-md-6 p-4" th:attr="data-aos=${iterStat.even ? 'fade-left' : 'fade-right'}">
                 <h2 class="brand-name" th:text="${brand.name}">Назва бренду</h2>
                 <p th:text="${brand.history}" style="font-weight: 300;">Опис історії бренду...</p>
-                <a th:href="@{/coffee/filter(brandId=${brand.id})}" class="btn-discover">
+                <a th:href="@{/coffee(brandId=${brand.id})}" class="btn-discover">
                     До колекції <i class="fas fa-arrow-right ml-2"></i>
                 </a>
             </div>

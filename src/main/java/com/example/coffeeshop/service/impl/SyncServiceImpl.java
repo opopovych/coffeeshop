@@ -22,6 +22,90 @@ public class SyncServiceImpl implements SyncService {
 
     @Transactional
     @Override
+    public SyncReport importNewProducts(MultipartFile file) throws IOException {
+        Map<String, ProductData> newProductsFromFile = new HashMap<>();
+
+        // 1. Зчитуємо всі товари з Excel файлу
+        try (InputStream is = file.getInputStream();
+             Workbook workbook = WorkbookFactory.create(is)) {
+
+            Sheet sheet = workbook.getSheetAt(0);
+            for (Row row : sheet) {
+                if (row.getRowNum() == 0) continue; // Пропуск шапки
+
+                Cell skuCell = row.getCell(0);
+                Cell nameCell = row.getCell(1);
+                Cell priceCell = row.getCell(2);
+
+                if (skuCell != null && nameCell != null && priceCell != null) {
+                    String sku = skuCell.toString().trim();
+                    String name = nameCell.toString().trim();
+
+                    if (sku.isEmpty() || name.isEmpty()) continue;
+
+                    try {
+                        // Очищення ціни від можливих пробілів чи ком
+                        String rawPrice = priceCell.toString();
+                        String cleanPrice = rawPrice
+                                .replace("\"", "")
+                                .replace(",", ".")
+                                .replaceAll("\\s", "")
+                                .trim();
+
+                        double price = Double.parseDouble(cleanPrice);
+                        newProductsFromFile.put(sku, new ProductData(name, price));
+                    } catch (Exception e) {
+                        continue; // Пропускаємо рядки з помилковими цінами
+                    }
+                }
+            }
+        }
+
+        // 2. Отримуємо список усіх існуючих SKU з бази даних, щоб знати, що пропускати
+        List<CoffeeBean> allExistingProducts = coffeeBeanRepository.findAll();
+        Set<String> existingSkus = allExistingProducts.stream()
+                .map(CoffeeBean::getSku)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        // 3. Формуємо список тільки НАЙНОВІШИХ товарів (яких немає в базі)
+        List<CoffeeBean> productsToSave = new ArrayList<>();
+        int skippedCount = 0;
+
+        for (Map.Entry<String, ProductData> entry : newProductsFromFile.entrySet()) {
+            String fileSku = entry.getKey();
+
+            // Якщо товар вже є в базі -> пропускаємо його
+            if (existingSkus.contains(fileSku)) {
+                skippedCount++;
+                continue;
+            }
+
+            // Якщо товару немає -> створюємо новий об'єкт
+
+            ProductData data = entry.getValue();
+            double originalPrice = data.getPrice();
+            double priceWithMarkup = originalPrice * 1.15; // +15%
+            CoffeeBean newProduct = new CoffeeBean();
+            newProduct.setSku(fileSku);
+            newProduct.setName(data.getName());
+            newProduct.setPrice((double) Math.round(priceWithMarkup)); // Округлення до цілих
+            newProduct.setActive(false); // Робимо новий товар одразу неактивним
+
+            productsToSave.add(newProduct);
+        }
+
+        // 4. Масово зберігаємо нові товари в базу
+        if (!productsToSave.isEmpty()) {
+            coffeeBeanRepository.saveAll(productsToSave);
+        }
+
+        // Повертаємо звіт: скільки створили (updatedCount), скільки пропустили (deactivatedCount)
+        return new SyncReport(productsToSave.size(), skippedCount);
+    }
+
+    @Transactional
+    @Override
     public SyncReport syncWithPriceList(MultipartFile file,Double percent) throws IOException {
         Map<String, Double> priceMapFromFile = new HashMap<>();
 

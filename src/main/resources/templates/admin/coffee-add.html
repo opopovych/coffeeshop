@@ -50,103 +50,171 @@
             <small>Виберіть фізичний стан продукту для коректного відображення в прайсі</small>
         </div>
 
-        <hr>
+<div id="capsuleFields" style="display:none;">
 
-        <div class="form-group">
-            <label for="originCountry">Країна походження:</label>
-            <select id="originCountry" th:field="*{originCountry}" >
-                <option value="">-- Виберіть Країну --</option>
-                <option th:each="country : ${countries}"
-                        th:value="${country.id}"
-                        th:text="${country.name}">Бразилія</option>
-            </select>
-            <small>Якщо країни немає, спочатку додайте її через /admin/add-country</small>
-        </div>
+    <div class="form-group">
+        <label>Система капсул:</label>
+        <select th:field="*{capsuleSystem}">
+            <option value="">-- Виберіть систему --</option>
+            <option th:each="system : ${capsuleSystems}"
+                    th:value="${system}"
+                    th:text="${system.displayName}">
+            </option>
+        </select>
+    </div>
 
-        <div class="form-group">
-            <label for="brand">Бренд:</label>
-            <select id="brand" th:field="*{brand}" >
-                <option value="">-- Виберіть Бренд --</option>
-                <option th:each="brand : ${brands}"
-                        th:value="${brand.id}"
-                        th:text="${brand.name}">Lavazza</option>
-            </select>
-            <small>Якщо бренду немає, спочатку додайте його через /admin/add-brand</small>
-        </div>
+    <div class="form-group">
+        <label>Кількість капсул:</label>
+        <select th:field="*{capsuleCount}">
+            <option th:each="count : ${capsuleCounts}"
+                    th:value="${count.value}"
+                    th:text="${count.value}">
+            </option>
+        </select>
+    </div>
 
-        <hr>
-
-        <div class="form-group">
-            <label>Вага:</label>
-            <div class="enum-group">
-                <select th:field="*{weight}" required>
-                    <option value="">-- Виберіть Вагу --</option>
-                    <option th:each="weight : ${weights}" th:value="${weight.name}" th:text="${weight.displayName}"></option>
-                </select>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>Рівень обсмаження:</label>
-            <div class="enum-group">
-                <select th:field="*{roastLevel}" required>
-                    <option value="">-- Виберіть Рівень --</option>
-                    <option th:each="roast : ${roastLevels}" th:value="${roast.name}" th:text="${roast.displayName}"></option>
-                </select>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>Гіркота:</label>
-            <div class="enum-group">
-                <select th:field="*{bitterness}" required>
-                    <option value="">-- Виберіть Рівень --</option>
-                    <option th:each="b : ${bitternessLevels}" th:value="${b.name}" th:text="${b.displayName}"></option>
-                </select>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>Кислотність:</label>
-            <div class="enum-group">
-                <select th:field="*{acidity}" required>
-                    <option value="">-- Виберіть Рівень --</option>
-                    <option th:each="a : ${acidityLevels}" th:value="${a.name}" th:text="${a.displayName}"></option>
-                </select>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>Склад (Арабіка/Робуста):</label>
-            <div class="enum-group">
-                <select th:field="*{composition}" required>
-                    <option value="">-- Виберіть Склад --</option>
-                    <option th:each="c : ${compositions}" th:value="${c.name}" th:text="${c.displayName}"></option>
-                </select>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>Інтенсивність:</label>
-            <div class="enum-group">
-                <select th:field="*{intensity}" required>
-                    <option value="">-- Виберіть Інтенсивність --</option>
-                    <option th:each="i : ${intensityLevels}" th:value="${i.name}" th:text="${i.displayName}"></option>
-                </select>
-            </div>
-        </div>
-
-        <hr>
-
-        <div class="form-group">
-            <label for="photoFile">Фото Продукту:</label>
-            <input type="file" id="photoFile" name="photo" accept="image/*" required>
-        </div>
-
-        <button type="submit">Додати Продукт Кави</button>
-
-    </form>
 </div>
 
+<hr>
+
+<div class="form-group">
+    <label for="originCountry">Країна походження:</label>
+    <select id="originCountry" th:field="*{originCountry}" >
+        <option value="">-- Виберіть Країну --</option>
+        <option th:each="country : ${countries}"
+                th:value="${country.id}"
+                th:text="${country.name}">Бразилія</option>
+    </select>
+    <small>Якщо країни немає, спочатку додайте її через /admin/add-country</small>
+</div>
+
+<div class="form-group">
+    <label for="brand">Бренд:</label>
+    <select id="brand" th:field="*{brand}" >
+        <option value="">-- Виберіть Бренд --</option>
+        <option th:each="brand : ${brands}"
+                th:value="${brand.id}"
+                th:text="${brand.name}">Lavazza</option>
+    </select>
+    <small>Якщо бренду немає, спочатку додайте його через /admin/add-brand</small>
+</div>
+
+<hr>
+
+<div id="coffeeFields">
+    <div class="form-group">
+        <label>Вага:</label>
+        <div class="enum-group">
+            <select th:field="*{weight}" required>
+                <option value="">-- Виберіть Вагу --</option>
+                <option th:each="weight : ${weights}" th:value="${weight.name}" th:text="${weight.displayName}"></option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Рівень обсмаження:</label>
+        <div class="enum-group">
+            <select th:field="*{roastLevel}" required>
+                <option value="">-- Виберіть Рівень --</option>
+                <option th:each="roast : ${roastLevels}" th:value="${roast.name}" th:text="${roast.displayName}"></option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Гіркота:</label>
+        <div class="enum-group">
+            <select th:field="*{bitterness}" required>
+                <option value="">-- Виберіть Рівень --</option>
+                <option th:each="b : ${bitternessLevels}" th:value="${b.name}" th:text="${b.displayName}"></option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Кислотність:</label>
+        <div class="enum-group">
+            <select th:field="*{acidity}" required>
+                <option value="">-- Виберіть Рівень --</option>
+                <option th:each="a : ${acidityLevels}" th:value="${a.name}" th:text="${a.displayName}"></option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Склад (Арабіка/Робуста):</label>
+        <div class="enum-group">
+            <select th:field="*{composition}" required>
+                <option value="">-- Виберіть Склад --</option>
+                <option th:each="c : ${compositions}" th:value="${c.name}" th:text="${c.displayName}"></option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Інтенсивність:</label>
+        <div class="enum-group">
+            <select th:field="*{intensity}" required>
+                <option value="">-- Виберіть Інтенсивність --</option>
+                <option th:each="i : ${intensityLevels}" th:value="${i.name}" th:text="${i.displayName}"></option>
+            </select>
+        </div>
+    </div>
+
+</div>
+<hr>
+
+<div class="form-group">
+    <label for="photoFile">Фото Продукту:</label>
+    <input type="file" id="photoFile" name="photo" accept="image/*" required>
+</div>
+
+<button type="submit">Додати Продукт Кави</button>
+
+</form>
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+        const format = document.getElementById("productFormat");
+        const coffeeFields = document.getElementById("coffeeFields");
+        const capsuleFields = document.getElementById("capsuleFields");
+
+        function updateForm() {
+            const isCapsule = format.value === "CAPSULE";
+
+            coffeeFields.style.display = isCapsule ? "none" : "block";
+            capsuleFields.style.display = isCapsule ? "block" : "none";
+
+            coffeeFields
+                .querySelectorAll("select,input,textarea")
+                .forEach(field => {
+                    if (isCapsule) {
+                        field.removeAttribute("required");
+                    } else {
+                        field.setAttribute("required", "required");
+                    }
+                });
+
+            capsuleFields
+                .querySelectorAll("select,input")
+                .forEach(field => {
+                    if (isCapsule) {
+                        field.setAttribute("required", "required");
+                    } else {
+                        field.removeAttribute("required");
+                        // СКРИВАЄМО І ОЧИЩУЄМО ЗНАЧЕННЯ ДЛЯ НЕ-КАПСУЛ
+                        field.value = "";
+                    }
+                });
+        }
+
+        updateForm();
+        format.addEventListener("change", updateForm);
+    });
+</script>
 </body>
 </html>

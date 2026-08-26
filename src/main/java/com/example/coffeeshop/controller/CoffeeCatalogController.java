@@ -2,12 +2,10 @@ package com.example.coffeeshop.controller;
 
 import com.example.coffeeshop.model.*;
 import com.example.coffeeshop.repository.BrandRepository;
-import com.example.coffeeshop.service.BrandService;
-import com.example.coffeeshop.service.CoffeeBeanService;
+import com.example.coffeeshop.service.*;
+
 import java.util.List;
 
-import com.example.coffeeshop.service.DiscountService;
-import com.example.coffeeshop.service.OriginCountryService;
 import com.example.coffeeshop.service.impl.DiscountServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +31,9 @@ public class CoffeeCatalogController {
     private DiscountService discountService;
     @Autowired
     private BrandRepository brandRepository;
+    @Autowired
+    private InfoBarService infoBarService;
+
 
     // SRP: Використовуємо @ModelAttribute, щоб фільтри були доступні всюди автоматично
     @ModelAttribute
@@ -46,6 +47,12 @@ public class CoffeeCatalogController {
         model.addAttribute("compositions", Composition.values());
         model.addAttribute("acidityLevels", Acidity.values());
         model.addAttribute("productFormats", ProductFormat.values());
+        model.addAttribute("capsuleSystems", CapsuleSystem.values());
+        model.addAttribute("capsuleCounts", CapsuleCount.values());
+        model.addAttribute("capsuleCounts", CapsuleCount.values());
+        model.addAttribute("infoBarSettings", infoBarService.getSettings());
+
+
 
         // Додаємо налаштування знижки для всього контролера
         DiscountSettings settings = discountService.getSettings();
@@ -58,35 +65,89 @@ public class CoffeeCatalogController {
     }
 
     @GetMapping("/coffee")
-    public String list(@RequestParam(defaultValue = "0") int page,
-                       @RequestParam(defaultValue = "9") int size,
-                       @RequestParam(required = false) String query,
-                       Model model,
-                       HttpServletRequest request) {
+    public String list(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "9") int size,
+            @RequestParam(required = false) String query,
+            @RequestParam(required = false) Long brandId,
+            @RequestParam(required = false) ProductFormat format,
+            @RequestParam(required = false) Long countryId,
+            @RequestParam(required = false) List<Intensity> intensity,
+            @RequestParam(required = false) List<RoastLevel> roast,
+            @RequestParam(required = false) List<Bitterness> bitterness,
+            @RequestParam(required = false) List<Composition> composition,
+            @RequestParam(required = false) List<Acidity> acidity,
+            @RequestParam(required = false) String sort,
+            @RequestParam(required = false) CapsuleSystem capsuleSystem, // або String, залежно від твоєї сутності
+            @RequestParam(required = false) Integer capsuleCount,
+            Model model,
+            HttpServletRequest request) {
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
-        Page<CoffeeBean> coffeePage;
-
+        // 1. Налаштовуємо сортування
+        Sort sorting;
         if (query != null && !query.trim().isEmpty()) {
-            coffeePage = coffeeBeanService.search(query, pageable);
+            // Якщо є пошуковий запит, сортуємо стабільно по ID
+            sorting = Sort.by("id").descending();
         } else {
-            coffeePage = coffeeBeanService.findAllActiveRandom(pageable);
+            // Якщо працюють фільтри, використовуємо вибране сортування або за замовчуванням ID DESC
+            sorting = "priceAsc".equals(sort) ? Sort.by("price").ascending() :
+                    "priceDesc".equals(sort) ? Sort.by("price").descending() :
+                    "nameAsc".equals(sort) ? Sort.by("name").ascending() :
+                            Sort.by("id").descending(); // стабільне дефолтне сортування
         }
 
-        // ВАЖЛИВО: Назва має бути coffeeList, як у вашому th:each
+        Pageable pageable = PageRequest.of(page, size, sorting);
+        Page<CoffeeBean> coffeePage;
+
+        // 2. Отримуємо дані (пріоритет у пошуку, потім фільтри)
+        if (query != null && !query.trim().isEmpty()) {
+            coffeePage = coffeeBeanService.search(query, pageable);
+            model.addAttribute("query", query);
+        } else {
+            coffeePage = coffeeBeanService.filter(
+                    format, brandId, countryId,
+                    clean(intensity), clean(roast), clean(bitterness),
+                    clean(composition), clean(acidity),
+                    capsuleSystem, capsuleCount, // <-- ОБОВ'ЯЗКОВО додаємо їх сюди
+                    pageable
+            );
+        }
+
+        // 3. Додаємо дані для фільтрів у модель (щоб вони не злітали в UI)
+        if (brandId != null) {
+            Brand b = brandService.findById(brandId);
+            if (b != null) model.addAttribute("selectedBrandName", b.getName());
+        }
+        if (countryId != null) {
+            OriginCountry c = originCountryService.findById(countryId);
+            if (c != null) model.addAttribute("selectedCountryName", c.getName());
+        }
+
+        model.addAttribute("format", format);
+        model.addAttribute("brandId", brandId);
+        model.addAttribute("countryId", countryId);
+        model.addAttribute("selectedIntensity", intensity);
+        model.addAttribute("selectedRoast", roast);
+        model.addAttribute("sort", sort);
+        model.addAttribute("capsuleSystem", capsuleSystem);
+        model.addAttribute("capsuleCount", capsuleCount);
+        // Додаємо дані для пагінації та списку товарів
         model.addAttribute("coffeeList", coffeePage.getContent());
-        model.addAttribute("coffeePage", coffeePage); // для пагінації
+        model.addAttribute("coffeePage", coffeePage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", coffeePage.getTotalPages());
 
-        // ... ваші SEO дані ...
-
+        // 4. Оброка AJAX запитів (тепер вона працює і при звичайному кліку, і при кліку на фільтри!)
         if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
             return "catalog :: #coffee-container";
         }
 
-        return populateCatalogModel(model, coffeePage, page);
+        return "catalog";
     }
+/*
     @GetMapping("/coffee/filter")
-    public String filter(
+*/
+    /*public String filter(
             @RequestParam(required = false) Long brandId,
             @RequestParam(required = false) ProductFormat format, // Змінено на Enum
             @RequestParam(required = false) Long countryId,
@@ -142,7 +203,7 @@ public class CoffeeCatalogController {
         model.addAttribute("sort", sort);
 
         return populateCatalogModel(model, coffeePage, page);
-    }
+    }*/
 
     @GetMapping("/coffee/{id}")
     public String details(

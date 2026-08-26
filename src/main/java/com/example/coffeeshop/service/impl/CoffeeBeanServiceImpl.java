@@ -1,5 +1,6 @@
 package com.example.coffeeshop.service.impl;
 
+import com.example.coffeeshop.model.dto.ProductSelectDto;
 import jakarta.transaction.*;
 import com.example.coffeeshop.mapper.CoffeeBeanMapper;
 import com.example.coffeeshop.model.*;
@@ -9,6 +10,7 @@ import com.example.coffeeshop.service.CoffeeBeanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,7 +35,7 @@ public class CoffeeBeanServiceImpl implements CoffeeBeanService {
 
     @Override
     public List<CoffeeBean> findAll() {
-        return coffeeBeanRepository.findAll();
+        return coffeeBeanRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
     }
 
     @Override
@@ -72,10 +74,11 @@ public class CoffeeBeanServiceImpl implements CoffeeBeanService {
             List<Bitterness> bitterness,
             List<Composition> composition,
             List<Acidity> acidity,
+            CapsuleSystem capsuleSystem, Integer capsuleCount,
             Pageable pageable
     ) {
         return coffeeBeanRepository.filter(
-                brandId, countryId, format, intensity, roast, bitterness, composition, acidity, pageable
+                brandId, countryId, format, intensity, roast, bitterness, composition, acidity, capsuleSystem, capsuleCount,pageable
         );
     }
 
@@ -98,9 +101,14 @@ coffeeBeanRepository.deleteAllById(productIds);
     public Page<CoffeeBean> findAllActive(Pageable pageable) {
         return coffeeBeanRepository.findAllActive(pageable);
     }
-    @Override
+    /*@Override
     public Page<CoffeeBean> findAllActiveRandom(Pageable pageable){
         return coffeeBeanRepository.findAllActiveById(pageable);
+    }*/
+    @Override
+    public Page<CoffeeBean> findAllActiveRandom(Pageable pageable) {
+        // Просто повертаємо активні товари з динамічним сортуванням, яке прийшло з контролера
+        return coffeeBeanRepository.findAllActive(pageable);
     }
     @Override
     @Transactional
@@ -125,6 +133,9 @@ coffeeBeanRepository.deleteAllById(productIds);
         }
         // Викликаємо наш новий метод з репозиторію
         return coffeeBeanRepository.searchActive(query.trim(), pageable);
+    }
+    public List<ProductSelectDto> findAllForSelect() {
+        return coffeeBeanRepository.findAllForSelect();
     }
 
 }

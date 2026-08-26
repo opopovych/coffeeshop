@@ -19,6 +19,10 @@ public class OrderItem {
     private Integer quantity;
     private Double price;
     private String weight;
+    private String productFormat;
+    private String capsuleSystem;
+    private String capsuleCount;
+
 
     @ManyToOne
     @JoinColumn(name = "order_id")

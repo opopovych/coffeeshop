@@ -401,18 +401,35 @@
 
                     <div class="coffee-name-container">
                         <span class="coffee-name" th:text="${item.name}">Назва кави</span>
-                        <span class="weight-badge" th:text="${item.weight}">250г</span>
+
+                        <span class="weight-badge"
+                              th:if="${item.weight != null && !item.weight.isEmpty() && item.weight != 'Не вказано'}"
+                              th:text="${item.weight}">250г</span>
                     </div>
 
                     <div class="characteristics">
-                        <div class="char-item"><i class="fas fa-leaf mr-1"></i> Склад: <span
-                                th:text="${item.composition}">Арабіка</span></div>
-                        <div class="char-item"><i class="fas fa-fire mr-1"></i> Обжарка: <span
-                                th:text="${item.roastLevel}">Середня</span></div>
-                        <div class="char-item"><i class="fas fa-bolt mr-1"></i> Міцність: <span
-                                th:text="${item.intensity}">3</span></div>
-                        <div class="char-item"><i class="fas fa-tint-slash mr-1"></i> Гіркота: <span
-                                th:text="${item.bitterness}">2</span></div>
+                        <div class="char-item" th:if="${item.capsuleSystem != null}">
+                            <i class="fas fa-cube mr-1"></i> Система: <span th:text="${item.capsuleSystem}">Nespresso</span>
+                        </div>
+                        <div class="char-item" th:if="${item.capsuleCount != null}">
+                            <i class="fas fa-layer-group mr-1"></i> Кількість: <span th:text="${item.capsuleCount}">10 шт.</span>
+                        </div>
+
+                        <div class="char-item" th:if="${item.composition != null}">
+                            <i class="fas fa-leaf mr-1"></i> Склад: <span th:text="${item.composition}">Арабіка</span>
+                        </div>
+
+                        <div class="char-item" th:if="${item.roastLevel != null}">
+                            <i class="fas fa-fire mr-1"></i> Обсмаження: <span th:text="${item.roastLevel}">Середнє</span>
+                        </div>
+
+                        <div class="char-item" th:if="${item.intensity != null}">
+                            <i class="fas fa-bolt mr-1"></i> Інтенсивність: <span th:text="${item.intensity}">3</span>
+                        </div>
+
+                        <div class="char-item" th:if="${item.bitterness != null}">
+                            <i class="fas fa-tint-slash mr-1"></i> Гірчинка: <span th:text="${item.bitterness}">2</span>
+                        </div>
                     </div>
                 </div>
 

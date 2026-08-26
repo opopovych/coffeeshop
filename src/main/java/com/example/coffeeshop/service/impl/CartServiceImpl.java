@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.SessionScope;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 @Service
 @SessionScope // Щоб зберігати стан кошика в сесії користувача
 public class CartServiceImpl implements CartService {
@@ -43,14 +46,16 @@ public class CartServiceImpl implements CartService {
     public long getCartItemCount(){
         return cart.getItems().size();
     }
-    public double getTotalWithDiscount() {
-        double subtotal = getTotal(); // Ваша існуюча логіка суми товарів
+    public BigDecimal getTotalWithDiscount() {
+        BigDecimal subtotal = BigDecimal.valueOf(getTotal()); // або getTotal() вже повертає BigDecimal
         DiscountSettings settings = discountService.getSettings();
 
-        if (settings != null && settings.isActive() && subtotal >= settings.getThreshold()) {
-            return subtotal * (1 - (settings.getDiscountPercent() / 100));
+        if (settings != null && settings.isActive() && subtotal.doubleValue() >= settings.getThreshold()) {
+            BigDecimal discountMultiplier = BigDecimal.valueOf(1)
+                    .subtract(BigDecimal.valueOf(settings.getDiscountPercent()).divide(BigDecimal.valueOf(100)));
+            return subtotal.multiply(discountMultiplier).setScale(2, RoundingMode.HALF_UP);
         }
-        return subtotal;
+        return subtotal.setScale(2, RoundingMode.HALF_UP);
     }
 
 }

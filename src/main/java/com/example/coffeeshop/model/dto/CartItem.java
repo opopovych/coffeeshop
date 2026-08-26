@@ -17,4 +17,7 @@ public class CartItem {
     private String composition;
     private String intensity;
     private String weight;
+    private String format;
+    private String capsuleSystem;
+    private String capsuleCount;
 }

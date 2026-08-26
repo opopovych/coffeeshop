@@ -7,7 +7,6 @@
     <title>IJO Coffee | Оформлення замовлення</title>
     <link rel="icon" type="image/png" th:href="@{/images/favicon.png}">
     <link rel="shortcut icon" th:href="@{/images/favicon.png}">
-
     <link rel="apple-touch-icon" th:href="@{/images/favicon.png}">
     <link
             href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400;500;600&display=swap"
@@ -45,6 +44,9 @@
             font-family: 'Playfair Display', serif;
             color: var(--gold) !important;
             letter-spacing: 2px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         /* Блоки оформлення */
@@ -171,12 +173,6 @@
             transform: translateY(-3px);
         }
 
-        .navbar-brand {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
         .cart-badge {
             position: absolute;
             top: -8px;
@@ -193,7 +189,42 @@
             justify-content: center;
             border: 2px solid var(--espresso);
         }
+        .messenger-btn {
+            flex: 1;
+            border: 1px solid #ddd;
+            background: var(--light-bg);
+            padding: 8px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            transition: 0.2s;
+        }
 
+        .messenger-btn.active {
+            background: var(--espresso);
+            color: var(--gold);
+            border-color: var(--espresso);
+        }
+        .messenger-btn {
+            flex: 1;
+            border: 1px solid #ddd;
+            background: var(--light-bg);
+            padding: 8px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            transition: 0.2s;
+        }
+
+        .messenger-btn.active {
+            background: var(--espresso);
+            color: var(--gold);
+            border-color: var(--espresso);
+        }
         @media (max-width: 991px) {
             .summary-box {
                 position: static;
@@ -232,6 +263,7 @@
         <div class="col-lg-8">
             <form th:action="@{/order/checkout}" method="post" id="checkoutForm">
 
+                <!-- 1. Контактні дані -->
                 <div class="checkout-block">
                     <div class="block-header">
                         <span class="step-number">1</span>
@@ -253,6 +285,7 @@
                     </div>
                 </div>
 
+                <!-- 2. Доставка -->
                 <div class="checkout-block">
                     <div class="block-header">
                         <span class="step-number">2</span>
@@ -297,16 +330,26 @@
                             <input type="radio" id="payCash" name="paymentMethod" value="При отриманні" class="custom-control-input" checked required>
                             <label class="custom-control-label w-100" for="payCash" style="cursor:pointer;">
                                 <strong>Накладений платіж</strong>
-                                <small class="d-block text-muted">Оплата у відділенні пошти</small>
+                                <small class="d-block text-muted">Оплата у відділенні пошти (комісія за переказ коштів згідно з тарифами перевізника)</small>
                             </label>
                         </div>
 
                         <div class="payment-option custom-control custom-radio p-3 border">
-                            <input type="radio" id="payCard" name="paymentMethod" value="На карту (IBAN)" class="custom-control-input" required>
+                            <input type="radio" id="payCard" name="paymentMethod" value="На карту (IBAN) (Telegram)" class="custom-control-input" required>
                             <label class="custom-control-label w-100" for="payCard" style="cursor:pointer;">
-                                <strong>Оплата на рахунок IBAN</strong>
-                                <small class="d-block text-muted">Реквізити надішлемо в месенджер</small>
+                                <strong>Оплата на рахунок IBAN (ФОП)</strong>
+                                <small class="d-block text-muted">Офіційний рахунок ФОП. Перевіримо замовлення та надішлемо реквізити</small>
                             </label>
+
+                            <!-- Блок вибору месенджера -->
+                            <div id="messengerChoiceContainer" class="mt-3 pt-3 border-top" style="display: none;">
+                                <label class="form-label mb-2" style="font-size: 0.65rem;">Куди надіслати реквізити та накладну?</label>
+                                <div class="d-flex" style="gap: 8px;">
+                                    <div class="messenger-btn active" data-messenger="Telegram">Telegram</div>
+                                    <div class="messenger-btn" data-messenger="Viber">Viber</div>
+                                    <div class="messenger-btn" data-messenger="WhatsApp">WhatsApp</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -318,6 +361,7 @@
             </form>
         </div>
 
+        <!-- Sidebar (Підсумок з гарантіями) -->
         <div class="col-lg-4">
             <div class="summary-box">
                 <h6 class="text-uppercase mb-3" style="letter-spacing: 2px; opacity: 0.8;">До сплати</h6>
@@ -327,8 +371,10 @@
 
                 <hr style="border-top: 1px solid rgba(209, 184, 148, 0.2);">
 
-                <ul class="list-unstyled small mb-4" style="opacity: 0.8; line-height: 2;">
-                    <li><i class="fas fa-truck mr-2"></i> Відправка протягом 24 годин</li>
+                <ul class="list-unstyled small mb-4" style="opacity: 0.9; line-height: 2.2;">
+                    <li><i class="fas fa-truck mr-2" style="color: var(--gold);"></i> Відправка протягом 24 годин</li>
+                    <li><i class="fas fa-shield-alt mr-2" style="color: var(--gold);"></i> Захист прав споживачів (ФОП)</li>
+                    <li><i class="fas fa-coffee mr-2" style="color: var(--gold);"></i> Свіже обсмаження кави</li>
                 </ul>
 
                 <button type="submit" form="checkoutForm" id="submitBtn" class="btn btn-confirm">
@@ -362,15 +408,36 @@
             });
         } else {
             $('#btn-np').addClass('active');
-            // Перезавантажуємо для ініціалізації Select2
             location.reload();
         }
     }
+    // Показувати/хова́ти вибір месенджера залежно від обраного типу оплати
+    // Функція оновлення value для IBAN інпуту
+    function updateIbanValue() {
+        const activeMessenger = $('.messenger-btn.active').data('messenger');
+        $('#payCard').val('На карту (IBAN) (' + activeMessenger + ')');
+    }
 
+    // Показувати/хова́ти блок вибору месенджера залежно від обраного типу оплати
+    $('input[name="paymentMethod"]').on('change', function() {
+        if ($('#payCard').is(':checked')) {
+            $('#messengerChoiceContainer').slideDown();
+            updateIbanValue(); // оновлюємо value при виборі картки
+        } else {
+            $('#messengerChoiceContainer').slideUp();
+            // Можна повернути дефолтне значення для іншого методу, якщо потрібно
+        }
+    });
+
+    // Перемикання активної кнопки месенджера та оновлення value
+    $('.messenger-btn').on('click', function() {
+        $('.messenger-btn').removeClass('active');
+        $(this).addClass('active');
+        updateIbanValue(); // оновлюємо value при зміні месенджера
+    });
     $(document).ready(function () {
         $("#phoneInput").mask("+38 (099) 999 99 99");
 
-        // Ініціалізація Нової Пошти
         $('#citySelect').select2({
             ajax: {
                 url: '/api/shipping/cities',

@@ -1,5 +1,6 @@
 package com.example.coffeeshop.repository;
 
+import com.example.coffeeshop.model.dto.ProductSelectDto;
 import jakarta.transaction.*;
 import com.example.coffeeshop.model.*;
 import java.util.List;
@@ -28,6 +29,8 @@ public interface CoffeeBeanRepository extends JpaRepository<CoffeeBean, Long> {
       AND (:bitterness IS NULL OR c.bitterness IN :bitterness)
       AND (:composition IS NULL OR c.composition IN :composition)
       AND (:acidity IS NULL OR c.acidity IN :acidity)
+      AND (:capsuleSystem IS NULL OR c.capsuleSystem = :capsuleSystem)
+      AND (:capsuleCount IS NULL OR c.capsuleCount = :capsuleCount)
 """)
     Page<CoffeeBean> filter(
             @Param("brandId") Long brandId,
@@ -38,13 +41,20 @@ public interface CoffeeBeanRepository extends JpaRepository<CoffeeBean, Long> {
             @Param("bitterness") List<Bitterness> bitterness,
             @Param("composition") List<Composition> composition,
             @Param("acidity") List<Acidity> acidity,
+            @Param("capsuleSystem") CapsuleSystem capsuleSystem, // <-- ДОДАЛИ
+            @Param("capsuleCount") Integer capsuleCount,         // <-- ДОДАЛИ
             Pageable pageable
     );
     long count();
+
+
     @Query("SELECT c FROM CoffeeBean c WHERE c.active = true")
     Page<CoffeeBean> findAllActive(Pageable pageable);
-    @Query(value = "SELECT * FROM coffee_bean WHERE active = true ORDER BY id DESC", nativeQuery = true)
-    Page<CoffeeBean> findAllActiveById(Pageable pageable);
+
+    //@Query(value = "SELECT * FROM coffee_bean WHERE active = true ORDER BY id DESC", nativeQuery = true)
+    //Page<CoffeeBean> findAllActiveById(Pageable pageable);
+
+
     @Modifying
     @Query("UPDATE CoffeeBean c SET c.price = ROUND(c.price * :multiplier, 0)")
     void bulkUpdatePrices(@Param("multiplier") Double multiplier);
@@ -69,7 +79,18 @@ public interface CoffeeBeanRepository extends JpaRepository<CoffeeBean, Long> {
             "AND c.active = true")
     Page<CoffeeBean> searchActive(@Param("keyword") String keyword, Pageable pageable);
 
-
+    @Query("""
+select new com.example.coffeeshop.model.dto.ProductSelectDto(
+    c.id,
+    b.name,
+    c.name,
+    c.price
+)
+from CoffeeBean c
+left join c.brand b
+order by c.id desc
+""")
+    List<ProductSelectDto> findAllForSelect();
 
 
     // Додаткові методи можна буде додати пізніше (наприклад, пошук по назві)

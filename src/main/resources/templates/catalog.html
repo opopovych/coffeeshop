@@ -8,12 +8,12 @@
     <title th:text="${seoTitle != null ? seoTitle : 'IJO Coffee — Ексклюзивна кава від легендарних домів Європи'}">
     </title>
     <meta name="description"
-        th:content="${seoDescription != null ? seoDescription : 'IJO Coffee — ваш провідник у світ преміальної кави. Колекційні купажі, свіже обсмаження та історія кожного зерна.'}">
+          th:content="${seoDescription != null ? seoDescription : 'IJO Coffee — ваш провідник у світ преміальної кави. Колекційні купажі, свіже обсмаження та історія кожного зерна.'}">
 
     <meta property="og:title"
-        th:content="${seoTitle != null ? seoTitle : 'IJO Coffee — Мистецтво кави у кожній чашці'}">
+          th:content="${seoTitle != null ? seoTitle : 'IJO Coffee — Мистецтво кави у кожній чашці'}">
     <meta property="og:image"
-        th:content="${coffee != null ? 'https://ijocoffee.com.ua' + coffee.photoPath : 'https://ijocoffee.com.ua/images/coffee.webp'}">
+          th:content="${coffee != null ? 'https://ijocoffee.com.ua' + coffee.photoPath : 'https://ijocoffee.com.ua/images/coffee.webp'}">
 
     <meta property="og:description" th:content="${seoDescription}">
     <meta property="og:type" content="website">
@@ -23,8 +23,8 @@
 
     <link rel="apple-touch-icon" th:href="@{/images/favicon.png}">
     <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400;500;600&display=swap"
-        rel="stylesheet">
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400;500;600&display=swap"
+            rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 
@@ -377,6 +377,8 @@
         }
 
         .bean-label {
+            display: inline-block;
+            width: 105px;
             font-size: 0.6rem;
             text-transform: uppercase;
             color: var(--espresso);
@@ -1224,42 +1226,21 @@
             }
         }
 
-        .announcement-bar {
-            background-color: #1a1716;
-            color: #c5a059;
-            padding: 10px 0;
-            min-height: 40px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            text-align: center;
-            border-bottom: 1px solid rgba(197, 160, 89, 0.3);
-        }
+        /* =========================================================
+   ANNOUNCEMENT BAR
+   ========================================================= */
 
-        #display-message {
-            /* Збільшуємо час анімації до 1 секунди для плавності */
-            transition: opacity 1.2s ease-in-out, transform 1.2s ease-in-out;
-            display: inline-block;
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .announcement-bar { background: #1a1716; color: #c5a059; padding: 10px 0; min-height: 40px; font-size: 0.85rem; font-weight: 500; text-align: center; border-bottom: 1px solid rgba(197, 160, 89, 0.3); }
 
-        .fade-out {
-            opacity: 0 !important;
-            transform: translateY(10px);
-        }
+        .announcement-slider { min-height: 20px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 
-        .fade-in {
-            opacity: 1 !important;
-            transform: translateY(0);
-        }
+        #display-message { display: inline-block; opacity: 1; transform: translateY(0); transition: opacity 0.7s ease, transform 0.7s ease; }
 
-        /* Мобільна адаптація */
-        @media (max-width: 768px) {
-            .announcement-bar {
-                font-size: 0.75rem;
-                padding: 10px 15px;
-            }
-        }
+        #display-message.fade-out { opacity: 0; transform: translateY(-8px); }
+
+        #display-message.fade-in { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 768px) { .announcement-bar { font-size: 0.75rem; padding: 10px 15px; } }
 
         .nav-arrow {
             position: absolute;
@@ -1418,655 +1399,1066 @@
                 transform: scale(1) rotate(0);
             }
         }
+
+        /* =========================================================
+           МОБІЛЬНИЙ NAVBAR
+           ========================================================= */
+        /* МОБІЛЬНЕ МЕНЮ — ЗА ЗАМОВЧУВАННЯМ СХОВАНЕ */
+        .mobile-side-menu {
+            display: none;
+        }
+        @media (max-width: 991.98px) {
+            .mobile-side-menu {
+                position: fixed;
+                inset: 0;
+                display: block;
+                width: 100vw;
+                height: 100dvh;
+                background: var(--espresso);
+                color: var(--white);
+                z-index: 9999;
+                overflow-y: auto;
+                transform: translateX(-100%);
+                transition: transform 0.35s ease;
+                visibility: hidden;
+            }
+
+            .mobile-side-menu.open {
+                transform: translateX(0);
+                visibility: visible;
+            }
+
+            .mobile-menu-screen {
+                display: none;
+                min-height: 100%;
+                padding: 22px 22px 35px;
+            }
+
+            .mobile-menu-screen.active {
+                display: block;
+            }
+
+            .mobile-menu-header {
+                display: flex;
+                align-items: center;
+                min-height: 52px;
+                margin-bottom: 35px;
+            }
+
+            .mobile-menu-close {
+                width: 44px;
+                height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0;
+                border: 1px solid rgba(209, 184, 148, 0.35);
+                border-radius: 6px;
+                background: transparent;
+                color: var(--gold);
+                font-size: 1.1rem;
+            }
+
+            .mobile-menu-logo {
+                margin: 0 auto;
+                color: var(--gold);
+                font-family: 'Playfair Display', serif;
+                font-size: 1.15rem;
+                letter-spacing: 1.5px;
+                text-decoration: none;
+            }
+
+            .mobile-menu-items {
+                border-top: 1px solid rgba(209, 184, 148, 0.2);
+            }
+
+            .mobile-menu-item {
+                width: 100%;
+                min-height: 64px;
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                padding: 0 5px;
+                border: 0;
+                border-bottom: 1px solid rgba(209, 184, 148, 0.15);
+                background: transparent;
+                color: var(--white);
+                text-align: left;
+                font-family: 'Montserrat', sans-serif;
+                font-size: 0.82rem;
+                letter-spacing: 1.4px;
+                text-transform: uppercase;
+            }
+
+            .mobile-menu-item-icon {
+                width: 25px;
+                color: var(--gold);
+                text-align: center;
+            }
+
+            .mobile-menu-arrow {
+                margin-left: auto;
+                color: rgba(209, 184, 148, 0.65);
+                font-size: 0.7rem;
+            }
+
+            .mobile-menu-back {
+                min-height: 48px;
+                display: flex;
+                align-items: center;
+                gap: 13px;
+                padding: 0;
+                margin-bottom: 30px;
+                border: 0;
+                background: transparent;
+                color: var(--gold);
+                font-family: 'Montserrat', sans-serif;
+                font-size: 0.78rem;
+                font-weight: 600;
+                letter-spacing: 1.5px;
+            }
+
+            .mobile-menu-subitems {
+                border-top: 1px solid rgba(209, 184, 148, 0.2);
+            }
+
+            .mobile-menu-link {
+                min-height: 60px;
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                padding: 0 5px;
+                border-bottom: 1px solid rgba(209, 184, 148, 0.15);
+                color: var(--white);
+                font-size: 0.82rem;
+                letter-spacing: 1px;
+                text-decoration: none;
+            }
+
+            .mobile-menu-link i {
+                width: 25px;
+                color: var(--gold);
+                text-align: center;
+            }
+
+            .mobile-filter-form {
+                padding-bottom: 20px;
+            }
+
+            .mobile-filter-group {
+                margin-bottom: 18px;
+            }
+
+            .mobile-filter-form .filter-label {
+                margin-bottom: 7px;
+                color: var(--gold);
+                font-size: 0.65rem;
+                font-weight: 600;
+                letter-spacing: 1.2px;
+            }
+
+            .mobile-filter-form .form-select-custom {
+                width: 100%;
+                min-height: 46px;
+                margin-bottom: 0;
+                padding: 0 12px;
+                border: 1px solid rgba(209, 184, 148, 0.45);
+                border-radius: 5px;
+                background: #1a1716;
+                color: #fff;
+                font-size: 0.78rem;
+            }
+
+            .mobile-filter-form .form-select-custom option {
+                background: var(--espresso);
+                color: #fff;
+            }
+
+            .mobile-filter-submit {
+                min-height: 48px;
+                margin-top: 8px;
+            }
+
+            .mobile-filter-clear {
+                color: rgba(255, 255, 255, 0.55) !important;
+                text-decoration: none !important;
+            }
+
+            .mobile-search-form {
+                margin-top: 15px;
+            }
+
+            .mobile-search-box {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                min-height: 50px;
+                padding: 0 14px;
+                border: 1px solid var(--gold);
+                border-radius: 6px;
+                background: #1a1716;
+            }
+
+            .mobile-search-box i {
+                color: var(--gold);
+            }
+
+            .mobile-search-input {
+                width: 100%;
+                height: 48px;
+                padding: 0;
+                border: 0;
+                outline: 0;
+                background: transparent;
+                color: #fff;
+                font-family: 'Montserrat', sans-serif;
+                font-size: 0.82rem;
+            }
+
+            .mobile-search-input::placeholder {
+                color: rgba(255, 255, 255, 0.45);
+            }
+
+            .mobile-search-submit {
+                min-height: 48px;
+                margin-top: 15px;
+            }
+
+            .navbar-toggler {
+                position: relative;
+                z-index: 2;
+            }
+
+            .nav-center-zone .navbar-brand.d-lg-none {
+                position: absolute;
+                left: 50%;
+                top: 15px;
+                transform: translateX(-50%);
+                margin: 0;
+                white-space: nowrap;
+                z-index: 1;
+            }
+
+            .navbar-collapse {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 375px) {
+            .mobile-menu-screen {
+                padding-left: 18px;
+                padding-right: 18px;
+            }
+
+            .mobile-menu-logo {
+                font-size: 1rem;
+            }
+        }
+
     </style>
 
 </head>
 
 <body>
-    <div th:if="${infoBarSettings?.active}" class="announcement-bar">
-        <div class="container">
-            <div id="raw-messages" style="display: none;" th:text="${infoBarSettings?.message}"></div>
+<div th:if="${infoBarSettings?.active}" class="announcement-bar">
+    <div class="container">
+        <div id="raw-messages"
+             style="display: none;"
+             th:text="${infoBarSettings?.message}">
+        </div>
 
-            <div class="announcement-slider">
-                <span id="display-message"></span>
-            </div>
+        <div class="announcement-slider">
+            <span id="display-message"></span>
         </div>
     </div>
+</div>
 
-    <div th:replace="~{fragments/clientnavbar :: navbar}"></div>
+<div th:replace="~{fragments/clientnavbar :: navbar}"></div>
 
 
-    <div th:if="${discountSettings != null and discountSettings.active}" class="promo-info-bar">
-        <div class="container text-center">
-            <div class="promo-content justify-content-center">
-                <i class="fas fa-percentage promo-icon-blink"></i>
-                <span>
+<div th:if="${discountSettings != null and discountSettings.active}" class="promo-info-bar">
+    <div class="container text-center">
+        <div class="promo-content justify-content-center">
+            <i class="fas fa-percentage promo-icon-blink"></i>
+            <span>
                     Знижка <b th:text="${discountSettings.discountPercent + '%'}">10%</b>
                     від <b
-                        th:text="${#numbers.formatDecimal(discountSettings.threshold, 0, 'POINT', 0, 'COMMA') + ' грн'}">800
+                    th:text="${#numbers.formatDecimal(discountSettings.threshold, 0, 'POINT', 0, 'COMMA') + ' грн'}">800
                         грн</b>!
                     <span class="d-none d-md-inline ml-1">Замовляй більше — плати менше.</span>
                 </span>
-            </div>
         </div>
     </div>
+</div>
 
-    <div class="brands-full-width-bg">
-        <div class="container position-relative px-md-5">
+<div class="brands-full-width-bg">
+    <div class="container position-relative px-md-5">
 
-            <button class="nav-arrow prev" onclick="scrollBrands(-1)" aria-label="Назад">
-                <i class="fas fa-chevron-left"></i>
-            </button>
-            <button class="nav-arrow next" onclick="scrollBrands(1)" aria-label="Вперед">
-                <i class="fas fa-chevron-right"></i>
-            </button>
+        <button class="nav-arrow prev" onclick="scrollBrands(-1)" aria-label="Назад">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="nav-arrow next" onclick="scrollBrands(1)" aria-label="Вперед">
+            <i class="fas fa-chevron-right"></i>
+        </button>
 
-            <div class="brands-scroll-container" id="brandsScroll">
-                <div th:each="brand : ${brands}" class="brand-card">
-                    <a th:href="@{/coffee/filter(brandId=${brand.id})}" style="text-decoration: none;">
-                        <div class="brand-logo-rect">
-                            <img th:src="@{'/images/' + ${brand.photoPath}}" th:alt="${brand.name}">
-                        </div>
-                    </a>
-                </div>
+        <div class="brands-scroll-container" id="brandsScroll">
+            <div th:each="brand : ${brands}" class="brand-card">
+                <a th:href="@{/coffee(brandId=${brand.id})}" style="text-decoration: none;">
+                    <div class="brand-logo-rect">
+                        <img th:src="@{'/images/' + ${brand.photoPath}}" th:alt="${brand.name}">
+                    </div>
+                </a>
             </div>
-
         </div>
-    </div>
 
-    <div class="container mt-5">
-        <div class="container mb-4"
-            th:if="${(format != null and format != '') or brandId != null or countryId != null or (intensity != null and !intensity.isEmpty()) or (roast != null and !roast.isEmpty()) or (bitterness != null and !bitterness.isEmpty()) or (composition != null and !composition.isEmpty()) or (acidity != null and !acidity.isEmpty())}">
-            <div class="d-flex align-items-center flex-wrap">
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="container mb-4"
+         th:if="${(format != null and format != '') or brandId != null or countryId != null or (intensity != null and !intensity.isEmpty()) or (roast != null and !roast.isEmpty()) or (bitterness != null and !bitterness.isEmpty()) or (composition != null and !composition.isEmpty()) or (acidity != null and !acidity.isEmpty())}">
+        <div class="d-flex align-items-center flex-wrap">
                 <span class="mr-3 text-uppercase"
-                    style="letter-spacing: 2px; font-size: 0.7rem; color: var(--gold); font-weight: 600;">
+                      style="letter-spacing: 2px; font-size: 0.7rem; color: var(--gold); font-weight: 600;">
                     Ваш вибір:
                 </span>
-                <div class="filter-chip" th:if="${format != null and format != ''}">
-                    <span class="text-muted small">Тип:</span>
-                    <strong class="ml-1"
-                            th:text="${format == 'GRAIN' ? 'В зернах' : (format == 'GROUND' ? 'Мелена' : format.getDisplayName())}">
-                    </strong>
-                    <a th:href="@{/coffee/filter(brandId=${brandId}, countryId=${countryId}, intensity=${intensity}, roast=${roast}, bitterness=${bitterness}, composition=${composition}, acidity=${acidity})}">
-                        <i class="fas fa-times-circle ml-1"></i>
-                    </a>
-                </div>
-
-                <div class="filter-chip" th:if="${brandId != null}">
-                    <span class="text-muted small">Бренд:</span>
-                    <strong class="ml-1" th:text="${selectedBrandName}">Назва</strong>
-                    <a
-                        th:href="@{/coffee/filter(format=${format},countryId=${countryId}, intensity=${intensity}, roast=${roast}, bitterness=${bitterness}, composition=${composition}, acidity=${acidity}, sort=${sort})}">
-                        <i class="fas fa-times-circle ml-1"></i>
-                    </a>
-                </div>
-
-                <div class="filter-chip" th:if="${countryId != null}">
-                    <span class="text-muted small">Країна:</span>
-                    <strong class="ml-1" th:text="${selectedCountryName}">Назва</strong>
-                    <a
-                        th:href="@{/coffee/filter(format=${format},brandId=${brandId}, intensity=${intensity}, roast=${roast}, bitterness=${bitterness}, composition=${composition}, acidity=${acidity}, sort=${sort})}">
-                        <i class="fas fa-times-circle ml-1"></i>
-                    </a>
-                </div>
-
-                <th:block th:if="${intensity != null}">
-                    <div class="filter-chip" th:each="i : ${intensity}">
-                        <i class="fas fa-bolt mr-1 text-primary"></i>
-                        <span th:text="${i.getDisplayName()}"></span>
-                        <a
-                            th:href="@{/coffee/filter(format=${format},brandId=${brandId}, countryId=${countryId}, sort=${sort}, roast=${roast}, bitterness=${bitterness}, composition=${composition}, acidity=${acidity}, intensity=${#lists.toList(intensity).?[#this != __${i}__]})}">
-                            <i class="fas fa-times"></i>
-                        </a>
-                    </div>
-                </th:block>
-
-                <th:block th:if="${roast != null}">
-                    <div class="filter-chip" th:each="r : ${roast}">
-                        <i class="fas fa-fire-alt mr-1 text-warning"></i>
-                        <span th:text="${r.getDisplayName()}"></span>
-                        <a
-                            th:href="@{/coffee/filter(format=${format},brandId=${brandId}, countryId=${countryId}, sort=${sort}, intensity=${intensity}, bitterness=${bitterness}, composition=${composition}, acidity=${acidity}, roast=${#lists.toList(roast).?[#this != __${r}__]})}">
-                            <i class="fas fa-times"></i>
-                        </a>
-                    </div>
-                </th:block>
-
-                <th:block th:if="${composition != null}">
-                    <div class="filter-chip" th:each="c : ${composition}">
-                        <i class="fas fa-seedling mr-1 text-success"></i>
-                        <span th:text="${c.getDisplayName()}"></span>
-                        <a
-                            th:href="@{/coffee/filter(format=${format},brandId=${brandId}, countryId=${countryId}, sort=${sort}, intensity=${intensity}, roast=${roast}, bitterness=${bitterness}, acidity=${acidity}, composition=${#lists.toList(composition).?[#this != __${c}__]})}">
-                            <i class="fas fa-times"></i>
-                        </a>
-                    </div>
-                </th:block>
-
-                <th:block th:if="${acidity != null}">
-                    <div class="filter-chip" th:each="a : ${acidity}">
-                        <i class="fas fa-lemon mr-1 text-warning"></i>
-                        <span th:text="${a.getDisplayName()}"></span>
-                        <a
-                            th:href="@{/coffee/filter(format=${format},brandId=${brandId}, countryId=${countryId}, sort=${sort}, intensity=${intensity}, roast=${roast}, bitterness=${bitterness}, composition=${composition}, acidity=${#lists.toList(acidity).?[#this != __${a}__]})}">
-                            <i class="fas fa-times"></i>
-                        </a>
-                    </div>
-                </th:block>
-
-                <a th:href="@{/coffee}" class="btn-clear-all ml-3">Скинути все</a>
-            </div>
-        </div>
-
-        <div class="container text-center py-5 my-5" th:if="${#lists.isEmpty(coffeeList)}">
-            <div style="opacity: 0.5;">
-                <i class="fas fa-mug-hot mb-3" style="font-size: 3rem; color: var(--gold);"></i>
-            </div>
-            <h2 style="font-family: 'Playfair Display', serif;">Вишуканий вибір!</h2>
-            <p class="text-muted">
-                Саме такої комбінації зараз немає, але оскільки ви полюбляєте
-                <b th:text="${composition == 'ARABICA_100' ? '100% Арабіку' : 'насичені Купажі'}"></b>,
-                ми підібрали для вас найкращі альтернативи:
-            </p>
-
-            <a th:href="@{/coffee/filter(composition=${composition})}" class="btn-nav-catalog mt-3">
-                Показати схожу каву
-            </a>
-        </div>
-        <div id="coffee-container" class="row">
-            <div class=" col-lg-4 col-md-6 mb-5 coffee-card-animated" th:each="coffee, iterStat : ${coffeeList}"
-                th:style="'animation-delay: ' + ${iterStat.index * 0.2} + 's'">
-                <div class="card h-100 text-center position-relative">
-                    <a th:href="@{/coffee/{id}(id=${coffee.id})}"
-                        class="coffee-card-link text-decoration-none color-inherit">
-                        <div class="card-img-container">
-                            <div th:if="${coffee.isHit}" class="badge-label badge-ijo-hit">
-                                <div class="badge-inner">
-                                    <i class="fas fa-crown"></i>
-                                    <span>TOP</span>
-                                </div>
-                            </div>
-
-                            <div th:if="${coffee.isPromo}" class="badge-label badge-ijo-promo">
-                                <div class="badge-inner">
-                                    <div class="badge-glare"></div>
-                                    <i class="fas fa-bolt"></i>
-                                    <span>Акція</span>
-                                </div>
-                            </div>
-
-                            <img th:src="@{'/images/' + ${coffee.photoPath}}" class="card-img-top" alt="Coffee">
-                        </div>
-
-                        <div class="card-body d-flex flex-column">
-                            <h6 class="text-muted small text-uppercase mb-1" th:text="${coffee.brand?.name}">BRAND
-                            </h6>
-                            <h5 class="card-title-main mb-3">
-                                <span th:text="${coffee.name}">Coffee Name</span>
-                                <span class="weight-badge" th:text="${coffee.weight?.displayName}">250г</span>
-                            </h5>
-                            <span class="composition-tag" th:text="${coffee.composition?.displayName}">100%
-                                Arabica</span>
-
-                            <div class="mb-4">
-
-                                <div class="bean-rating">
-                                    <span class="bean-label">Тип кави:</span>
-
-                                    <th:block th:if="${coffee.productFormat != null && coffee.productFormat.name() == 'GROUND'}">
-                                        <i class="fas fa-mortar-pestle bean-icon"></i>
-                                        <span class="info-value" th:text="${coffee.productFormat.displayName}">Мелена</span>
-                                    </th:block>
-
-                                    <th:block th:if="${coffee.productFormat == null || coffee.productFormat.name() == 'GRAIN'}">
-                                        <i class="fas fa-seedling bean-icon"></i>
-                                        <span class="info-value">У зернах</span>
-                                    </th:block>
-                                </div>
-
-                                <div class="bean-rating">
-                                    <span class="bean-label">Інтенсивність</span>
-                                    <th:block th:each="i : ${#numbers.sequence(1, 4)}">
-                                        <i class="fas fa-seedling bean-icon"
-                                            th:classappend="${i <= (coffee.intensity?.ordinal() + 1)} ? '' : 'inactive'"></i>
-                                    </th:block>
-                                </div>
-
-                                <div class="bean-rating">
-                                    <span class="bean-label">Кислотність</span>
-                                    <th:block th:each="i : ${#numbers.sequence(1, 4)}">
-                                        <i class="fas fa-seedling bean-icon"
-                                            th:classappend="${i <= (coffee.acidity?.ordinal() + 1)} ? '' : 'inactive'"></i>
-                                    </th:block>
-                                </div>
-
-                                <div class="bean-rating">
-                                    <span class="bean-label">Обжарка</span>
-                                    <th:block th:each="i : ${#numbers.sequence(1, 4)}">
-                                        <i class="fas fa-seedling bean-icon"
-                                            th:classappend="${i <= (coffee.roastLevel?.ordinal() + 1)} ? '' : 'inactive'"></i>
-                                    </th:block>
-                                </div>
-
-                                <div class="bean-rating">
-                                    <span class="bean-label">Гіркота</span>
-                                    <th:block th:each="i : ${#numbers.sequence(1, 4)}">
-                                        <i class="fas fa-seedling bean-icon"
-                                            th:classappend="${i <= (coffee.bitterness?.ordinal() + 1)} ? '' : 'inactive'"></i>
-                                    </th:block>
-                                </div>
-                            </div>
-
-                            <div class="mt-auto">
-                                <h4 class="font-weight-bold mb-3">
-                                    ₴ <span
-                                        th:text="${#numbers.formatDecimal(coffee.price, 0, 'POINT', 0, 'COMMA')}">450</span>
-                                </h4>
-                            </div>
-
-                        </div>
-                    </a>
-                    <div class="px-3 pb-3">
-                        <button class="btn-ijo-cart w-100" th:onclick="'addToCart(this, ' + ${coffee.id} + ')'">
-                            <i class="fas fa-shopping-basket"></i> У кошик
-                        </button>
-                    </div>
-                </div>
-
-
-            </div>
-        </div>
-
-        <div class="pagination justify-content-center mt-5" th:if="${totalPages > 1}">
-            <a th:if="${currentPage > 0}"
-               th:href="@{/coffee/filter(page=${currentPage - 1}, format=${format}, brandId=${brandId}, countryId=${countryId}, intensity=${intensity}, roast=${roast}, composition=${composition}, acidity=${acidity}, bitterness=${bitterness})}">
-                &laquo;
-            </a>
-
-            <th:block th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-                <a th:if="${i >= currentPage - 2 and i <= currentPage + 2}"
-                   th:text="${i + 1}"
-                   th:classappend="${i == currentPage} ? 'active'"
-                   th:href="@{/coffee/filter(page=${i}, format=${format}, brandId=${brandId}, countryId=${countryId}, intensity=${intensity}, roast=${roast}, composition=${composition}, acidity=${acidity}, bitterness=${bitterness})}">
+            <div class="filter-chip" th:if="${format != null and format != ''}">
+                <span class="text-muted small">Тип:</span>
+                <strong class="ml-1"
+                        th:text="${format == 'GRAIN' ? 'В зернах' : (format == 'GROUND' ? 'Мелена' : format.getDisplayName())}">
+                </strong>
+                <a th:href="@{/coffee(brandId=${brandId}, countryId=${countryId}, intensity=${intensity}, roast=${roast}, bitterness=${bitterness}, composition=${composition}, acidity=${acidity})}">
+                    <i class="fas fa-times-circle ml-1"></i>
                 </a>
+            </div>
+
+            <div class="filter-chip" th:if="${brandId != null}">
+                <span class="text-muted small">Бренд:</span>
+                <strong class="ml-1" th:text="${selectedBrandName}">Назва</strong>
+                <a
+                        th:href="@{/coffee(format=${format},countryId=${countryId}, intensity=${intensity}, roast=${roast}, bitterness=${bitterness}, composition=${composition}, acidity=${acidity}, sort=${sort})}">
+                    <i class="fas fa-times-circle ml-1"></i>
+                </a>
+            </div>
+
+            <div class="filter-chip" th:if="${countryId != null}">
+                <span class="text-muted small">Країна:</span>
+                <strong class="ml-1" th:text="${selectedCountryName}">Назва</strong>
+                <a
+                        th:href="@{/coffee(format=${format},brandId=${brandId}, intensity=${intensity}, roast=${roast}, bitterness=${bitterness}, composition=${composition}, acidity=${acidity}, sort=${sort})}">
+                    <i class="fas fa-times-circle ml-1"></i>
+                </a>
+            </div>
+
+            <th:block th:if="${intensity != null}">
+                <div class="filter-chip" th:each="i : ${intensity}">
+                    <i class="fas fa-bolt mr-1 text-primary"></i>
+                    <span th:text="${i.getDisplayName()}"></span>
+                    <a
+                            th:href="@{/coffee(format=${format},brandId=${brandId}, countryId=${countryId}, sort=${sort}, roast=${roast}, bitterness=${bitterness}, composition=${composition}, acidity=${acidity}, intensity=${#lists.toList(intensity).?[#this != __${i}__]})}">
+                        <i class="fas fa-times"></i>
+                    </a>
+                </div>
             </th:block>
 
-            <a th:if="${currentPage < totalPages - 1}"
-               th:href="@{/coffee/filter(page=${currentPage + 1}, format=${format}, brandId=${brandId}, countryId=${countryId}, intensity=${intensity}, roast=${roast}, composition=${composition}, acidity=${acidity}, bitterness=${bitterness})}">
-                &raquo;
-            </a>
+            <th:block th:if="${roast != null}">
+                <div class="filter-chip" th:each="r : ${roast}">
+                    <i class="fas fa-fire-alt mr-1 text-warning"></i>
+                    <span th:text="${r.getDisplayName()}"></span>
+                    <a
+                            th:href="@{/coffee(format=${format},brandId=${brandId}, countryId=${countryId}, sort=${sort}, intensity=${intensity}, bitterness=${bitterness}, composition=${composition}, acidity=${acidity}, roast=${#lists.toList(roast).?[#this != __${r}__]})}">
+                        <i class="fas fa-times"></i>
+                    </a>
+                </div>
+            </th:block>
+
+            <th:block th:if="${composition != null}">
+                <div class="filter-chip" th:each="c : ${composition}">
+                    <i class="fas fa-seedling mr-1 text-success"></i>
+                    <span th:text="${c.getDisplayName()}"></span>
+                    <a
+                            th:href="@{/coffee(format=${format},brandId=${brandId}, countryId=${countryId}, sort=${sort}, intensity=${intensity}, roast=${roast}, bitterness=${bitterness}, acidity=${acidity}, composition=${#lists.toList(composition).?[#this != __${c}__]})}">
+                        <i class="fas fa-times"></i>
+                    </a>
+                </div>
+            </th:block>
+
+            <th:block th:if="${acidity != null}">
+                <div class="filter-chip" th:each="a : ${acidity}">
+                    <i class="fas fa-lemon mr-1 text-warning"></i>
+                    <span th:text="${a.getDisplayName()}"></span>
+                    <a
+                            th:href="@{/coffee(format=${format},brandId=${brandId}, countryId=${countryId}, sort=${sort}, intensity=${intensity}, roast=${roast}, bitterness=${bitterness}, composition=${composition}, acidity=${#lists.toList(acidity).?[#this != __${a}__]})}">
+                        <i class="fas fa-times"></i>
+                    </a>
+                </div>
+            </th:block>
+
+            <a th:href="@{/coffee}" class="btn-clear-all ml-3">Скинути все</a>
         </div>
     </div>
 
-    <button class="ai-assistant-btn" data-toggle="modal" data-target="#sommelierModal" onclick="showStep('start')">
-        <i class="fas fa-magic"></i>
-        <span class="btn-text-full">AI Сомельє</span>
-        <span class="btn-text-mobile" style="display:none;">AI</span>
-    </button>
-    <div class="modal fade" id="sommelierModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content ai-modal-content p-4">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <small id="stepCounter" class="text-uppercase"
-                        style="color: var(--dark-gold); letter-spacing: 1px;">Крок 1</small>
-                    <button type="button" class="close" data-dismiss="modal"
-                        style="color: var(--espresso); opacity: 1;">&times;
-                    </button>
-                </div>
-                <div class="ai-progress-container">
-                    <div id="ai-progress" class="ai-progress-bar"></div>
-                </div>
+    <div class="container text-center py-5 my-5" th:if="${#lists.isEmpty(coffeeList)}">
+        <div style="opacity: 0.5;">
+            <i class="fas fa-mug-hot mb-3" style="font-size: 3rem; color: var(--gold);"></i>
+        </div>
+        <h2 style="font-family: 'Playfair Display', serif;">Вишуканий вибір!</h2>
+        <p class="text-muted">
+            Саме такої комбінації зараз немає, але оскільки ви полюбляєте
+            <b th:text="${composition == 'ARABICA_100' ? '100% Арабіку' : 'насичені Купажі'}"></b>,
+            ми підібрали для вас найкращі альтернативи:
+        </p>
 
-                <div id="sommelier-content">
-                </div>
+        <a th:href="@{/coffe(composition=${composition})}" class="btn-nav-catalog mt-3">
+            Показати схожу каву
+        </a>
+    </div>
+    <div id="coffee-container" class="row">
+        <div class=" col-lg-4 col-md-6 mb-5 coffee-card-animated" th:each="coffee, iterStat : ${coffeeList}"
+             th:style="'animation-delay: ' + ${iterStat.index * 0.2} + 's'">
+            <div class="card h-100 text-center position-relative">
+                <a th:href="@{/coffee/{id}(id=${coffee.id})}"
+                   class="coffee-card-link text-decoration-none color-inherit">
+                    <div class="card-img-container">
+                        <div th:if="${coffee.isHit}" class="badge-label badge-ijo-hit">
+                            <div class="badge-inner">
+                                <i class="fas fa-crown"></i>
+                                <span>TOP</span>
+                            </div>
+                        </div>
 
-                <div class="mt-4 d-flex justify-content-between">
-                    <button id="prevStep" class="btn btn-link p-0" onclick="changeStep(-1)"
-                        style="display:none; color: var(--espresso); text-decoration: none;">
-                        <i class="fas fa-chevron-left mr-1"></i> Назад
+                        <div th:if="${coffee.isPromo}" class="badge-label badge-ijo-promo">
+                            <div class="badge-inner">
+                                <div class="badge-glare"></div>
+                                <i class="fas fa-bolt"></i>
+                                <span>Акція</span>
+                            </div>
+                        </div>
+
+                        <img th:src="@{'/images/' + ${coffee.photoPath}}" class="card-img-top" alt="Coffee">
+                    </div>
+
+                    <div class="card-body d-flex flex-column">
+                        <h6 class="text-muted small text-uppercase mb-1" th:text="${coffee.brand?.name}">BRAND
+                        </h6>
+                        <h5 class="card-title-main mb-3">
+                            <span th:text="${coffee.name}">Coffee Name</span>
+                            <span class="weight-badge" th:if="${coffee.weight != null}" th:text="${coffee.weight.displayName}">250г</span>                            </h5>
+                        <span class="composition-tag" th:text="${coffee.composition?.displayName}">100%
+                                Arabica</span>
+
+                        <div class="mb-4">
+
+                            <div class="bean-rating">
+                                <span class="bean-label">Тип кави:</span>
+
+                                <th:block th:if="${coffee.productFormat == null || coffee.productFormat.name() == 'GRAIN'}">
+                                    <i class="fas fa-seedling bean-icon"></i>
+                                    <span class="info-value">В зернах</span>
+                                </th:block>
+
+                                <th:block th:if="${coffee.productFormat != null && coffee.productFormat.name() == 'GROUND'}">
+                                    <i class="fas fa-mortar-pestle bean-icon"></i>
+                                    <span class="info-value" th:text="${coffee.productFormat.displayName}">Мелена</span>
+                                </th:block>
+
+                                <th:block th:if="${coffee.productFormat != null && coffee.productFormat.name() == 'CAPSULE'}">
+                                    <i class="fas fa-cube bean-icon"></i>
+                                    <span class="info-value">В капсулах</span>
+                                </th:block>
+                            </div>
+
+                            <div class="bean-group" style="min-height: 110px;"> <th:block th:if="${coffee.capsuleSystem != null}">
+                                <div class="bean-rating">
+                                    <span class="bean-label">Система:</span>
+                                    <span class="weight-badge" style="border-color: var(--dark-gold); color: var(--espresso); font-weight: 600;"
+                                          th:text="${coffee.capsuleSystem.displayName}">Nespresso</span>
+                                </div>
+                                <div class="bean-rating" th:if="${coffee.capsuleCount != null}">
+                                    <span class="bean-label">Кількість:</span>
+                                    <span style="font-size: 0.85rem; font-weight: 600;" th:text="${coffee.capsuleCount + ' шт.'}">10 шт.</span>
+                                </div>
+                            </th:block>
+
+                                <th:block th:if="${coffee.capsuleSystem == null}">
+                                    <div class="bean-rating" th:if="${coffee.intensity != null}">
+                                        <span class="bean-label">Інтенсивність</span>
+                                        <th:block th:each="i : ${#numbers.sequence(1, 4)}">
+                                            <i class="fas fa-seedling bean-icon" th:classappend="${i <= (coffee.intensity.ordinal() + 1)} ? '' : 'inactive'"></i>
+                                        </th:block>
+                                    </div>
+
+                                    <div class="bean-rating" th:if="${coffee.roastLevel != null}">
+                                        <span class="bean-label">Обсмаження</span>
+                                        <th:block th:each="i : ${#numbers.sequence(1, 4)}">
+                                            <i class="fas fa-seedling bean-icon" th:classappend="${i <= (coffee.roastLevel.ordinal() + 1)} ? '' : 'inactive'"></i>
+                                        </th:block>
+                                    </div>
+
+                                    <div class="bean-rating" th:if="${coffee.bitterness != null}">
+                                        <span class="bean-label">Гірчинка</span>
+                                        <th:block th:each="i : ${#numbers.sequence(1, 4)}">
+                                            <i class="fas fa-seedling bean-icon" th:classappend="${i <= (coffee.bitterness.ordinal() + 1)} ? '' : 'inactive'"></i>
+                                        </th:block>
+                                    </div>
+
+                                    <div class="bean-rating" th:if="${coffee.acidity != null}">
+                                        <span class="bean-label">Кислинка</span>
+                                        <th:block th:each="i : ${#numbers.sequence(1, 4)}">
+                                            <i class="fas fa-seedling bean-icon" th:classappend="${i <= (coffee.acidity.ordinal() + 1)} ? '' : 'inactive'"></i>
+                                        </th:block>
+                                    </div>
+                                </th:block>
+
+                            </div>
+                        </div>
+
+                        <div class="mt-auto">
+                            <h4 class="font-weight-bold mb-3">
+                                ₴ <span
+                                    th:text="${#numbers.formatDecimal(coffee.price, 0, 'POINT', 0, 'COMMA')}">450</span>
+                            </h4>
+                        </div>
+
+                    </div>
+                </a>
+                <div class="px-3 pb-3">
+                    <button class="btn-ijo-cart w-100" th:onclick="'addToCart(this, ' + ${coffee.id} + ')'">
+                        <i class="fas fa-shopping-basket"></i> У кошик
                     </button>
                 </div>
             </div>
+
+
         </div>
     </div>
 
+    <div class="pagination justify-content-center mt-5" th:if="${totalPages > 1}">
+        <a th:if="${currentPage > 0}"
+           th:href="@{/coffee(
+           page=${currentPage - 1},
+           query=${(query != null && !query.isEmpty()) ? query : null},
+           format=${(format != null) ? format : null},
+           brandId=${(brandId != null) ? brandId : null},
+           countryId=${(countryId != null) ? countryId : null},
+           intensity=${(selectedIntensity != null && !selectedIntensity.isEmpty()) ? selectedIntensity : null},
+           roast=${(selectedRoast != null && !selectedRoast.isEmpty()) ? selectedRoast : null},
+           composition=${(composition != null && !composition.isEmpty()) ? composition : null},
+           acidity=${(acidity != null && !acidity.isEmpty()) ? acidity : null},
+           bitterness=${(bitterness != null && !bitterness.isEmpty()) ? bitterness : null},
+           sort=${(sort != null && !sort.isEmpty()) ? sort : null}
+       )}">
+            &laquo;
+        </a>
 
-    <footer>
-        <div class="container-fluid text-center">
-            <small>© 2026 IJO Coffee — Тільки преміальні сорти</small>
+        <th:block th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+            <a th:if="${i >= currentPage - 2 and i <= currentPage + 2}"
+               th:text="${i + 1}"
+               th:classappend="${i == currentPage} ? 'active'"
+               th:href="@{/coffee(
+               page=${i},
+               query=${(query != null && !query.isEmpty()) ? query : null},
+               format=${(format != null) ? format : null},
+               brandId=${(brandId != null) ? brandId : null},
+               countryId=${(countryId != null) ? countryId : null},
+               intensity=${(selectedIntensity != null && !selectedIntensity.isEmpty()) ? selectedIntensity : null},
+               roast=${(selectedRoast != null && !selectedRoast.isEmpty()) ? selectedRoast : null},
+               composition=${(composition != null && !composition.isEmpty()) ? composition : null},
+               acidity=${(acidity != null && !acidity.isEmpty()) ? acidity : null},
+               bitterness=${(bitterness != null && !bitterness.isEmpty()) ? bitterness : null},
+               sort=${(sort != null && !sort.isEmpty()) ? sort : null}
+           )}">
+            </a>
+        </th:block>
+
+        <a th:if="${currentPage < totalPages - 1}"
+           th:href="@{/coffee(
+           page=${currentPage + 1},
+           query=${(query != null && !query.isEmpty()) ? query : null},
+           format=${(format != null) ? format : null},
+           brandId=${(brandId != null) ? brandId : null},
+           countryId=${(countryId != null) ? countryId : null},
+           intensity=${(selectedIntensity != null && !selectedIntensity.isEmpty()) ? selectedIntensity : null},
+           roast=${(selectedRoast != null && !selectedRoast.isEmpty()) ? selectedRoast : null},
+           composition=${(composition != null && !composition.isEmpty()) ? composition : null},
+           acidity=${(acidity != null && !acidity.isEmpty()) ? acidity : null},
+           bitterness=${(bitterness != null && !bitterness.isEmpty()) ? bitterness : null},
+           sort=${(sort != null && !sort.isEmpty()) ? sort : null}
+       )}">
+            &raquo;
+        </a>
+    </div>
+</div>
+
+<button class="ai-assistant-btn" data-toggle="modal" data-target="#sommelierModal" onclick="showStep('start')">
+    <i class="fas fa-magic"></i>
+    <span class="btn-text-full">AI Сомельє</span>
+    <span class="btn-text-mobile" style="display:none;">AI</span>
+</button>
+<div class="modal fade" id="sommelierModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content ai-modal-content p-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <small id="stepCounter" class="text-uppercase"
+                       style="color: var(--dark-gold); letter-spacing: 1px;">Крок 1</small>
+                <button type="button" class="close" data-dismiss="modal"
+                        style="color: var(--espresso); opacity: 1;">&times;
+                </button>
+            </div>
+            <div class="ai-progress-container">
+                <div id="ai-progress" class="ai-progress-bar"></div>
+            </div>
+
+            <div id="sommelier-content">
+            </div>
+
+            <div class="mt-4 d-flex justify-content-between">
+                <button id="prevStep" class="btn btn-link p-0" onclick="changeStep(-1)"
+                        style="display:none; color: var(--espresso); text-decoration: none;">
+                    <i class="fas fa-chevron-left mr-1"></i> Назад
+                </button>
+            </div>
         </div>
-    </footer>
+    </div>
+</div>
 
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-    const searchInput = document.getElementById('dynamic-search');
-    const container = document.getElementById('coffee-container');
+<footer>
+    <div class="container-fluid text-center">
+        <small>© 2026 IJO Coffee — Тільки преміальні сорти</small>
+    </div>
+</footer>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
 
-    let timeout = null;
+        const rawMessages = document.getElementById('raw-messages');
+        const displayMessage = document.getElementById('display-message');
 
-    if (searchInput) {
-        searchInput.addEventListener('input', function () {
-            clearTimeout(timeout);
-            const query = this.value;
+        if (!rawMessages || !displayMessage) {
+            return;
+        }
 
-            timeout = setTimeout(() => {
-                // Шлях до вашого контролера
-                const url = new URL(window.location.origin + '/coffee');
-                url.searchParams.set('query', query);
+        const text = rawMessages.textContent.trim();
 
-                fetch(url, {
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                })
-                .then(response => response.text())
-                .then(html => {
-                    // Створюємо тимчасовий блок для отримання вмісту
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, 'text/html');
-                    const newItems = doc.getElementById('coffee-container');
+        if (!text) {
+            return;
+        }
 
-                    if (newItems) {
-                        container.innerHTML = newItems.innerHTML;
+        const messages = text
+            .split(/\r?\n/)
+            .map(message => message.trim())
+            .filter(message => message.length > 0);
+
+        if (messages.length === 0) {
+            return;
+        }
+
+        let currentIndex = 0;
+
+        function showMessage(index) {
+
+            displayMessage.classList.remove('fade-in');
+            displayMessage.classList.add('fade-out');
+
+            setTimeout(() => {
+
+                displayMessage.textContent = messages[index];
+
+                displayMessage.classList.remove('fade-out');
+                displayMessage.classList.add('fade-in');
+
+            }, 700);
+        }
+
+        displayMessage.textContent = messages[0];
+
+        if (messages.length === 1) {
+            return;
+        }
+
+        setInterval(() => {
+
+            currentIndex++;
+
+            if (currentIndex >= messages.length) {
+                currentIndex = 0;
+            }
+
+            showMessage(currentIndex);
+
+        }, 5000);
+
+    });
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+
+
+<script th:inline="javascript">
+    // 1. Функція оновлення кількості товарів у кошику
+    function refreshCartCount() {
+        fetch('/cart/api/count')
+            .then(response => response.json())
+            .then(count => {
+                const badges = document.querySelectorAll('.js-cart-count, #cart-count-badge');
+                badges.forEach(badge => {
+                    if (count > 0) {
+                        badge.textContent = count;
+                        badge.style.setProperty('display', 'flex', 'important');
                     } else {
-                        // Якщо прийшов тільки фрагмент (без самого id="coffee-container")
-                        container.innerHTML = html;
+                        badge.style.display = 'none';
                     }
-
-                    window.history.replaceState(null, '', url.toString());
-                })
-                .catch(err => console.error('Помилка:', err));
-            }, 400);
-        });
+                });
+            })
+            .catch(err => console.error("Помилка кошика:", err));
     }
-});
-        document.addEventListener('DOMContentLoaded', function () {
-            const brandSelect = document.querySelector('select[name="brandId"]');
-            const countrySelect = document.querySelector('select[name="countryId"]');
 
-            // ФУНКЦІЯ ДЛЯ ОНОВЛЕННЯ СЕЛЕКТОРІВ
-            function updateDropdown(targetSelect, url, defaultText, autoSelect = false) {
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        targetSelect.innerHTML = `<option value="">${defaultText}</option>`;
-                        data.forEach(item => {
-                            const option = document.createElement('option');
-                            option.value = item.id;
-                            option.textContent = item.name;
-                            targetSelect.appendChild(option);
-                        });
+    // 2. Додавання товару в кошик
+    function addToCart(btn, coffeeId) {
+        const originalContent = btn.innerHTML;
+        if (btn.disabled) return;
+        btn.disabled = true;
 
-                        // Якщо прийшов лише один варіант — вибираємо його автоматично
-                        if (autoSelect && data.length === 1) {
-                            targetSelect.value = data[0].id;
-                        }
-                    });
-            }
+        const formData = new FormData();
+        formData.append('quantity', 1);
 
-            // ЛОГІКА ПРИ ЗМІНІ БРЕНДУ
-            if (brandSelect) {
-                brandSelect.addEventListener('change', function () {
-                    const brandId = this.value;
-                    const url = brandId ? `/api/countries-by-brand?brandId=${brandId}` : `/api/all-countries`;
+        fetch('/cart/add/' + coffeeId, {
+            method: 'POST',
+            body: formData,
+            redirect: 'manual'
+        })
+            .then(response => {
+                refreshCartCount();
 
-                    // Оновлюємо країни. Якщо обрано бренд — підтягуємо країну автоматично
-                    updateDropdown(countrySelect, url, "Всі країни", !!brandId);
-                });
-            }
+                btn.innerHTML = '<i class="fas fa-check-circle"></i> Додано!';
+                btn.classList.add('btn-success-animated');
 
-            // ЛОГІКА ПРИ ЗМІНІ КРАЇНИ
-            if (countrySelect) {
-                countrySelect.addEventListener('change', function () {
-                    const countryId = this.value;
-                    const url = countryId ? `/api/brands-by-country?countryId=${countryId}` : `/api/all-brands`;
+                setTimeout(() => {
+                    btn.style.opacity = '0';
+                    setTimeout(() => {
+                        btn.classList.remove('btn-success-animated');
+                        btn.innerHTML = originalContent;
+                        btn.style.opacity = '1';
+                        btn.disabled = false;
+                    }, 300);
+                }, 2200);
+            })
+            .catch(err => {
+                console.error("Помилка:", err);
+                btn.disabled = false;
+            });
+    }
 
-                    // Оновлюємо бренди. Якщо обрано країну — підтягуємо бренд автоматично
-                    updateDropdown(brandSelect, url, "Всі бренди", !!countryId);
-                });
-            }
-        });
-        function scrollBrands(direction) {
-            const container = document.getElementById('brandsScroll');
-            // Прокручуємо на ширину двох карток або на 300px
-            const scrollStep = 300;
-
+    // 3. Прокрутка брендів
+    function scrollBrands(direction) {
+        const container = document.getElementById('brandsScroll');
+        const scrollStep = 300;
+        if (container) {
             container.scrollBy({
                 left: direction * scrollStep,
                 behavior: 'smooth'
             });
         }
+    }
 
-        // Опціонально: зупиняємо "drag" скрол при кліку на стрілку
-        document.querySelectorAll('.nav-arrow').forEach(arrow => {
-            arrow.addEventListener('mousedown', (e) => e.stopPropagation());
-        });
-    </script>
-    <script>
-        function refreshCartCount() {
-            fetch('/cart/api/count')
-                .then(response => response.json())
-                .then(count => {
-                    console.log("Отримано кількість товару:", count); // Для перевірки в консолі
-                    const badges = document.querySelectorAll('.js-cart-count, #cart-count-badge');
-                    badges.forEach(badge => {
-                        if (count > 0) {
-                            badge.textContent = count;
-                            badge.style.setProperty('display', 'flex', 'important');
-                        } else {
-                            badge.style.display = 'none';
-                        }
-                    });
-                })
-                .catch(err => console.error("Помилка кошика:", err));
+    // Кроки розумного сомельє
+    const sommelierSteps = {
+        "start": {
+            title: "З якого різновиду кави розпочнемо?",
+            param: "composition",
+            options: [
+                { value: "ARABICA_100", label: "Тільки благородна арабіка (100%)", icon: "fa-seedling", next: "arabica_roast" },
+                { value: "MIX", label: "Суміш арабіки та робусти (купаж)", icon: "fa-layer-group", next: "mix_intensity" }
+            ]
+        },
+        "arabica_roast": {
+            title: "Оберіть ступінь обсмаження зерен:",
+            param: "roast",
+            options: [
+                { value: "LIGHT", label: "Світле (м'яка, з кислинкою)", icon: "fa-sun", next: "arabica_light_acidity" },
+                { value: "MEDIUM", label: "Середнє (збалансована, класика)", icon: "fa-adjust", next: "arabica_med_acidity" },
+                { value: "DARK", label: "Темне (насичена, з гірчинкою)", icon: "fa-moon", next: "finish" }
+            ]
+        },
+        "arabica_light_acidity": {
+            title: "Світле обсмаження має виразну кислотність. Яку бажаєте?",
+            param: "acidity",
+            options: [
+                { value: "HIGH", label: "Висока (яскраві, фруктові ноти)", icon: "fa-lemon", next: "finish" },
+                { value: "MEDIUM", label: "Помірна (м'яка)", icon: "fa-tint", next: "finish" }
+            ]
+        },
+        "arabica_med_acidity": {
+            title: "При середньому обсмаженні кислотність відчувається як:",
+            param: "acidity",
+            options: [
+                { value: "MEDIUM", label: "Злегка виражена", icon: "fa-balance-scale", next: "finish" },
+                { value: "LOW", label: "Майже без кислинки", icon: "fa-cookie", next: "finish" }
+            ]
+        },
+        "mix_intensity": {
+            title: "Яка інтенсивність напою вам до смаку?",
+            param: "intensity",
+            options: [
+                { value: "STRONG", label: "Міцна та бадьора", icon: "fa-bolt", next: "mix_bitterness" },
+                { value: "BALANCED", label: "Збалансована (середня)", icon: "fa-coffee", next: "mix_bitterness" }
+            ]
+        },
+        "mix_bitterness": {
+            title: "Бажаний рівень гірчинки в чашці:",
+            param: "bitterness",
+            options: [
+                { value: "HIGH", label: "Виражена гіркота/чорний шоколад", icon: "fa-fire", next: "finish" },
+                { value: "MEDIUM", label: "Помірна, не різка", icon: "fa-tint", next: "finish" }
+            ]
         }
-        function addToCart(btn, coffeeId) {
-            const originalContent = btn.innerHTML;
-            if (btn.disabled) return;
-            btn.disabled = true;
+    };
 
-            // Використовуємо FormData, щоб Spring правильно зчитав @RequestParam(defaultValue = "1")
-            const formData = new FormData();
-            formData.append('quantity', 1);
+    let currentStepKey = "start";
+    let sommelierHistory = [];
+    let userChoices = {};
 
-            fetch('/cart/add/' + coffeeId, {
-                method: 'POST',
-                body: formData,
-                // redirect: 'manual' дозволяє нам перехопити редирект, не завантажуючи сторінку
-                redirect: 'manual'
-            })
-                .then(response => {
-                    // Оскільки метод повертає redirect, статус буде 0 (якщо manual) або response.redirected
-                    // В будь-якому випадку, якщо товар додався — ми запускаємо анімацію
+    function openSommelier() {
+        sommelierHistory = [];
+        userChoices = {};
+        $('#aiSommelierModal').modal('show');
+        showStep("start");
+    }
 
-                    refreshCartCount(); // Оновлюємо цифру в хедері
+    function showStep(stepKey) {
+        currentStepKey = stepKey;
+        const step = sommelierSteps[stepKey];
+        if (!step) return;
 
-                    // ЗОЛОТА АНІМАЦІЯ
-                    btn.innerHTML = '<i class="fas fa-check-circle"></i> ДОДАНО!';
-                    btn.classList.add('btn-success-animated');
-
-                    setTimeout(() => {
-                        btn.style.opacity = '0';
-                        setTimeout(() => {
-                            btn.classList.remove('btn-success-animated');
-                            btn.innerHTML = originalContent;
-                            btn.style.opacity = '1';
-                            btn.disabled = false;
-                        }, 300);
-                    }, 2200);
-                })
-                .catch(err => {
-                    console.error("Помилка:", err);
-                    btn.disabled = false;
-                });
-        }
-        // Якщо повідомлень кілька, вони будуть змінюватися кожні 4 секунди
-        const messages = [
-            "Безкоштовна доставка від 1500 грн",
-            "Знижка 10% на перше замовлення",
-            "Тільки свіже обсмажування щопонеділка"
-        ];
-        let currentIndex = 0;
-
-        function rotateMessage() {
-            const content = document.querySelector('.announcement-content span');
-            if (content) {
-                currentIndex = (currentIndex + 1) % messages.length;
-                content.style.opacity = 0;
-                setTimeout(() => {
-                    content.textContent = messages[currentIndex];
-                    content.style.opacity = 1;
-                }, 500);
-            }
-        }
-        // setInterval(rotateMessage, 4000); // Розкоментуй, якщо хочеш ротацію
-        const sommelierSteps = {
-            "start": {
-                title: "З чого почнемо наповнення нашої чашки смаком?",
-                param: "composition",
-                options: [
-                    { value: "ARABICA_100", label: "Шукаю благородну м'якість (100% Арабіка)", icon: "fa-seedling", next: "arabica_roast" },
-                    { value: "MIX", label: "Віддаю перевагу міцності та креми (Купаж)", icon: "fa-layer-group", next: "mix_intensity" }
-                ]
-            },
-
-            // --- ГІЛКА АРАБІКИ ---
-            "arabica_roast": {
-                title: "Який характер обсмаження вам ближче?",
-                param: "roast",
-                options: [
-                    { value: "LIGHT", label: "Світле (фруктові та квіткові нотки)", icon: "fa-sun", next: "arabica_light_acidity" },
-                    { value: "MEDIUM", label: "Середнє (збалансоване, горіхове)", icon: "fa-adjust", next: "arabica_med_acidity" },
-                    { value: "DARK", label: "Темне (шоколад, димність, без кислинки)", icon: "fa-moon", next: "finish" }
-                ]
-            },
-            "arabica_light_acidity": {
-                title: "Світле обсмаження дуже соковите. Яку кислинку оберемо?",
-                param: "acidity",
-                options: [
-                    { value: "HIGH", label: "Яскрава (цитрус, зелене яблуко)", icon: "fa-lemon", next: "finish" },
-                    { value: "MEDIUM", label: "Делікатна (ягідна)", icon: "fa-tint", next: "finish" }
-                ]
-            },
-            "arabica_med_acidity": {
-                title: "Додати свіжості чи залишити класичний солодкий смак?",
-                param: "acidity",
-                options: [
-                    { value: "MEDIUM", label: "Легка свіжість", icon: "fa-balance-scale", next: "finish" },
-                    { value: "LOW", label: "Мінімум кислотності, більше карамелі", icon: "fa-cookie", next: "finish" }
-                ]
-            },
-
-            // --- ГІЛКА КУПАЖУ ---
-            "mix_intensity": {
-                title: "Який рівень бадьорості ви очікуєте?",
-                param: "intensity",
-                options: [
-                    { value: "STRONG", label: "Максимальний (міцний ранок)", icon: "fa-bolt", next: "mix_bitterness" },
-                    { value: "BALANCED", label: "Помірний (м'яка енергія)", icon: "fa-coffee", next: "mix_bitterness" }
-                ]
-            },
-            "mix_bitterness": {
-                title: "Оберіть фінальний акорд — гірчинку:",
-                param: "bitterness",
-                options: [
-                    { value: "HIGH", label: "Глибока шоколадна/палена", icon: "fa-fire", next: "finish" },
-                    { value: "MEDIUM", label: "Делікатна, як какао", icon: "fa-tint", next: "finish" }
-                ]
-            }
-        };
-
-
-        let currentAiStep = 0;
-        let currentStepKey = "start";
-        let history = [];
-        let userChoices = {};
-
-        function openSommelier() {
-            currentAiStep = 0;
-            userChoices = {};
-            $('#aiSommelierModal').modal('show');
-            showStep(0);
-        }
-
-        function showStep(stepKey) {
-            currentStepKey = stepKey;
-            const step = sommelierSteps[stepKey];
-
-            let html = `<h4 class="mb-4" style="font-family: 'Playfair Display', serif;">${step.title}</h4><div class="row px-3">`;
-            step.options.forEach(opt => {
-                html += `
+        let html = `<h4 class="mb-4" style="font-family: 'Playfair Display', serif;">${step.title}</h4><div class="row px-3">`;
+        step.options.forEach(opt => {
+            html += `
             <div class="col-12 mb-2">
-                <div class="option-card p-3 d-flex align-items-center"
+                <div class="option-card p-3 d-flex align-items-center" style="cursor:pointer; border:1px solid #ddd; border-radius:8px;"
                      onclick="makeChoice('${step.param}', '${opt.value}', '${opt.next}')">
-                    <i class="fas ${opt.icon} mr-3" style="color: var(--gold); width: 25px;"></i>
+                    <i class="fas ${opt.icon} mr-3" style="color: #c5a059; width: 25px;"></i>
                     <span class="font-weight-bold">${opt.label}</span>
                 </div>
             </div>`;
-            });
-            html += `</div>`;
+        });
+        html += `</div>`;
 
-            document.getElementById('sommelier-content').innerHTML = html;
+        document.getElementById('sommelier-content').innerHTML = html;
 
-            // Прогрес та Кнопка Назад
-            const totalSteps = 3; // Середня довжина шляху
-            const currentProgress = history.length + 1;
-            document.getElementById('ai-progress').style.width = (currentProgress / totalSteps * 100) + "%";
-            document.getElementById('stepCounter').innerText = `Крок ${currentProgress}`;
-            document.getElementById('prevStep').style.display = history.length > 0 ? 'block' : 'none';
+        const totalSteps = 3;
+        const currentProgress = sommelierHistory.length + 1;
+        document.getElementById('ai-progress').style.width = (currentProgress / totalSteps * 100) + "%";
+        document.getElementById('stepCounter').innerText = `Крок ${currentProgress}`;
+        document.getElementById('prevStep').style.display = sommelierHistory.length > 0 ? 'block' : 'none';
+    }
+
+    function makeChoice(param, value, nextStep) {
+        userChoices[param] = value;
+        sommelierHistory.push(currentStepKey);
+
+        if (nextStep === "finish") {
+            finishSommelier();
+        } else {
+            showStep(nextStep);
         }
+    }
 
-        function makeChoice(param, value, nextStep) {
-            userChoices[param] = value;
-            history.push(currentStepKey);
+    function finishSommelier() {
+        document.getElementById('sommelier-content').innerHTML = `
+        <div class="py-5 text-center">
+            <div class="spinner-border text-warning mb-3" style="color: #c5a059 !important;"></div>
+            <h5>Підбираємо найкращу каву для Вас...</h5>
+        </div>`;
 
-            if (nextStep === "finish") {
-                finishSommelier();
+        setTimeout(() => {
+            let url = '/coffee?';
+            let params = [];
+            if (userChoices.composition) params.push(`composition=${userChoices.composition}`);
+            if (userChoices.roast) params.push(`roast=${userChoices.roast}`);
+            if (userChoices.intensity) params.push(`intensity=${userChoices.intensity}`);
+            window.location.href = url + params.join('&');
+        }, 1200);
+    }
+
+    // Головний ініціалізатор DOM-структури
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // 1. Початкове оновлення кількості товарів у кошику
+        refreshCartCount();
+
+        // 2. Перемикання відображення фільтрів (Зерно / Капсули)
+        const formatSelect = document.getElementById("formatSelect");
+        const coffeeFilters = document.getElementById("coffee-only-filters");
+        const capsuleFilters = document.getElementById("capsule-only-filters");
+
+        function toggleFiltersVisibility(val) {
+            if (!coffeeFilters || !capsuleFilters) return;
+
+            if (val === "CAPSULE") {
+                // 1. Ховаємо зернові фільтри та повністю вимикаємо їх (вони не підуть в URL)
+                coffeeFilters.classList.add("d-none");
+                coffeeFilters.querySelectorAll('select, input').forEach(el => {
+                    el.disabled = true;
+                    el.value = ""; // Очищаємо значення, щоб скинути старий вибір
+                });
+
+                // 2. Показуємо капсульні фільтри та вмикаємо їх
+                capsuleFilters.classList.remove("d-none");
+                capsuleFilters.querySelectorAll('select, input').forEach(el => {
+                    el.disabled = false;
+                });
             } else {
-                showStep(nextStep);
+                // 1. Показуємо зернові фільтри та вмикаємо їх
+                coffeeFilters.classList.remove("d-none");
+                coffeeFilters.querySelectorAll('select, input').forEach(el => {
+                    el.disabled = false;
+                });
+
+                // 2. Ховаємо капсульні фільтри та вимикаємо їх
+                capsuleFilters.classList.add("d-none");
+                capsuleFilters.querySelectorAll('select, input').forEach(el => {
+                    el.disabled = true;
+                    el.value = ""; // Очищаємо значення
+                });
             }
         }
 
-        function changeStep(delta) {
-            currentAiStep += delta;
-            showStep(currentAiStep);
+        if (formatSelect) {
+            formatSelect.addEventListener("change", function () {
+                toggleFiltersVisibility(this.value);
+            });
+            // Ініціалізація при першому завантаженні сторінки
+            toggleFiltersVisibility(formatSelect.value);
         }
 
-        function finishSommelier() {
-            document.getElementById('sommelier-content').innerHTML = `
-        <div class="py-5 text-center">
-            <div class="spinner-border text-warning mb-3" style="color: #c5a059 !important;"></div>
-            <h5>Шукаю вашу ідеальну каву...</h5>
-        </div>`;
+        // 3. Динамічний зв'язок фільтрів Бренд та Країна
+        const brandSelect = document.getElementById('desktopBrandSelect');
+        const countrySelect = document.getElementById('desktopCountrySelect');
 
+        function updateDropdown(targetSelect, url, defaultText, autoSelect = false) {
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    targetSelect.innerHTML = `<option value="">${defaultText}</option>`;
+                    data.forEach(item => {
+                        const option = document.createElement('option');
+                        option.value = item.id;
+                        option.textContent = item.name;
+                        targetSelect.appendChild(option);
+                    });
+                    if (autoSelect && data.length === 1) {
+                        targetSelect.value = data[0].id;
+                    }
+                });
+        }
+
+        if (brandSelect && countrySelect) {
+            brandSelect.addEventListener('change', function () {
+                const brandId = this.value;
+                const url = brandId ? `/api/countries-by-brand?brandId=${brandId}` : `/api/all-countries`;
+                updateDropdown(countrySelect, url, "Всі країни", !!brandId);
+            });
+
+            countrySelect.addEventListener('change', function () {
+                const countryId = this.value;
+                const url = countryId ? `/api/brands-by-country?countryId=${countryId}` : `/api/all-brands`;
+                updateDropdown(brandSelect, url, "Всі бренди", !!countryId);
+            });
+        }
+
+        // 4. Динамічний AJAX-пошук
+        const searchInput = document.getElementById('dynamic-search');
+        const coffeeContainer = document.getElementById('coffee-container');
+
+        let searchTimeout = null;
+
+        if (searchInput && coffeeContainer) {
+            searchInput.addEventListener('input', function () {
+                clearTimeout(searchTimeout);
+                const query = this.value;
+
+                searchTimeout = setTimeout(() => {
+                    const url = new URL(window.location.origin + '/coffee');
+                    url.searchParams.set('query', query);
+
+                    fetch(url, {
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    })
+                        .then(response => {
+                            if (!response.ok) throw new Error('Помилка сервера');
+                            return response.text();
+                        })
+                        .then(html => {
+                            const parser = new DOMParser();
+                            const doc = parser.parseFromString(html, 'text/html');
+                            const newContainer = doc.getElementById('coffee-container');
+
+                            if (newContainer) {
+                                coffeeContainer.innerHTML = newContainer.innerHTML;
+                            } else {
+                                coffeeContainer.innerHTML = html;
+                            }
+
+                            window.history.replaceState(null, '', url.toString());
+                        })
+                        .catch(err => console.error('Помилка пошуку:', err));
+                }, 400);
+            });
+        }
+
+        // 5.1 Очищення посилань пагінації при кліку
+        document.querySelectorAll('.pagination a').forEach(link => {
+            link.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (!href) return;
+
+                e.preventDefault(); // Зупиняємо стандартний перехід по брудному URL
+
+                const url = new URL(href, window.location.origin);
+                const cleanParams = new URLSearchParams();
+
+                url.searchParams.forEach((value, key) => {
+                    if (value !== null &&
+                        value !== undefined &&
+                        value.toString().trim() !== '' && // Безпечне приведення до рядка
+                        value.toString() !== 'null' &&
+                        value.toString() !== 'undefined' &&
+                        value.toString() !== '[]') {
+
+                        cleanParams.append(key, value);
+                    }
+                });
+
+                const finalUrl = url.pathname + (cleanParams.toString() ? '?' + cleanParams.toString() : '');
+                window.location.href = finalUrl;
+            });
+        });
+
+        // 6. Запам'ятовування позиції скролу
+        document.querySelectorAll('.coffee-card-link').forEach(link => {
+            link.addEventListener('click', function () {
+                sessionStorage.setItem('sidebar-scroll', window.scrollY.toString());
+            });
+        });
+
+        const scrollPos = sessionStorage.getItem('sidebar-scroll');
+        if (scrollPos !== null) {
             setTimeout(() => {
-                let url = '/coffee/filter?';
-                let params = [];
-
-                // Завжди додаємо склад
-                if (userChoices.composition) params.push(`composition=${userChoices.composition}`);
-
-                // Додаємо другий важливий параметр (roast або intensity)
-                if (userChoices.roast) params.push(`roast=${userChoices.roast}`);
-                if (userChoices.intensity) params.push(`intensity=${userChoices.intensity}`);
-
-                // Важливо: ми НЕ передаємо acidity/bitterness у URL, якщо хочемо ГАРАНТОВАНОГО результату.
-                // Або додаємо їх лише як "підказку" (якщо твій бекенд підтримує необов'язкові фільтри)
-
-                window.location.href = url + params.join('&');
-            }, 1200);
+                window.scrollTo({
+                    top: parseInt(scrollPos),
+                    behavior: 'instant'
+                });
+                sessionStorage.removeItem('sidebar-scroll');
+            }, 50);
         }
+    }); // Кінець головного DOMContentLoaded
 
-
-    </script>
-    <script>
-
-
-        const slider = document.querySelector('#brandsScroll');
+    // 7. Drag-to-Scroll для брендів
+    const slider = document.querySelector('#brandsScroll');
+    if (slider) {
         let isDown = false; let startX; let scrollLeft;
-
         slider.addEventListener('mousedown', (e) => {
             isDown = true;
             startX = e.pageX - slider.offsetLeft;
@@ -2081,89 +2473,136 @@
             const walk = (x - startX) * 2;
             slider.scrollLeft = scrollLeft - walk;
         });
-        document.addEventListener('DOMContentLoaded', function () {
-            const rawData = document.getElementById('raw-messages').textContent;
-            // Розбиваємо текст на масив за символом нового рядка
-            const messages = rawData.split('\n').map(m => m.trim()).filter(m => m.length > 0);
+    }
 
-            if (messages.length === 0) return;
+    document.querySelectorAll('.nav-arrow').forEach(arrow => {
+        arrow.addEventListener('mousedown', (e) => e.stopPropagation());
+    });
+</script>
 
-            let currentIndex = 0;
-            const displayElement = document.getElementById('display-message');
 
-            // Ініціалізація першим повідомленням
-            displayElement.textContent = messages[0];
+<script>
+    /* =========================================================
+       МОБІЛЬНЕ МЕНЮ
+       ========================================================= */
 
-            function rotate() {
-                if (messages.length <= 1) return;
+    function openMobileMenu() {
+        const menu = document.getElementById('mobileSideMenu');
 
-                // Починаємо анімацію зникнення
-                displayElement.classList.add('fade-out');
+        if (!menu) {
+            return;
+        }
 
-                setTimeout(() => {
-                    currentIndex = (currentIndex + 1) % messages.length;
-                    displayElement.textContent = messages[currentIndex];
+        menu.classList.add('open');
+        menu.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        openMobileScreen('main');
+    }
 
-                    // Повертаємо видимість
-                    displayElement.classList.remove('fade-out');
-                    displayElement.classList.add('fade-in');
-                }, 120); // Час має збігатися з CSS transition
+    function closeMobileMenu() {
+        const menu = document.getElementById('mobileSideMenu');
+
+        if (!menu) {
+            return;
+        }
+
+        menu.classList.remove('open');
+        menu.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    }
+
+    function openMobileScreen(screen) {
+        document.querySelectorAll('#mobileSideMenu .mobile-menu-screen').forEach(function(element) {
+            element.classList.remove('active');
+        });
+
+        const target = document.getElementById('mobile' + screen.charAt(0).toUpperCase() + screen.slice(1) + 'Screen');
+
+        if (target) {
+            target.classList.add('active');
+        }
+    }
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeMobileMenu();
+        }
+    });
+
+    /* =========================================================
+       МОБІЛЬНІ ФІЛЬТРИ
+       ========================================================= */
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileFormatSelect = document.getElementById('mobileFormatSelect');
+        const mobileCoffeeFilters = document.getElementById('mobileCoffeeOnlyFilters');
+        const mobileCapsuleFilters = document.getElementById('mobileCapsuleOnlyFilters');
+
+        function toggleMobileFilters() {
+            if (!mobileFormatSelect || !mobileCoffeeFilters || !mobileCapsuleFilters) {
+                return;
             }
 
-            // Зміна кожні 4 секунди (як у Next)
-            setInterval(rotate, 6000);
-        });
-        document.addEventListener('DOMContentLoaded', function () {
-            // 1. Оновлення кошика
+            const isCapsule = mobileFormatSelect.value === 'CAPSULE';
 
-            refreshCartCount();
+            mobileCoffeeFilters.classList.toggle('d-none', isCapsule);
+            mobileCapsuleFilters.classList.toggle('d-none', !isCapsule);
+        }
 
-            // 2. Логіка пагінації та чистка URL
-            document.querySelectorAll('.pagination a').forEach(link => {
-                link.addEventListener('click', function (e) {
-                    // Примусово ставимо 0 для пагінації
-                    sessionStorage.setItem('sidebar-scroll', '0');
+        if (mobileFormatSelect) {
+            mobileFormatSelect.addEventListener('change', toggleMobileFilters);
+            toggleMobileFilters();
+        }
 
-                    const href = this.getAttribute('href');
-                    if (href && href !== '#') {
-                        const url = new URL(href, window.location.origin);
-                        const params = new URLSearchParams(url.search);
-                        const cleanParams = new URLSearchParams();
+        /* =====================================================
+           ЗВ'ЯЗОК БРЕНД / КРАЇНА ДЛЯ МОБІЛЬНИХ ФІЛЬТРІВ
+           ===================================================== */
 
-                        params.forEach((value, key) => {
-                            if (value && value !== 'null' && value !== '[]' && value.trim() !== "") {
-                                cleanParams.append(key, value);
-                            }
-                        });
+        const mobileBrandSelect = document.getElementById('mobileBrandSelect');
+        const mobileCountrySelect = document.getElementById('mobileCountrySelect');
 
-                        e.preventDefault();
-                        window.location.href = url.pathname + (cleanParams.toString() ? '?' + cleanParams.toString() : '');
-                    }
-                });
-            });
+        function updateMobileDropdown(targetSelect, url, defaultText, autoSelect) {
+            fetch(url)
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    targetSelect.innerHTML = '<option value="">' + defaultText + '</option>';
 
-            // 3. Збереження позиції при переході до товару
-            document.querySelectorAll('.coffee-card-link').forEach(link => {
-                link.addEventListener('click', function () {
-                    sessionStorage.setItem('sidebar-scroll', window.scrollY.toString());
-                });
-            });
+                    data.forEach(function(item) {
+                        const option = document.createElement('option');
 
-            // 4. Відновлення прокрутки з невеликою затримкою
-            const scrollPos = sessionStorage.getItem('sidebar-scroll');
-            if (scrollPos !== null) {
-                // Використовуємо setTimeout, щоб браузер встиг "усвідомити" висоту сторінки
-                setTimeout(() => {
-                    window.scrollTo({
-                        top: parseInt(scrollPos),
-                        behavior: 'instant'
+                        option.value = item.id;
+                        option.textContent = item.name;
+                        targetSelect.appendChild(option);
                     });
-                    sessionStorage.removeItem('sidebar-scroll');
-                }, 50); // 50мс достатньо для більшості випадків
-            }
-        });
 
-    </script>
+                    if (autoSelect && data.length === 1) {
+                        targetSelect.value = data[0].id;
+                    }
+                })
+                .catch(function(error) {
+                    console.error('Помилка оновлення фільтра:', error);
+                });
+        }
+
+        if (mobileBrandSelect && mobileCountrySelect) {
+            mobileBrandSelect.addEventListener('change', function() {
+                const brandId = this.value;
+                const url = brandId ? '/api/countries-by-brand?brandId=' + brandId : '/api/all-countries';
+
+                updateMobileDropdown(mobileCountrySelect, url, 'Всі країни', !!brandId);
+            });
+
+            mobileCountrySelect.addEventListener('change', function() {
+                const countryId = this.value;
+                const url = countryId ? '/api/brands-by-country?countryId=' + countryId : '/api/all-brands';
+
+                updateMobileDropdown(mobileBrandSelect, url, 'Всі бренди', !!countryId);
+            });
+        }
+    });
+</script>
 
 </body>
 

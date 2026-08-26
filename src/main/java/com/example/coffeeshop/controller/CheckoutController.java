@@ -1,9 +1,12 @@
 package com.example.coffeeshop.controller;
 
 import com.example.coffeeshop.model.Order;
+import com.example.coffeeshop.service.DiscountService;
 import com.example.coffeeshop.service.OrderService;
+import com.example.coffeeshop.service.ShopSettingsService;
 import com.example.coffeeshop.service.TelegramService;
 import com.example.coffeeshop.service.impl.CartServiceImpl;
+import com.example.coffeeshop.service.impl.PdfService;
 import com.example.coffeeshop.service.impl.TelegramServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +15,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.math.BigDecimal;
 
 @Controller
 @RequestMapping("/order/checkout")
@@ -23,6 +28,12 @@ public class CheckoutController {
     private  OrderService orderService;
     @Autowired
     private TelegramService telegramService;
+    @Autowired
+    private PdfService pdfService;
+    @Autowired
+    private ShopSettingsService settingsService; // Сервіс налаштувань (ФОП, IBAN тощо)
+    @Autowired
+    private DiscountService discountService; // Сервіс знижок
 
 
     @GetMapping
@@ -30,9 +41,9 @@ public class CheckoutController {
         model.addAttribute("cart", cartService.getCart());
 
         // ВИПРАВЛЕНО: Викликаємо метод зі знижкою, який ми створили в CartService
-        double finalTotal = cartService.getTotalWithDiscount();
+        BigDecimal finalTotal = cartService.getTotalWithDiscount();
 
-        model.addAttribute("total", Math.round(finalTotal));
+        model.addAttribute("total", finalTotal.doubleValue());
         return "checkout";
     }
     @PostMapping
@@ -41,7 +52,7 @@ public class CheckoutController {
                              @RequestParam String phone,
                              @RequestParam String cityName,
                              @RequestParam String wareHouse,
-                             @RequestParam(required = false) String deliveryProvider, // Додано
+                             @RequestParam(required = false) String deliveryProvider,
                              @RequestParam("paymentMethod") String paymentMethod,
                              @RequestParam(required = false) String comment,
                              Model model) {
@@ -49,12 +60,31 @@ public class CheckoutController {
         // Визначаємо назву служби для красивого запису в адресу
         String providerName = (deliveryProvider != null && deliveryProvider.equals("UP")) ? "Укрпошта" : "Нова пошта";
 
-        // Формат залишається майже такий самий, як ти звик
+        // Формат адреси
         String address = "Місто - " + cityName + ", " + providerName + ", " + wareHouse;
 
-        // Все інше без змін
+        // Створюємо замовлення
         Order order = orderService.createOrder(name, surName, phone, address, paymentMethod, comment);
-        telegramService.sendOrderNotification(order);
+
+        // 1. Надсилаємо текстове сповіщення в Telegram (як і раніше)
+        //telegramService.sendOrderNotification(order);
+
+        // 2. ДОДАЄМО: Генеруємо PDF та відправляємо файл у Telegram
+        try {
+            byte[] pdfData = pdfService.generatePdf(
+                    order,
+                    settingsService.getSettings(),
+                    discountService.getSettings()
+            );
+
+            telegramService.sendPdfDocument(
+                    pdfData,
+                    name + "-" + surName + "_" + order.getId() + ".pdf",
+                    order
+            );
+        } catch (Exception e) {
+            System.err.println("❌ Помилка генерації або відправки PDF у Telegram: " + e.getMessage());
+        }
 
         model.addAttribute("order", order);
         return "order-success";

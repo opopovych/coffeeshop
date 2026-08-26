@@ -42,6 +42,8 @@ public class AdminCoffeeController {
         model.addAttribute("compositions", Composition.values());
         model.addAttribute("intensityLevels", Intensity.values());
         model.addAttribute("productFormats", ProductFormat.values());
+        model.addAttribute("capsuleSystems", CapsuleSystem.values());
+        model.addAttribute("capsuleCounts", CapsuleCount.values());
     }
 
 
@@ -79,6 +81,19 @@ public class AdminCoffeeController {
         res.put("acidity", p.getAcidity() != null ? p.getAcidity().getDisplayName() : "-");
         res.put("productformat", p.getProductFormat() != null ? p.getProductFormat().getDisplayName() : "-");
         res.put("intensity", p.getIntensity() != null ? p.getIntensity().getDisplayName() : "-");
+        res.put(
+                "capsuleSystem",
+                p.getCapsuleSystem() != null
+                        ? p.getCapsuleSystem().getDisplayName()
+                        : "-"
+        );
+
+        res.put(
+                "capsuleCount",
+                p.getCapsuleCount() != null
+                        ? p.getCapsuleCount()
+                        : "-"
+        );
 
         return ResponseEntity.ok(res);
     }
@@ -125,9 +140,16 @@ public class AdminCoffeeController {
 
     @PostMapping("/add")
     public String add(
-            @ModelAttribute CoffeeBean coffeeBean, // Використовуйте цей об'єкт
+            @ModelAttribute CoffeeBean coffeeBean,
             @RequestParam("photo") MultipartFile photoFile
     ) throws IOException {
+
+        // Якщо продукт не капсули — повністю очищаємо поля капсул
+        if (!"CAPSULE".equals(coffeeBean.getProductFormat())) {
+            coffeeBean.setCapsuleSystem(null);
+            coffeeBean.setCapsuleCount(null);
+        }
+
         coffeeBean.setPhotoPath(fileService.saveFile(photoFile));
         coffeeBeanService.save(coffeeBean);
         return "redirect:/admin/coffee/list";
@@ -154,6 +176,8 @@ public class AdminCoffeeController {
         existing.setDescription(coffeeBean.getDescription());
         existing.setPrice(coffeeBean.getPrice());
         existing.setProductFormat(coffeeBean.getProductFormat());
+        existing.setCapsuleSystem(coffeeBean.getCapsuleSystem());
+        existing.setCapsuleCount(coffeeBean.getCapsuleCount());
         existing.setBrand(coffeeBean.getBrand());
         existing.setWeight(coffeeBean.getWeight());
         existing.setOriginCountry(coffeeBean.getOriginCountry());

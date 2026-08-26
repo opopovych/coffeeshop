@@ -13,6 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 
 @Controller
 @RequestMapping("/cart")
@@ -29,18 +32,26 @@ public class CartController {
     public String addToCart(@PathVariable Long coffeeId,
                             @RequestParam(defaultValue = "1") Integer quantity) {
         CoffeeBean coffee = coffeeBeanService.findById(coffeeId);
+
         CartItem item = new CartItem()
                 .setCoffeeId(coffee.getId())
                 .setName(coffee.getName())
-                .setBrand(coffee.getBrand().getName())
+                .setBrand(coffee.getBrand() != null ? coffee.getBrand().getName() : "Без бренду")
                 .setPrice(coffee.getPrice())
                 .setQuantity(quantity)
                 .setPhotoPath(coffee.getPhotoPath())
-                .setBitterness(coffee.getBitterness().displayName)
-                .setIntensity(coffee.getIntensity().displayName)
-                .setComposition(coffee.getComposition().displayName)
-                .setRoastLevel(coffee.getRoastLevel().displayName)
-                .setWeight(coffee.getWeight().getDisplayName());
+                .setFormat(coffee.getProductFormat() != null ? coffee.getProductFormat().getDisplayName() : "В зернах")
+                // Безпечний мапінг оцінок (якщо null, записуємо порожній рядок або null)
+                .setBitterness(coffee.getBitterness() != null ? coffee.getBitterness().displayName : null)
+                .setIntensity(coffee.getIntensity() != null ? coffee.getIntensity().displayName : null)
+                .setComposition(coffee.getComposition() != null ? coffee.getComposition().getDisplayName() : null)
+                .setRoastLevel(coffee.getRoastLevel() != null ? coffee.getRoastLevel().displayName : null)
+                .setCapsuleSystem(coffee.getCapsuleSystem() != null ? coffee.getCapsuleSystem().getDisplayName() : null)
+                .setCapsuleCount(coffee.getCapsuleCount() != null ? coffee.getCapsuleCount() + " шт." : null)
+                // Безпечний мапінг ваги
+                .setWeight(coffee.getWeight() != null ? coffee.getWeight().getDisplayName() : "Не вказано");
+
+
         cartService.addToCart(item);
         return "redirect:/cart/view";
     }
@@ -61,7 +72,7 @@ public class CartController {
 
         // 2. Викликаємо розрахунки, які вже лежать у CartService
         double subtotal = cartService.getTotal();
-        double total = cartService.getTotalWithDiscount();
+        BigDecimal total = cartService.getTotalWithDiscount();
 
         // 3. Визначаємо, чи була застосована знижка (для відображення в UI)
         double discountPercent = 0;
@@ -72,7 +83,7 @@ public class CartController {
         // 4. Передаємо все в модель
         model.addAttribute("cart", cart);
         model.addAttribute("subtotal", subtotal);
-        model.addAttribute("total", Math.round(total)); // Округлюємо для краси
+        model.addAttribute("total", total.doubleValue());
         model.addAttribute("discountPercent", discountPercent);
         model.addAttribute("discountSettings", settings);
 

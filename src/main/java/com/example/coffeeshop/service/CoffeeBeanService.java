@@ -3,6 +3,8 @@ package com.example.coffeeshop.service;
 import com.example.coffeeshop.model.*;
 import com.example.coffeeshop.model.dto.CoffeeBeanDto;
 import java.util.List;
+
+import com.example.coffeeshop.model.dto.ProductSelectDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -29,6 +31,7 @@ public interface CoffeeBeanService {
             List<Bitterness> bitterness,
             List<Composition> composition,
             List<Acidity> acidity,
+            CapsuleSystem capsuleSystem, Integer capsuleCount,
             Pageable pageable
     );
 
@@ -44,5 +47,6 @@ public interface CoffeeBeanService {
     void adjustAllPrices(Double percent);
     void updateSingleField(Long id, String field, boolean value);
     Page<CoffeeBean> search(String query, Pageable pageable);
+    List<ProductSelectDto> findAllForSelect();
 
 }

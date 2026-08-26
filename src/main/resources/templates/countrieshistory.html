@@ -244,7 +244,7 @@
                 <span class="step-number" th:text="${iterStat.count < 10 ? '0' + iterStat.count : iterStat.count}">01</span>
                 <h2 class="country-name" th:text="${country.name}">Назва країни</h2>
                 <div th:utext="${country.history}" style="font-weight: 300;">Історія...</div>
-                <a th:href="@{/coffee/filter(countryId=${country.id})}" class="btn-discover">
+                <a th:href="@{/coffee(countryId=${country.id})}" class="btn-discover">
                     Переглянути врожай <i class="fas fa-arrow-right ml-2"></i>
                 </a>
             </div>

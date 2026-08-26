@@ -261,6 +261,26 @@
                                     </div>
                                 </form>
                             </div>
+                            <div class="border-top pt-4 mt-4">
+                                <label class="section-title text-info"><i class="fas fa-cube mr-1"></i> Масовий імпорт капсул</label>
+                                <p class="small text-muted mb-2">
+                                    Завантажте файл постачальника. Система автоматично відфільтрує товари, які містять у назві "капсул/capsule", та створить ті, яких немає в базі даних (існуючі SKU будуть пропущені).
+                                </p>
+                                <form th:action="@{/admin/sync/import-new}" method="post" enctype="multipart/form-data" class="mt-2" id="syncCapsulesForm">
+                                    <div class="d-flex align-items-center">
+                                        <div class="custom-file flex-grow-1">
+                                            <input type="file" name="file" class="custom-file-input" id="capsuleFileInput" required>
+                                            <label class="custom-file-label" for="capsuleFileInput">Оберіть прайс для капсул</label>
+                                        </div>
+                                        <button class="btn btn-link text-info font-weight-bold ml-3 text-nowrap" type="submit" id="capsuleSyncBtn" style="text-decoration: none;">
+                                            <span id="capsuleBtnText"><i class="fas fa-plus-circle mr-1"></i> Імпортувати капсули</span>
+                                            <span id="capsuleBtnLoader" style="display: none;">
+                    <span class="spinner-border spinner-border-sm mr-1" role="status"></span> Завантаження...
+                </span>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
 
@@ -300,6 +320,18 @@
                 let fileName = $(this).val().split('\\').pop();
                 $(this).next('.custom-file-label').html(fileName);
             });
+        });
+        // Відображення імені вибраного файла для капсул
+        $('#capsuleFileInput').on('change', function () {
+            var fileName = $(this).val().split('\\').pop();
+            $(this).next('.custom-file-label').addClass("selected").html(fileName);
+        });
+
+        // Блокування кнопки імпорту капсул
+        $('#syncCapsulesForm').on('submit', function () {
+            $('#capsuleBtnText').hide();
+            $('#capsuleBtnLoader').show();
+            $('#capsuleSyncBtn').prop('disabled', true).addClass('disabled');
         });
     </script>
 </body>

@@ -2,6 +2,7 @@ package com.example.coffeeshop.model;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ public class Order {
     private String surName;
     private String phone;
     private String deliveryAddress;
-    private Double totalPrice;
+    private BigDecimal totalPrice;
     private Status status;
     private String paymentMethod; // Додайте це поле
     //Поля для нової пошти
